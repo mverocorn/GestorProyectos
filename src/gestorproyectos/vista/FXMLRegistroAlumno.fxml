@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLRegistroAlumnoController">
+   <children>
+      <TextField layoutX="61.0" layoutY="104.0" prefHeight="26.0" prefWidth="483.0" />
+      <TextField layoutX="61.0" layoutY="154.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField layoutX="338.0" layoutY="154.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField layoutX="61.0" layoutY="200.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField layoutX="338.0" layoutY="200.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField layoutX="61.0" layoutY="248.0" prefHeight="26.0" prefWidth="270.0" />
+      <TextField layoutX="388.0" layoutY="248.0" />
+   </children>
+</AnchorPane>
