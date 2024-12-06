@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gestorproyectos.utilidades;
 
-/**
- *
- * @author Vero
- */
 public class Constantes {
-	
+
+    public static final String USER_BD = "root";
+    public static final String PASSWORD_BD = "121404";
+
 }
