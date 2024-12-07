@@ -46,7 +46,7 @@ public class AlumnoDAOTest {
     @Test(expected = SQLException.class)
     public void testRegistrarAlumnoExcepcionSQL() throws SQLException {
         alumno = new Alumno(null, "Tomas", "Gutierrez",
-                "S22013679", "+52 1234567890", "tomas@correo.com",
+                "S22013079", "+52 1234567890", "tomas@correo.com",
                 9.5f, "inscrito"
         );
 
