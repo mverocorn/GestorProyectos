@@ -9,7 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.*;
 
 public class AlumnoDAO {
@@ -17,6 +19,41 @@ public class AlumnoDAO {
     private static final Logger logger = Logger.getLogger(
             AlumnoDAO.class.getName()
     );
+
+    public static List<Alumno> obtenerAlumnos() throws SQLException {
+        List<Alumno> alumnos = null;
+        Connection conexionBD = ConexionBD.abrirConexion();
+        if (conexionBD != null) {
+            try {
+                String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, matricula, telefonoAlumno, correoAlumno, promedio, estadoAlumno FROM alumno;";
+                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+                ResultSet resultado = prepararConsulta.executeQuery();
+                alumnos = new ArrayList<>();
+                while (resultado.next()) {
+                    alumnos.add(serializarAlumno(resultado));
+                }
+            } catch (SQLException e) {
+                alumnos = null;
+                e.printStackTrace();
+            } finally {
+                conexionBD.close();
+            }
+        }
+        return alumnos;
+    }
+
+    private static Alumno serializarAlumno(ResultSet resultado) throws SQLException {
+        Alumno alumno = new Alumno();
+        alumno.setIdAlumno(resultado.getInt("idAlumno"));
+        alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
+        alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
+        alumno.setMatricula(resultado.getString("matricula"));
+        alumno.setTelefonoAlumno(resultado.getString("telefonoAlumno"));
+        alumno.setCorreoAlumno(resultado.getString("correoAlumno"));
+        alumno.setPromedio(resultado.getFloat("promedio"));
+        alumno.setEstadoAlumno(resultado.getString("estadoAlumno"));
+        return alumno;
+    }
 
     public static void validarAlumnoARegistrar(Alumno alumno) {
         if (alumno == null) {
@@ -48,7 +85,7 @@ public class AlumnoDAO {
     }
 
     public boolean existeAlumno(String correo, String telefono, String matricula, int idAlumnoActual) throws SQLException {
-        verificarConexion();
+        ConexionBD.verificarConexionBD();
 
         boolean existe = false;
         String consulta
@@ -132,13 +169,6 @@ public class AlumnoDAO {
         }
 
         return respuesta;
-    }
-
-    public static void verificarConexion() throws SQLException {
-        if (!ConexionBD.verificarConexionBD()) {
-            logger.log(Level.SEVERE, "No hay conexión con la base de datos.");
-            throw new SQLException("No hay conexión con la base de datos.");
-        }
     }
 
 }

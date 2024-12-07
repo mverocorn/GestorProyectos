@@ -31,16 +31,18 @@ public class AlumnoDAOTest {
 
     @Test
     public void testRegistrarAlumnoExitoso() throws SQLException {
+        int valorEsperado = 1;
+
         alumno = new Alumno(null, "Tomas", "Gutierrez",
-                "S22013679", "+52 1234567890", "tomas@correo.com",
+                "S22013079", "+52 1234567890", "tomas@correo.com",
                 9.5f, "inscrito"
         );
 
         HashMap<String, Object> resultado = AlumnoDAO.registrarAlumno(alumno);
 
-        int idAlumnoGenerado = (int) resultado.get("idAlumno");
+        int valorObtenido = (int) resultado.get("idAlumno");
 
-        assertTrue(idAlumnoGenerado > 0);
+        assertEquals(valorEsperado, valorObtenido);
     }
 
     @Test(expected = SQLException.class)
@@ -53,4 +55,3 @@ public class AlumnoDAOTest {
         AlumnoDAO.registrarAlumno(alumno);
     }
 }
-

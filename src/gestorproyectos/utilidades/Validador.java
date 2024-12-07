@@ -147,4 +147,53 @@ public class Validador {
             throw new IllegalArgumentException("El promedio debe estar en el rango de 0.0 a 10.0.");
         }
     }
+
+    public static void validarPeriodo(String periodo) {
+        if (periodo == null || periodo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El periodo no puede estar vacío.");
+        }
+        String patronPeriodo = "^[A-Z]{3}\\d{4}-[A-Z]{3}\\d{4}$";
+        if (!Pattern.matches(patronPeriodo, periodo)) {
+            throw new IllegalArgumentException("El formato del periodo es incorrecto. Debe ser como 'MMMYYYY-MMMYYYY'. Ejemplo: 'AGO2024-ENE2025'.");
+        }
+    }
+
+    // Método para validar la fecha de proyecto
+    public static void validarFechaProyecto(Date fechaProyecto) {
+        if (fechaProyecto == null) {
+            throw new IllegalArgumentException("La fecha de proyecto no puede ser nula.");
+        }
+        Date fechaActual = new Date(System.currentTimeMillis());
+        if (fechaProyecto.before(fechaActual)) {
+            throw new IllegalArgumentException("La fecha del proyecto no puede ser anterior a la fecha actual.");
+        }
+    }
+
+    // Método para validar el responsable (idResponsable)
+    public static void validarResponsable(int idResponsable) {
+        if (idResponsable <= 0) {
+            throw new IllegalArgumentException("El responsable asociado es inválido.");
+        }
+    }
+
+    // Método para validar la empresa (idEmpresa)
+    public static void validarEmpresa(int idEmpresa) {
+        if (idEmpresa <= 0) {
+            throw new IllegalArgumentException("La empresa asociada es inválida.");
+        }
+    }
+    
+    public static void validarNRC(int nrc) {
+        String nrcStr = String.valueOf(nrc);
+
+        if (nrcStr.length() != 5 || !nrcStr.matches("\\d{5}")) {
+            throw new IllegalArgumentException("El NRC debe contener exactamente 5 números.");
+        }
+    }
+    
+    public static void validarBloque(int bloque) {
+        if (bloque < 1 || bloque > 3) {
+            throw new IllegalArgumentException("El bloque debe ser 1, 2 o 3.");
+        }
+    }
 }
