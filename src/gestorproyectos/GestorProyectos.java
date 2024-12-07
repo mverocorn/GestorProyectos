@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML.java to edit this template
- */
 package gestorproyectos;
 
 import javafx.application.Application;
@@ -18,7 +14,7 @@ public class GestorProyectos extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("FXMLInicioSesion.fxml"));
 		
 		Scene scene = new Scene(root);
 		
