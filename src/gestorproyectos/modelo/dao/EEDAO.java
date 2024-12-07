@@ -53,7 +53,6 @@ public class EEDAO {
         return ee;
     }
 
-
     public static void validarEE(EE ee) {
         if (ee == null) {
             throw new IllegalArgumentException("El objeto EE no puede ser nulo.");
@@ -75,47 +74,75 @@ public class EEDAO {
         return false;
     }
 
-    public static HashMap<String, Object> registrarEE(EE ee) throws SQLException {
+    public static HashMap<String, Object> registrarEEConPeriodo(EE ee, String periodo) throws SQLException {
         HashMap<String, Object> respuesta = new HashMap<>();
-
         Connection conexionBD = ConexionBD.abrirConexion();
+
         if (conexionBD != null) {
-            PreparedStatement prepararSentencia = null;
+            PreparedStatement prepararSentenciaEE = null;
             int idEEGenerado = -1;
+            int idInscripcionGenerada = -1;
+
             try {
+                // Validar EE
                 validarEE(ee);
                 if (existeEE(ee.getNrc(), ee.getBloque(), ee.getIdProfesor())) {
                     throw new IllegalArgumentException("Ya existe un EE con el mismo NRC, bloque y profesor.");
                 }
 
-                String sentencia = "INSERT INTO EE (nombreEE, nrc, bloque, idProfesor) "
-                        + "VALUES (?, ?, ?, ?)";
+                // Iniciar transacción
+                conexionBD.setAutoCommit(false);
 
-                prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
-                prepararSentencia.setString(1, ee.getNombreEE());
-                prepararSentencia.setInt(2, ee.getNrc());
-                prepararSentencia.setInt(3, ee.getBloque());
-                prepararSentencia.setInt(4, ee.getIdProfesor());
+                // Insertar EE
+                String sentenciaEE = "INSERT INTO EE (nombreEE, nrc, bloque, idProfesor) VALUES (?, ?, ?, ?)";
+                prepararSentenciaEE = conexionBD.prepareStatement(sentenciaEE, Statement.RETURN_GENERATED_KEYS);
+                prepararSentenciaEE.setString(1, ee.getNombreEE());
+                prepararSentenciaEE.setInt(2, ee.getNrc());
+                prepararSentenciaEE.setInt(3, ee.getBloque());
+                prepararSentenciaEE.setInt(4, ee.getIdProfesor());
 
-                int filasAfectadas = prepararSentencia.executeUpdate();
-
-                if (filasAfectadas == 1) {
-                    try (ResultSet rs = prepararSentencia.getGeneratedKeys()) {
+                int filasAfectadasEE = prepararSentenciaEE.executeUpdate();
+                if (filasAfectadasEE == 1) {
+                    try (ResultSet rs = prepararSentenciaEE.getGeneratedKeys()) {
                         if (rs.next()) {
-                            idEEGenerado = rs.getInt(1); // Obtener el id generado
+                            idEEGenerado = rs.getInt(1);
                         }
                     }
                 }
 
+                if (idEEGenerado <= 0) {
+                    throw new SQLException("Error al obtener el ID del EE registrado.");
+                }
+
+                // Registrar el periodo en InscripcionProyecto (llamar al DAO correspondiente)
+                idInscripcionGenerada = InscripcionProyectoDAO.registrarPeriodoInscripcionProyecto(idEEGenerado, periodo);
+
+                // Confirmar la transacción
+                conexionBD.commit();
+
+                // Preparar respuesta
                 respuesta.put("idEE", idEEGenerado);
+                respuesta.put("idInscripcion", idInscripcionGenerada);
 
             } catch (SQLTimeoutException ex) {
-                logger.log(Level.SEVERE, "La inserción en la base de datos excedió el tiempo límite", ex);
-                throw new SQLException("Tiempo de espera agotado al registrar EE.", ex);
+                if (conexionBD != null) {
+                    conexionBD.rollback();
+                }
+                logger.log(Level.SEVERE, "La operación excedió el tiempo límite", ex);
+                throw new SQLException("Tiempo de espera agotado al registrar EE y periodo.", ex);
             } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Error al registrar EE", ex);
-                throw new SQLException("Error al registrar EE", ex);
+                if (conexionBD != null) {
+                    conexionBD.rollback();
+                }
+                logger.log(Level.SEVERE, "Error al registrar EE y periodo", ex);
+                throw new SQLException("Error al registrar EE y periodo.", ex);
             } finally {
+                if (conexionBD != null) {
+                    conexionBD.setAutoCommit(true);
+                }
+                if (prepararSentenciaEE != null) {
+                    prepararSentenciaEE.close();
+                }
                 ConexionBD.cerrarConexion(conexionBD);
             }
         }

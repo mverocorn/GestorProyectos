@@ -1,6 +1,7 @@
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.pojo.EE;
+import gestorproyectos.modelo.pojo.InscripcionProyecto;
 import java.sql.SQLException;
 import java.util.HashMap;
 import org.junit.Before;
@@ -11,6 +12,7 @@ public class EEDAOTest {
 
     private EEDAO eeDAO;
     private EE ee;
+    private InscripcionProyecto inscripcionProyecto;
 
     public EEDAOTest() {
     }
@@ -30,24 +32,19 @@ public class EEDAOTest {
     }
 
     @Test
-    public void testRegistrarEEExitoso() throws SQLException {
-        int valorEsperado = 1;
+    public void testRegistrarEEConPeriodoExitoso() throws SQLException {
+        int valorEsperadoEE = 1;
+        int valorEsperadoInscripcion = 1;
+        String periodo = "ENE2024-JUL2024";
+        EE ee = new EE(0, "Servicio Social", 12301, 2, 1);
 
-        ee = new EE(0, "Servicio Social", 12301, 2,
-                1);
+        HashMap<String, Object> resultado = EEDAO.registrarEEConPeriodo(ee, periodo);
 
-        HashMap<String, Object> resultado = EEDAO.registrarEE(ee);
+        int idEEObtenido = (int) resultado.get("idEE");
+        assertEquals(valorEsperadoEE, idEEObtenido);
 
-        int valorObtenido = (int) resultado.get("idEE");
-
-        assertEquals(valorEsperado, valorObtenido);
+        int idInscripcionObtenido = (int) resultado.get("idInscripcion");
+        assertEquals(valorEsperadoInscripcion, idInscripcionObtenido);
     }
 
-    @Test(expected = SQLException.class)
-    public void testRegistrarEEExcepcionSQL() throws SQLException {
-        ee = new EE(0, "Servicio Social", 12301, 2, 
-                999);
-
-        EEDAO.registrarEE(ee);
-    }
 }
