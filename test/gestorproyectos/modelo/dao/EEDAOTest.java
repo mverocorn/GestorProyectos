@@ -2,11 +2,14 @@ package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.pojo.EE;
 import gestorproyectos.modelo.pojo.InscripcionEE;
-import java.sql.SQLException;
 import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class EEDAOTest {
 
@@ -43,6 +46,26 @@ public class EEDAOTest {
         int valorObtenido = (int) resultado.get("idEE");
 
         assertEquals(valorEsperado, valorObtenido);
+    }
+
+    @Test
+    public void testObtenerEE() throws Exception {
+    }
+
+    @Test
+    public void testObtenerNombresProyectosPorTipo() throws Exception {
+    }
+
+    @Test
+    public void testRegistrarEE() throws Exception {
+    }
+
+    @Test
+    public void testObtenerDetalleEE() throws Exception {
+    }
+
+    @Test
+    public void testIsPeriodoActivo() throws Exception {
     }
 
 }

@@ -11,14 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.SQLTimeoutException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EEDAO {
     private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("MMMyyyy");
@@ -186,4 +186,7 @@ public class EEDAO {
         // Verificar si la fecha actual está dentro del rango
         return !fechaActual.before(fechaInicioDate) && !fechaActual.after(fechaFinDate);
     }
+    
+    
+
 }

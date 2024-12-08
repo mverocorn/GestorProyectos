@@ -1,6 +1,9 @@
 package gestorproyectos.utilidades;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Validador {
@@ -192,8 +195,26 @@ public class Validador {
     }
     
     public static void validarBloque(int bloque) {
-        if (bloque < 1 || bloque > 3) {
+        if (bloque < 7 || bloque > 12) {
             throw new IllegalArgumentException("El bloque debe ser 1, 2 o 3.");
         }
     }
+    
+    public static void validarProyectosAPriorizar(Map<Integer, Integer> proyectosYPrioridades, int totalProyectos) {
+        Set<Integer> prioridades = new HashSet<>();
+
+        for (Integer prioridad : proyectosYPrioridades.values()) {
+            if (prioridad == null || prioridad <= 0) {
+                throw new IllegalArgumentException("Todas las prioridades deben estar asignadas y ser mayores a 0.");
+            }
+            if (!prioridades.add(prioridad)) {
+                throw new IllegalArgumentException("No pueden haber números de priorización duplicados.");
+            }
+        }
+
+        if (prioridades.size() != totalProyectos) {
+            throw new IllegalArgumentException("Debe haber una prioridad única para cada proyecto.");
+        }
+    }
+
 }

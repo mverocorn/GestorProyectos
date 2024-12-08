@@ -4,6 +4,8 @@ import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.utilidades.Validador;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -109,8 +111,8 @@ public class ProyectoSSDAO {
                 validarProyectoSS(proyecto);
 
                 String sentencia = "INSERT INTO ProyectoSS (fechaProyecto, nombreProyecto, "
-                        + "objetivoProyecto, descripcionProyecto, cupoProyecto, idEmpresa, idResponsable) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable) "
+                        + "VALUES (?, ?, ?, ?, ?, ?)";
 
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
                 prepararSentencia.setDate(1, proyecto.getFechaProyecto());
@@ -175,6 +177,104 @@ public class ProyectoSSDAO {
         }
         return proyectoSS;
     }
+    
+    public List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodo(String periodo) throws SQLException {
+        List<ProyectoSS> proyectosDisponibles = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
 
+        if (conexionBD != null) {
+            try {
+                // Obtener las fechas de inicio y fin del periodo
+                java.sql.Date fechaInicio = obtenerFechaInicioSQL(periodo);
+                java.sql.Date fechaFin = obtenerFechaFinSQL(periodo);
+
+                // Modificar la consulta SQL para seleccionar solo los campos necesarios
+                String consulta = "SELECT idProyectoSS, nombreProyecto FROM proyectoss WHERE fechaProyecto BETWEEN ? AND ? AND cupoProyecto > 0";
+                try (PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
+                    prepararConsulta.setDate(1, fechaInicio);
+                    prepararConsulta.setDate(2, fechaFin);
+
+                    try (ResultSet resultado = prepararConsulta.executeQuery()) {
+                        if (!resultado.isBeforeFirst()) {
+                            System.out.println("No se encontraron proyectos en el rango de fechas.");
+                            return proyectosDisponibles;
+                        }
+
+                        while (resultado.next()) {
+                            // Crear un objeto ProyectoSS con solo los campos necesarios
+                            ProyectoSS proyecto = new ProyectoSS(
+                                    resultado.getInt("idProyectoSS"),
+                                    null, // No necesitamos la fecha en este caso
+                                    resultado.getString("nombreProyecto"),
+                                    null, // Los otros campos no son necesarios
+                                    null,
+                                    0, // El cupoProyecto no es necesario
+                                    0 // El idResponsable tampoco es necesario
+                            );
+                            proyectosDisponibles.add(proyecto);
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                throw new SQLException("Error al obtener proyectos disponibles por periodo: " + ex.getMessage(), ex);
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        }
+        return proyectosDisponibles;
+    }
+
+    private java.sql.Date obtenerFechaInicioSQL(String periodo) {
+        String mesInicio = periodo.substring(0, 3).toUpperCase();
+        int anioInicio = Integer.parseInt(periodo.substring(3, 7));
+        return java.sql.Date.valueOf(obtenerPrimerDiaMes(mesInicio, anioInicio));
+    }
+
+    private java.sql.Date obtenerFechaFinSQL(String periodo) {
+        String mesFin = periodo.substring(8, 11).toUpperCase();
+        int anioFin = Integer.parseInt(periodo.substring(11, 15));
+        return java.sql.Date.valueOf(obtenerUltimoDiaMes(mesFin, anioFin));
+    }
+
+    private String obtenerPrimerDiaMes(String mes, int anio) {
+        int numeroMes = convertirMesANumero(mes);
+        return LocalDate.of(anio, numeroMes, 1).toString();
+    }
+
+    private String obtenerUltimoDiaMes(String mes, int anio) {
+        int numeroMes = convertirMesANumero(mes);
+        return LocalDate.of(anio, numeroMes, 1).withDayOfMonth(LocalDate.of(anio, numeroMes, 1).lengthOfMonth()).toString();
+    }
+
+    private int convertirMesANumero(String mes) {
+        switch (mes.toUpperCase()) {
+            case "ENE":
+                return 1; // Enero
+            case "FEB":
+                return 2; // Febrero
+            case "MAR":
+                return 3; // Marzo
+            case "ABR":
+                return 4; // Abril
+            case "MAY":
+                return 5; // Mayo
+            case "JUN":
+                return 6; // Junio
+            case "JUL":
+                return 7; // Julio
+            case "AGO":
+                return 8; // Agosto
+            case "SEP":
+                return 9; // Septiembre
+            case "OCT":
+                return 10; // Octubre
+            case "NOV":
+                return 11; // Noviembre
+            case "DIC":
+                return 12; // Diciembre
+            default:
+                throw new IllegalArgumentException("Mes inválido: " + mes);
+        }
+    }
 
 }

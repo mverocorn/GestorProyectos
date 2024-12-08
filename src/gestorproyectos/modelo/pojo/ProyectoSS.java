@@ -1,6 +1,7 @@
 package gestorproyectos.modelo.pojo;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class ProyectoSS {
     private int idProyectoSS;
@@ -79,4 +80,22 @@ public class ProyectoSS {
     public void setIdResponsable(int idResponsable) {
         this.idResponsable = idResponsable;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ProyectoSS that = (ProyectoSS) obj;
+        return idProyectoSS == that.idProyectoSS && Objects.equals(nombreProyecto, that.nombreProyecto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idProyectoSS, nombreProyecto);
+    }
+
 }
