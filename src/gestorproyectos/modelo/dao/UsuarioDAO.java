@@ -66,7 +66,7 @@ public class UsuarioDAO {
 				try {
 					String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, "
 							+ "correoAlumno, matricula, promedio "
-							+ "FROM Alumno WHERE correo = ? AND contrasenia = ?";
+							+ "FROM Alumno WHERE correoAlumno = ? AND contrasenia = ?";
 					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
 					prepararSentencia.setString(1, correo);
 					prepararSentencia.setString(2, contrasenia);
@@ -95,7 +95,7 @@ public class UsuarioDAO {
 			if (conexionBD != null) {
 				try {
 					String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, correoProfesor, clave "
-							+ "FROM Profesor WHERE correo = ? AND contrasenia = ?";
+							+ "FROM Profesor WHERE correoProfesor = ? AND contrasenia = ?";
 					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
 					prepararSentencia.setString(1, correo);
 					prepararSentencia.setString(2, contrasenia);

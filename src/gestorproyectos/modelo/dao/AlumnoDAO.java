@@ -42,7 +42,7 @@ public class AlumnoDAO {
         return alumnos;
     }
 
-    private static Alumno serializarAlumno(ResultSet resultado) throws SQLException {
+    public static Alumno serializarAlumno(ResultSet resultado) throws SQLException {
         Alumno alumno = new Alumno();
         alumno.setIdAlumno(resultado.getInt("idAlumno"));
         alumno.setNombreAlumno(resultado.getString("nombreAlumno"));

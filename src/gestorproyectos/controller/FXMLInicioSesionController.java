@@ -1,5 +1,6 @@
 package gestorproyectos.controller;
 
+import gestorproyectos.modelo.dao.AlumnoDAO;
 import gestorproyectos.modelo.dao.UsuarioDAO;
 import gestorproyectos.utilidades.MisUtilidades;
 import java.net.URL;
@@ -39,15 +40,16 @@ public class FXMLInicioSesionController implements Initializable {
 		if (validarFormulario(correo, contrasenia)) {
 			String tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
 			if (tipoUsuario != null) {
-				UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
+				Object usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
 			} else {
-				
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Datos inválidos", 
+						"Los datos ingresados no son correctos, "
+								+ "por favor verifique e intente nuevamente");
 			}
 		} else {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Campos vacíos", 
 					"Pro favor ingrese los datos solicitados");
 		}
-		
 	}
 	
 	private boolean validarFormulario(String correo, String contrasenia) {
