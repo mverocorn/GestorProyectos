@@ -136,9 +136,9 @@ public class Validador {
         }
     }
 
-    public static void validarNumero(int numero, int maxLength) {
-        if (numero <= 1 || numero > maxLength) {
-            throw new IllegalArgumentException("El número debe ser mayor a 1 y menor a " + maxLength);
+    public static void validarCupo(int cupo) {
+        if (cupo <= 1 || cupo > 30) {
+            throw new IllegalArgumentException("El cupo debe ser un valor numérico mayor a 1 y menor o igual a 30.");
         }
     }
 

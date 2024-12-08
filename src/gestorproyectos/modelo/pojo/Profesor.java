@@ -6,13 +6,15 @@ public class Profesor {
     private String apellidoProfesor;
     private String clave;
     private String correoProfesor;
+    private String contraseniaProfesor;
 
-    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, String clave, String correoProfesor) {
+    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, String clave, String correoProfesor, String contraseniaProfesor) {
         this.idProfesor = idProfesor;
         this.nombreProfesor = nombreProfesor;
         this.apellidoProfesor = apellidoProfesor;
         this.clave = clave;
         this.correoProfesor = correoProfesor;
+        this.contraseniaProfesor = contraseniaProfesor;
     }
 
     public Profesor() {
@@ -57,4 +59,13 @@ public class Profesor {
     public void setCorreoProfesor(String correoProfesor) {
         this.correoProfesor = correoProfesor;
     }
+
+    public String getContraseniaProfesor() {
+        return contraseniaProfesor;
+    }
+
+    public void setContraseniaProfesor(String contraseniaProfesor) {
+        this.contraseniaProfesor = contraseniaProfesor;
+    }
+    
 }

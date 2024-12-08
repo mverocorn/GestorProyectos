@@ -2,32 +2,34 @@ package gestorproyectos.modelo.pojo;
 
 import java.sql.Date;
 
-public class InscripcionProyecto {
-    private int idInscripcionProyecto;
+public class InscripcionEE {
+    private int idInscripcionEE;
     private Date fechaInscripcion;
-    private String periodo;
     private String estadoInscripcion;
     private int idAlumno;
     private int idEE;
+    private int idProyectoPP;
+    private int idProyectoSS;
 
-    public InscripcionProyecto(int idInscripcionProyecto, Date fechaInscripcion, String periodo, String estadoInscripcion, int idAlumno, int idEE) {
-        this.idInscripcionProyecto = idInscripcionProyecto;
+    public InscripcionEE(int idInscripcionEE, Date fechaInscripcion, String estadoInscripcion, int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {
+        this.idInscripcionEE = idInscripcionEE;
         this.fechaInscripcion = fechaInscripcion;
-        this.periodo = periodo;
         this.estadoInscripcion = estadoInscripcion;
         this.idAlumno = idAlumno;
         this.idEE = idEE;
+        this.idProyectoPP = idProyectoPP;
+        this.idProyectoSS = idProyectoSS;
     }
 
-    public InscripcionProyecto() {
+    public InscripcionEE() {
     }
 
-    public int getIdInscripcionProyecto() {
-        return idInscripcionProyecto;
+    public int getIdInscripcionEE() {
+        return idInscripcionEE;
     }
 
-    public void setIdInscripcionProyecto(int idInscripcionProyecto) {
-        this.idInscripcionProyecto = idInscripcionProyecto;
+    public void setIdInscripcionEE(int idInscripcionEE) {
+        this.idInscripcionEE = idInscripcionEE;
     }
 
     public Date getFechaInscripcion() {
@@ -36,14 +38,6 @@ public class InscripcionProyecto {
 
     public void setFechaInscripcion(Date fechaInscripcion) {
         this.fechaInscripcion = fechaInscripcion;
-    }
-
-    public String getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
     }
 
     public String getEstadoInscripcion() {
@@ -69,4 +63,21 @@ public class InscripcionProyecto {
     public void setIdEE(int idEE) {
         this.idEE = idEE;
     }
+
+    public int getIdProyectoPP() {
+        return idProyectoPP;
+    }
+
+    public void setIdProyectoPP(int idProyectoPP) {
+        this.idProyectoPP = idProyectoPP;
+    }
+
+    public int getIdProyectoSS() {
+        return idProyectoSS;
+    }
+
+    public void setIdProyectoSS(int idProyectoSS) {
+        this.idProyectoSS = idProyectoSS;
+    }
+
 }

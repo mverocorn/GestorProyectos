@@ -19,14 +19,7 @@ public class ProyectoSSDAOTest {
     @Before
     public void setUp() {
         proyectoSSDAO = new ProyectoSSDAO();
-        // Inicializar el proyectoSS con valores de prueba que serán reutilizados en los tests
-        proyectoSS = new ProyectoSS(
-                0, Date.valueOf("2024-12-25"),
-                "ENE2024-JUL2024", "Proyecto Innovador",
-                "Desarrollar tecnología innovadora.",
-                "Este proyecto tiene como objetivo desarrollar nuevas soluciones tecnológicas.",
-                30, 1, 1
-        );
+        proyectoSS = new ProyectoSS();
     }
 
     @Test
@@ -41,22 +34,26 @@ public class ProyectoSSDAOTest {
     public void testRegistrarProyectoSSExitoso() throws SQLException {
         int valorEsperado = 1;
 
-        // Usamos el objeto proyectoSS ya inicializado en el método @Before
+        proyectoSS = new ProyectoSS(
+                0, Date.valueOf("2024-12-25"), "Proyecto Innovador",
+                "Desarrollar tecnología innovadora.",
+                "Este proyecto tiene como objetivo desarrollar nuevas soluciones tecnológicas.",
+                30, 1
+        );
+
         HashMap<String, Object> resultado = ProyectoSSDAO.registrarProyectoSS(proyectoSS);
 
         int valorObtenido = (int) resultado.get("idProyectoSS");
 
         assertEquals(valorEsperado, valorObtenido);
     }
-
     @Test(expected = SQLException.class)
     public void testRegistrarProyectoSSExcepcionSQL() throws SQLException {
         ProyectoSS proyecto = new ProyectoSS(
-                0, Date.valueOf("2024-01-01"),
-                "ENE2024-JUL2024", "Proyecto Innovador",
+                0, Date.valueOf("2024-01-01"), "Proyecto Innovador",
                 "Desarrollar tecnología innovadora.",
                 "Este proyecto tiene como objetivo desarrollar nuevas soluciones tecnológicas.",
-                30,1, 1 
+                30, 1 
         );
 
         ProyectoSSDAO.registrarProyectoSS(proyecto);

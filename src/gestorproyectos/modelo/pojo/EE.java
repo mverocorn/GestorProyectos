@@ -5,13 +5,15 @@ public class EE {
     private String nombreEE;
     private int nrc;
     private int bloque;
+    private String periodo;
     private int idProfesor;
 
-    public EE(int idEE, String nombreEE, int nrc, int bloque, int idProfesor) {
+    public EE(int idEE, String nombreEE, int nrc, int bloque, String periodo, int idProfesor) {
         this.idEE = idEE;
         this.nombreEE = nombreEE;
         this.nrc = nrc;
         this.bloque = bloque;
+        this.periodo = periodo;
         this.idProfesor = idProfesor;
     }
 
@@ -48,6 +50,14 @@ public class EE {
 
     public void setBloque(int bloque) {
         this.bloque = bloque;
+    }
+
+    public String getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(String periodo) {
+        this.periodo = periodo;
     }
 
     public int getIdProfesor() {

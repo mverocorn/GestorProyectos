@@ -1,8 +1,6 @@
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
-import static gestorproyectos.modelo.dao.EmpresaDAO.obtenerEmpresaPorIdEmpresa;
-import static gestorproyectos.modelo.dao.ResponsableDAO.obtenerResponsablePorIdResponsable;
 import gestorproyectos.utilidades.Validador;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.*;
@@ -22,7 +20,9 @@ public class ProyectoSSDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idProyectoSS, fechaProyecto, periodoProyecto, nombreProyecto, objetivoProyecto, descripcionProyecto, cupoProyecto, idEmpresa, idResponsable FROM proyectoss;";
+                String consulta = "SELECT idProyectoSS, fechaProyecto, nombreProyecto, "
+                        + "objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable "
+                        + "FROM proyectoss;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 proyectosSS = new ArrayList<>();
@@ -43,12 +43,10 @@ public class ProyectoSSDAO {
         ProyectoSS proyectoSS = new ProyectoSS();
         proyectoSS.setIdProyectoSS(resultado.getInt("idProyectoSS"));
         proyectoSS.setFechaProyecto(resultado.getDate("fechaProyecto"));
-        proyectoSS.setPeriodoProyecto(resultado.getString("periodoProyecto"));
         proyectoSS.setNombreProyecto(resultado.getString("nombreProyecto"));
         proyectoSS.setObjetivoProyecto(resultado.getString("objetivoProyecto"));
         proyectoSS.setDescripcionProyecto(resultado.getString("descripcionProyecto"));
         proyectoSS.setCupoProyecto(resultado.getInt("cupoProyecto"));
-        proyectoSS.setIdEmpresa(resultado.getInt("idEmpresa"));
         proyectoSS.setIdResponsable(resultado.getInt("idResponsable"));
         return proyectoSS;
     }
@@ -67,33 +65,25 @@ public class ProyectoSSDAO {
         // Validar descripcionProyecto
         Validador.validarTexto(proyecto.getDescripcionProyecto(), "descripcionProyecto", 1000);
 
-        // Validar periodoProyecto
-        Validador.validarPeriodo(proyecto.getPeriodoProyecto());
-
         // Validar fechaProyecto
         Validador.validarFechaProyecto(proyecto.getFechaProyecto());
-
-        // Validar idEmpresa
-        Validador.validarEmpresa(proyecto.getIdEmpresa());
 
         // Validar idResponsable
         Validador.validarResponsable(proyecto.getIdResponsable());
     }
 
-    public boolean existeProyectoSS(String nombre, String objetivo, String descripcion, String periodo, int idProyectoActual) throws SQLException {
+    public boolean existeProyectoSS(String nombre, String objetivo, String descripcion, int idProyectoActual) throws SQLException {
         ConexionBD.verificarConexionBD();
 
         boolean existe = false;
         String consulta = "SELECT COUNT(*) AS cantidad FROM ProyectoSS WHERE nombreProyecto = ? "
-                + "AND objetivoProyecto = ? AND descripcionProyecto = ? AND periodoProyecto = ? "
-                + "AND idProyectoSS != ?";
+                + "AND objetivoProyecto = ? AND descripcionProyecto = ? AND idProyectoSS != ?";
 
         try (Connection conexion = ConexionBD.abrirConexion(); PreparedStatement sentenciaPreparada = conexion.prepareStatement(consulta)) {
             sentenciaPreparada.setString(1, nombre);
             sentenciaPreparada.setString(2, objetivo);
             sentenciaPreparada.setString(3, descripcion);
-            sentenciaPreparada.setString(4, periodo);
-            sentenciaPreparada.setInt(5, idProyectoActual);
+            sentenciaPreparada.setInt(4, idProyectoActual);
 
             try (ResultSet resultSet = sentenciaPreparada.executeQuery()) {
                 if (resultSet.next() && resultSet.getInt("cantidad") > 0) {
@@ -118,19 +108,17 @@ public class ProyectoSSDAO {
             try {
                 validarProyectoSS(proyecto);
 
-                String sentencia = "INSERT INTO ProyectoSS (fechaProyecto, periodoProyecto, nombreProyecto, "
+                String sentencia = "INSERT INTO ProyectoSS (fechaProyecto, nombreProyecto, "
                         + "objetivoProyecto, descripcionProyecto, cupoProyecto, idEmpresa, idResponsable) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
                 prepararSentencia.setDate(1, proyecto.getFechaProyecto());
-                prepararSentencia.setString(2, proyecto.getPeriodoProyecto());
-                prepararSentencia.setString(3, proyecto.getNombreProyecto());
-                prepararSentencia.setString(4, proyecto.getObjetivoProyecto());
-                prepararSentencia.setString(5, proyecto.getDescripcionProyecto());
-                prepararSentencia.setInt(6, proyecto.getCupoProyecto());
-                prepararSentencia.setInt(7, proyecto.getIdEmpresa());
-                prepararSentencia.setInt(8, proyecto.getIdResponsable());
+                prepararSentencia.setString(2, proyecto.getNombreProyecto());
+                prepararSentencia.setString(3, proyecto.getObjetivoProyecto());
+                prepararSentencia.setString(4, proyecto.getDescripcionProyecto());
+                prepararSentencia.setInt(5, proyecto.getCupoProyecto());
+                prepararSentencia.setInt(6, proyecto.getIdResponsable());
 
                 int filasAfectadas = prepararSentencia.executeUpdate();
 
@@ -171,12 +159,10 @@ public class ProyectoSSDAO {
                     proyectoSS = new ProyectoSS(
                             resultado.getInt("idProyectoSS"),
                             resultado.getDate("fechaProyecto"),
-                            resultado.getString("periodoProyecto"),
                             resultado.getString("nombreProyecto"),
                             resultado.getString("objetivoProyecto"),
                             resultado.getString("descripcionProyecto"),
                             resultado.getInt("cupoProyecto"),
-                            resultado.getInt("idEmpresa"),
                             resultado.getInt("idResponsable")
                     );
                 }

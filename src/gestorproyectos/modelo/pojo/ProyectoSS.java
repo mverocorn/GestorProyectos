@@ -5,23 +5,19 @@ import java.sql.Date;
 public class ProyectoSS {
     private int idProyectoSS;
     private Date fechaProyecto;
-    private String periodoProyecto;
     private String nombreProyecto;
     private String objetivoProyecto;
     private String descripcionProyecto;
     private int cupoProyecto;
-    private int idEmpresa;
     private int idResponsable;
 
-    public ProyectoSS(int idProyectoSS, Date fechaProyecto, String periodoProyecto, String nombreProyecto, String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idEmpresa, int idResponsable) {
+    public ProyectoSS(int idProyectoSS, Date fechaProyecto, String nombreProyecto, String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
         this.idProyectoSS = idProyectoSS;
         this.fechaProyecto = fechaProyecto;
-        this.periodoProyecto = periodoProyecto;
         this.nombreProyecto = nombreProyecto;
         this.objetivoProyecto = objetivoProyecto;
         this.descripcionProyecto = descripcionProyecto;
         this.cupoProyecto = cupoProyecto;
-        this.idEmpresa = idEmpresa;
         this.idResponsable = idResponsable;
     }
 
@@ -42,14 +38,6 @@ public class ProyectoSS {
 
     public void setFechaProyecto(Date fechaProyecto) {
         this.fechaProyecto = fechaProyecto;
-    }
-
-    public String getPeriodoProyecto() {
-        return periodoProyecto;
-    }
-
-    public void setPeriodoProyecto(String periodoProyecto) {
-        this.periodoProyecto = periodoProyecto;
     }
 
     public String getNombreProyecto() {
@@ -82,14 +70,6 @@ public class ProyectoSS {
 
     public void setCupoProyecto(int cupoProyecto) {
         this.cupoProyecto = cupoProyecto;
-    }
-
-    public int getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
     }
 
     public int getIdResponsable() {

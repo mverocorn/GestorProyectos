@@ -35,7 +35,7 @@ public class AlumnoDAOTest {
 
         alumno = new Alumno(null, "Tomas", "Gutierrez",
                 "S22013079", "+52 1234567890", "tomas@correo.com",
-                9.5f, "inscrito"
+                9.5f, "inscrito", "Password1."
         );
 
         HashMap<String, Object> resultado = AlumnoDAO.registrarAlumno(alumno);
@@ -49,7 +49,7 @@ public class AlumnoDAOTest {
     public void testRegistrarAlumnoExcepcionSQL() throws SQLException {
         alumno = new Alumno(null, "Tomas", "Gutierrez",
                 "S22013079", "+52 1234567890", "tomas@correo.com",
-                9.5f, "inscrito"
+                9.5f, "inscrito", "Password1."
         );
 
         AlumnoDAO.registrarAlumno(alumno);
