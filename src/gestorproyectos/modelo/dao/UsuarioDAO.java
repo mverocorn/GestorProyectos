@@ -66,14 +66,14 @@ public class UsuarioDAO {
 				try {
 					String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, "
 							+ "correoAlumno, matricula, promedio "
-							+ "FROM Alumno WHERE correoAlumno = ? AND contrasenia = ?";
+							+ "FROM Alumno WHERE correoAlumno = ? AND contraseniaAlumno = ?";
 					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
 					prepararSentencia.setString(1, correo);
 					prepararSentencia.setString(2, contrasenia);
 
 					ResultSet resultadoConsulta = prepararSentencia.executeQuery();
 					if (resultadoConsulta.next()) {
-						alumno = serializarAlumno(resultadoConsulta);
+						alumno = AlumnoDAO.serializarAlumno(resultadoConsulta);
 					}
 					conexionBD.close();
 				} catch (SQLException e) {
@@ -95,14 +95,14 @@ public class UsuarioDAO {
 			if (conexionBD != null) {
 				try {
 					String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, correoProfesor, clave "
-							+ "FROM Profesor WHERE correoProfesor = ? AND contrasenia = ?";
+							+ "FROM Profesor WHERE correoProfesor = ? AND contraseniaProfesor = ?";
 					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
 					prepararSentencia.setString(1, correo);
 					prepararSentencia.setString(2, contrasenia);
 
 					ResultSet resultadoConsulta = prepararSentencia.executeQuery();
 					if (resultadoConsulta.next()) {
-						profesor = serializarProfesor(resultadoConsulta);
+						profesor = ProfesorDAO.serializarProfesor(resultadoConsulta);
 					}
 					conexionBD.close();
 				} catch (SQLException e) {
@@ -113,27 +113,6 @@ public class UsuarioDAO {
 		} catch (SQLException ex) {
 			ex.getMessage();
 		}
-		return profesor;
-	}
-
-	private static Alumno serializarAlumno(ResultSet resultadoConsulta) throws SQLException {
-		Alumno alumno = new Alumno();
-		alumno.setIdAlumno(resultadoConsulta.getInt("idAlumno"));
-		alumno.setNombreAlumno(resultadoConsulta.getString("nombre"));
-		alumno.setApellidoAlumno(resultadoConsulta.getString("apellido"));
-		alumno.setCorreoAlumno(resultadoConsulta.getString("correo"));
-		alumno.setMatricula(resultadoConsulta.getString("matricula"));
-		alumno.setPromedio(resultadoConsulta.getFloat("promedio"));
-		return alumno;
-	}
-
-	private static Profesor serializarProfesor(ResultSet resultadoConsulta) throws SQLException {
-		Profesor profesor = new Profesor();
-		profesor.setIdProfesor(resultadoConsulta.getInt("idProfesor"));
-		profesor.setNombreProfesor(resultadoConsulta.getString("nombre"));
-		profesor.setApellidoProfesor(resultadoConsulta.getString("apellido"));
-		profesor.setCorreoProfesor(resultadoConsulta.getString("correo"));
-		profesor.setClave(resultadoConsulta.getString("numeroEmpleado"));
 		return profesor;
 	}
 }

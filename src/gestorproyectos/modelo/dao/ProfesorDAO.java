@@ -33,7 +33,7 @@ public class ProfesorDAO {
         return profesores;
     }
 
-    private static Profesor serializarProfesor(ResultSet resultado) throws SQLException {
+    public static Profesor serializarProfesor(ResultSet resultado) throws SQLException {
         Profesor profesor = new Profesor();
         profesor.setIdProfesor(resultado.getInt("idProfesor"));
         profesor.setNombreProfesor(resultado.getString("nombreProfesor"));
