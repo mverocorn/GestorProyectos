@@ -1,27 +1,24 @@
 package gestorproyectos.modelo.pojo;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class ProyectoSS {
     private int idProyectoSS;
     private Date fechaProyecto;
-    private String periodoProyecto;
     private String nombreProyecto;
     private String objetivoProyecto;
     private String descripcionProyecto;
     private int cupoProyecto;
-    private int idEmpresa;
     private int idResponsable;
 
-    public ProyectoSS(int idProyectoSS, Date fechaProyecto, String periodoProyecto, String nombreProyecto, String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idEmpresa, int idResponsable) {
+    public ProyectoSS(int idProyectoSS, Date fechaProyecto, String nombreProyecto, String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
         this.idProyectoSS = idProyectoSS;
         this.fechaProyecto = fechaProyecto;
-        this.periodoProyecto = periodoProyecto;
         this.nombreProyecto = nombreProyecto;
         this.objetivoProyecto = objetivoProyecto;
         this.descripcionProyecto = descripcionProyecto;
         this.cupoProyecto = cupoProyecto;
-        this.idEmpresa = idEmpresa;
         this.idResponsable = idResponsable;
     }
 
@@ -42,14 +39,6 @@ public class ProyectoSS {
 
     public void setFechaProyecto(Date fechaProyecto) {
         this.fechaProyecto = fechaProyecto;
-    }
-
-    public String getPeriodoProyecto() {
-        return periodoProyecto;
-    }
-
-    public void setPeriodoProyecto(String periodoProyecto) {
-        this.periodoProyecto = periodoProyecto;
     }
 
     public String getNombreProyecto() {
@@ -84,14 +73,6 @@ public class ProyectoSS {
         this.cupoProyecto = cupoProyecto;
     }
 
-    public int getIdEmpresa() {
-        return idEmpresa;
-    }
-
-    public void setIdEmpresa(int idEmpresa) {
-        this.idEmpresa = idEmpresa;
-    }
-
     public int getIdResponsable() {
         return idResponsable;
     }
@@ -99,4 +80,22 @@ public class ProyectoSS {
     public void setIdResponsable(int idResponsable) {
         this.idResponsable = idResponsable;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ProyectoSS that = (ProyectoSS) obj;
+        return idProyectoSS == that.idProyectoSS && Objects.equals(nombreProyecto, that.nombreProyecto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idProyectoSS, nombreProyecto);
+    }
+
 }

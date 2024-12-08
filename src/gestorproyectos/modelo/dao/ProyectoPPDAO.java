@@ -21,7 +21,7 @@ public class ProyectoPPDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idProyectoPP, fechaProyecto, periodoProyecto, nombreProyecto, objetivoProyecto, descripcionProyecto, cupoProyecto, idEmpresa, idResponsable FROM proyectopp;";
+                String consulta = "SELECT idProyectoPP, fechaProyecto, nombreProyecto, objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable FROM proyectopp;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 proyectosPP = new ArrayList<>();
@@ -43,12 +43,10 @@ public class ProyectoPPDAO {
 
         proyectoPP.setIdProyectoPP(resultado.getInt("idProyectoPP"));
         proyectoPP.setFechaProyecto(resultado.getDate("fechaProyecto"));
-        proyectoPP.setPeriodoProyecto(resultado.getString("periodoProyecto"));
         proyectoPP.setNombreProyecto(resultado.getString("nombreProyecto"));
         proyectoPP.setObjetivoProyecto(resultado.getString("objetivoProyecto"));
         proyectoPP.setDescripcionProyecto(resultado.getString("descripcionProyecto"));
         proyectoPP.setCupoProyecto(resultado.getInt("cupoProyecto"));
-        proyectoPP.setIdEmpresa(resultado.getInt("idEmpresa"));
         proyectoPP.setIdResponsable(resultado.getInt("idResponsable"));
 
         return proyectoPP;

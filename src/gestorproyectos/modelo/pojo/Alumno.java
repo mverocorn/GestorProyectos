@@ -9,11 +9,12 @@ public class Alumno {
     private String correoAlumno;
     private Float promedio;
     private String estadoAlumno;
+    private String contraseniaAlumno;
 
     public Alumno() {
     }
 
-    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, String matricula, String telefonoAlumno, String correoAlumno, Float promedio, String estadoAlumno) {
+    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, String matricula, String telefonoAlumno, String correoAlumno, Float promedio, String estadoAlumno, String contraseniaAlumno) {
         this.idAlumno = idAlumno;
         this.nombreAlumno = nombreAlumno;
         this.apellidoAlumno = apellidoAlumno;
@@ -22,6 +23,7 @@ public class Alumno {
         this.correoAlumno = correoAlumno;
         this.promedio = promedio;
         this.estadoAlumno = estadoAlumno;
+        this.contraseniaAlumno = contraseniaAlumno;
     }
 
     public Integer getIdAlumno() {
@@ -86,6 +88,14 @@ public class Alumno {
 
     public void setEstadoAlumno(String estadoAlumno) {
         this.estadoAlumno = estadoAlumno;
+    }
+
+    public String getContraseniaAlumno() {
+        return contraseniaAlumno;
+    }
+
+    public void setContraseniaAlumno(String contraseniaAlumno) {
+        this.contraseniaAlumno = contraseniaAlumno;
     }
 }
 
