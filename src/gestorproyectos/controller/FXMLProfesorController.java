@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package gestorproyectos.controller;
 
+import gestorproyectos.modelo.pojo.Profesor;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -14,6 +11,8 @@ import javafx.fxml.Initializable;
  * @author Vero
  */
 public class FXMLProfesorController implements Initializable {
+	
+	Profesor profesor;
 
 	/**
 	 * Initializes the controller class.
@@ -22,5 +21,11 @@ public class FXMLProfesorController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
 	}	
+	
+	public void inicializarValores(Profesor profesor) {
+		this.profesor = profesor;
+		System.out.println("Datos profesor: " + profesor.getNombreProfesor() + " " 
+				+ profesor.getApellidoProfesor());
+	}
 	
 }

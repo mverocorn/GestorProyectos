@@ -25,7 +25,9 @@ public class AlumnoDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, matricula, telefonoAlumno, correoAlumno, promedio, estadoAlumno FROM alumno;";
+                String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, matricula, "
+						+ "telefonoAlumno, correoAlumno, promedio, estadoAlumno "
+						+ "FROM alumno;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 alumnos = new ArrayList<>();
@@ -89,7 +91,8 @@ public class AlumnoDAO {
 
         boolean existe = false;
         String consulta
-                = "SELECT COUNT(*) AS cantidad FROM Alumno WHERE (correoAlumno = ? OR telefonoAlumno = ? OR matricula = ?) "
+                = "SELECT COUNT(*) AS cantidad FROM Alumno WHERE (correoAlumno = ? OR "
+				+ "telefonoAlumno = ? OR matricula = ?) "
                 + "AND idAlumno != ?";
 
         try (

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package gestorproyectos.controller;
 
 import gestorproyectos.modelo.pojo.Alumno;
@@ -27,7 +23,7 @@ public class FXMLAlumnoController implements Initializable {
 	}	
 	public void inicializarValores(Alumno alumno){
 		this.alumno = alumno;
-		System.out.println("Datos colaborador: " + alumno.getNombreAlumno()+ " " 
+		System.out.println("Datos alumno: " + alumno.getNombreAlumno()+ " " 
 				+ alumno.getApellidoAlumno());
 	}
 	

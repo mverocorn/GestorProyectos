@@ -1,11 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLCoordinadorController">
-    
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLCoordinadorController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/FondoGestorProyectos.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="560.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/logo%20uv%20blanco.png" />
+         </image>
+      </ImageView>
+      <TabPane prefHeight="400.0" prefWidth="600.0" side="LEFT" style="-fx-tab-min-height: 100; -fx-tab-min-width: 50;" tabClosingPolicy="UNAVAILABLE">
+    <tabs>
+        <Tab>
+            <graphic>
+                <AnchorPane>
+                    <Label text="Alumnos">
+                        <font>
+                           <Font name="System Bold" size="12.0" />
+                        </font></Label>
+                </AnchorPane>
+            </graphic>
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="156.0">
+                     <children>
+                        <TextField fx:id="txtFBuscar" layoutX="38.0" layoutY="46.0" prefHeight="26.0" prefWidth="364.0" promptText="Buscar" />
+                        <TableView fx:id="tblAlumno" layoutX="38.0" layoutY="131.0" prefHeight="210.0" prefWidth="418.0">
+                          <columns>
+                            <TableColumn fx:id="colNombreAlumno" prefWidth="145.59998321533203" text="Nombre Alumno" />
+                            <TableColumn fx:id="colEE" prefWidth="130.4000244140625" text="EE" />
+                              <TableColumn fx:id="colProyecto" prefWidth="140.79998779296875" text="Proyecto" />
+                          </columns>
+                        </TableView>
+                        <ComboBox fx:id="cBoxFiltro" layoutX="296.0" layoutY="87.0" prefHeight="26.0" prefWidth="160.0" promptText="Experiencia Educativa" />
+                        <Button layoutX="431.0" layoutY="353.0" mnemonicParsing="false" onAction="#clickRegistrar" style="-fx-background-radius: 30;" text="+" />
+                        <Label layoutX="231.0" layoutY="91.0" text="Filtrar por:" textFill="WHITE" />
+                        <Button layoutX="400.0" layoutY="46.0" mnemonicParsing="false" onAction="#clickBuscar" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
+                     </children></AnchorPane>
+            </content>
+        </Tab>
+        <Tab>
+            <graphic>
+                <AnchorPane>
+                    <Label prefWidth="52.0" text="Proyectos" />
+                </AnchorPane>
+            </graphic>
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+        </Tab>
+        <Tab>
+            <graphic>
+                <AnchorPane>
+                    <Label text="EE" />
+                </AnchorPane>
+            </graphic>
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+        </Tab>
+    </tabs>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+</TabPane>
+
+   </children>
 </AnchorPane>

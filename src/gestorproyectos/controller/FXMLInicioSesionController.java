@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import gestorproyectos.utilidades.Constantes;
 
 /**
  * FXML Controller class
@@ -48,22 +47,27 @@ public class FXMLInicioSesionController implements Initializable {
 		String contrasenia = txtFContrasenia.getText().trim();
 		System.out.println("Correo: " + correo + ", Contraseña: " + contrasenia);//quitar
 		if (validarFormulario(correo, contrasenia)) {
-			tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
-			System.out.println("Tipo usuario: " + tipoUsuario);
-			if (tipoUsuario != null) {
-				Object usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
-				if (usuario != null) {
-					irSiguientePantalla(usuario);
+			if (!verificarCoordinador(correo, contrasenia)) {
+				tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
+				System.out.println("Tipo usuario: " + tipoUsuario);
+				if (tipoUsuario != null) {
+					Object usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
+					if (usuario != null) {
+						irSiguientePantalla(usuario);
+					} else {
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+								"Lo sentimos, no se ha podido recuperar la información, "
+								+ "por favor intente más tarde");
+					}
 				} else {
-					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-							"Lo sentimos, no se ha podido recuperar la información, "
-							+ "por favor intente más tarde");
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Datos inválidos",
+							"Los datos ingresados no son correctos, "
+							+ "por favor verifique e intente nuevamente");
 				}
 			} else {
-				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Datos inválidos",
-						"Los datos ingresados no son correctos, "
-						+ "por favor verifique e intente nuevamente");
+				irMenuCoordinador();
 			}
+
 		} else {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Campos vacíos",
 					"Por favor ingrese los datos solicitados");
@@ -78,22 +82,24 @@ public class FXMLInicioSesionController implements Initializable {
 		if (null == tipoUsuario) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
 					"Lo sentimos, no se ha podido recuperar la información, "
+					+ "por favor intente más tarde");
+		} else {
+			switch (tipoUsuario) {
+				case "coordinador":
+					irMenuCoordinador();
+					break;
+				case "profesor":
+					irMenuProfesor((Profesor) usuario);
+					break;
+				case "alumno":
+					irMenuAlumno((Alumno) usuario);
+					break;
+				default:
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+							"Lo sentimos, no se ha podido recuperar la información, "
 							+ "por favor intente más tarde");
-		} else switch (tipoUsuario) {
-			case "coordinador":
-				irMenuCoordinador();
-				break;
-			case "profesor":
-				irMenuProfesor((Profesor) usuario);
-				break;
-			case "alumno":
-				irMenuAlumno((Alumno) usuario);
-				break;
-			default:
-				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-						"Lo sentimos, no se ha podido recuperar la información, "
-								+ "por favor intente más tarde");
-				break;
+					break;
+			}
 		}
 	}
 
@@ -104,23 +110,64 @@ public class FXMLInicioSesionController implements Initializable {
 					"vista/FXMLAlumno.fxml"));
 			Parent vista = loader.load();
 			FXMLAlumnoController controlador = loader.getController();
-			
+			controlador.inicializarValores(alumno);
+
 			Scene escenaPrincipalAlumno = new Scene(vista);
 			escenario.setScene(escenaPrincipalAlumno);
 			escenario.setTitle("Inicio Alumno");
 			escenario.show();
 		} catch (IOException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, 
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
 					"Error", "Lo sentimos, no se pudo cargar la ventana principal de alumno");
 		}
 	}
 
 	private void irMenuProfesor(Profesor profesor) {
+		try {
+			Stage escenario = (Stage) txtFCorreo.getScene().getWindow();
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+					"vista/FXMLProfesor.fxml"));
+			Parent vista = loader.load();
+			FXMLProfesorController controlador = loader.getController();
+			controlador.inicializarValores(profesor);
 
+			Scene escenaPrincipalProfesor = new Scene(vista);
+			escenario.setScene(escenaPrincipalProfesor);
+			escenario.setTitle("Inicio Profesor");
+			escenario.show();
+		} catch (IOException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+					"Error", "Lo sentimos, no se pudo cargar la ventana principal de profesor");
+		}
 	}
 
 	private void irMenuCoordinador() {
+		try {
+			Stage escenario = (Stage) txtFCorreo.getScene().getWindow();
+			Parent vista = FXMLLoader.load(
+					gestorproyectos.GestorProyectos.class.getResource("vista/FXMLProfesor.fxml"));
 
+			Scene escenaPrincipalProfesor = new Scene(vista);
+			escenario.setScene(escenaPrincipalProfesor);
+			escenario.setTitle("Inicio Profesor");
+			escenario.show();
+		} catch (IOException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+					"Error", "Lo sentimos, no se pudo cargar la ventana principal de profesor");
+		}
+	}
+
+	private boolean verificarCoordinador(String correo, String contrasenia) {
+		boolean esCoordinador = false;
+		if (correo.equals(Constantes.USER_COORDINADOR)) {
+			if (contrasenia.equals(Constantes.PASSWORD_COORDINADOR)) {
+				esCoordinador = true;
+			}
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Contraseña incorrecta",
+					"La contraseña ingresada es incorrecta, "
+					+ "por favor intente de nuevo");
+		}
+		return esCoordinador;
 	}
 
 }
