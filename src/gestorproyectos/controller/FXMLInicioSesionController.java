@@ -4,15 +4,22 @@ import gestorproyectos.modelo.dao.UsuarioDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.pojo.Profesor;
 import gestorproyectos.utilidades.MisUtilidades;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -39,8 +46,10 @@ public class FXMLInicioSesionController implements Initializable {
 	private void clickAceptar(ActionEvent event) throws SQLException {
 		String correo = txtFCorreo.getText().trim();
 		String contrasenia = txtFContrasenia.getText().trim();
+		System.out.println("Correo: " + correo + ", Contraseña: " + contrasenia);//quitar
 		if (validarFormulario(correo, contrasenia)) {
 			tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
+			System.out.println("Tipo usuario: " + tipoUsuario);
 			if (tipoUsuario != null) {
 				Object usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
 				if (usuario != null) {
@@ -89,7 +98,21 @@ public class FXMLInicioSesionController implements Initializable {
 	}
 
 	private void irMenuAlumno(Alumno alumno) {
-
+		try {
+			Stage escenario = (Stage) txtFCorreo.getScene().getWindow();
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+					"vista/FXMLAlumno.fxml"));
+			Parent vista = loader.load();
+			FXMLAlumnoController controlador = loader.getController();
+			
+			Scene escenaPrincipalAlumno = new Scene(vista);
+			escenario.setScene(escenaPrincipalAlumno);
+			escenario.setTitle("Inicio Alumno");
+			escenario.show();
+		} catch (IOException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, 
+					"Error", "Lo sentimos, no se pudo cargar la ventana principal de alumno");
+		}
 	}
 
 	private void irMenuProfesor(Profesor profesor) {

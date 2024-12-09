@@ -1,20 +1,20 @@
 package gestorproyectos.modelo.pojo;
 
-public class Profesor {
+public class Profesor implements IUsuario{
     private int idProfesor;
     private String nombreProfesor;
     private String apellidoProfesor;
     private String clave;
-    private String correoProfesor;
-    private String contraseniaProfesor;
+    private String correo;
+    private String contrasenia;
 
-    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, String clave, String correoProfesor, String contraseniaProfesor) {
+    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, String clave, String correo, String contrasenia) {
         this.idProfesor = idProfesor;
         this.nombreProfesor = nombreProfesor;
         this.apellidoProfesor = apellidoProfesor;
         this.clave = clave;
-        this.correoProfesor = correoProfesor;
-        this.contraseniaProfesor = contraseniaProfesor;
+        this.correo = correo;
+        this.contrasenia = contrasenia;
     }
 
     public Profesor() {
@@ -52,20 +52,20 @@ public class Profesor {
         this.clave = clave;
     }
 
-    public String getCorreoProfesor() {
-        return correoProfesor;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setCorreoProfesor(String correoProfesor) {
-        this.correoProfesor = correoProfesor;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
-    public String getContraseniaProfesor() {
-        return contraseniaProfesor;
+    public String getContrasenia() {
+        return contrasenia;
     }
 
-    public void setContraseniaProfesor(String contraseniaProfesor) {
-        this.contraseniaProfesor = contraseniaProfesor;
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
     
 }

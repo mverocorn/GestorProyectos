@@ -49,7 +49,7 @@ public class AlumnoDAO {
         alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
         alumno.setMatricula(resultado.getString("matricula"));
         alumno.setTelefonoAlumno(resultado.getString("telefonoAlumno"));
-        alumno.setCorreoAlumno(resultado.getString("correoAlumno"));
+        alumno.setCorreo(resultado.getString("correoAlumno"));
         alumno.setPromedio(resultado.getFloat("promedio"));
         alumno.setEstadoAlumno(resultado.getString("estadoAlumno"));
         return alumno;
@@ -75,7 +75,7 @@ public class AlumnoDAO {
         }
 
         // Validar correo
-        Validador.validarCorreo(alumno.getCorreoAlumno());
+        Validador.validarCorreo(alumno.getCorreo());
 
         // Validar promedio
         Validador.validarPromedio(alumno.getPromedio());
@@ -137,7 +137,7 @@ public class AlumnoDAO {
                 prepararSentencia.setString(2, alumno.getApellidoAlumno());
                 prepararSentencia.setString(3, alumno.getMatricula());
                 prepararSentencia.setString(4, alumno.getTelefonoAlumno());
-                prepararSentencia.setString(5, alumno.getCorreoAlumno());
+                prepararSentencia.setString(5, alumno.getCorreo());
                 prepararSentencia.setFloat(6, alumno.getPromedio());
                 prepararSentencia.setString(7, alumno.getEstadoAlumno());
 

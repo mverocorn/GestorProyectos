@@ -2,6 +2,7 @@ package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.modelo.pojo.IUsuario;
 import gestorproyectos.modelo.pojo.Profesor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
  */
 public class UsuarioDAO {
 
-	public static Object verificarCredencialesUsuario(String tipoUsuario, 
+	public static IUsuario verificarCredencialesUsuario(String tipoUsuario,
 			String correo, String contrasenia) throws SQLException {
 		if (tipoUsuario == null) {
 			return null;
@@ -27,33 +28,46 @@ public class UsuarioDAO {
 		}
 		return null;
 	}
-	
+
 	public static String identificarTipoUsuario(String correo) {
 		String tipoUsuario = null;
+		Connection conexionBD = null;
+
 		try {
-			Connection conexionBD = ConexionBD.abrirConexion();
+			conexionBD = ConexionBD.abrirConexion();
+			if (conexionBD != null) {
+				System.out.println("Conexión a la base de datos abierta correctamente.");
+
+				String consulta = "SELECT 'alumno' AS tipoUsuario FROM Alumno WHERE correoAlumno = ? "
+						+ "UNION "
+						+ "SELECT 'profesor' AS tipoUsuario FROM Profesor WHERE correoProfesor = ?";
+				PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+				prepararSentencia.setString(1, correo.trim().toLowerCase());
+				prepararSentencia.setString(2, correo.trim().toLowerCase());
+
+				System.out.println("Consulta SQL: " + prepararSentencia.toString());
+
+				ResultSet resultadoConsulta = prepararSentencia.executeQuery();
+				if (resultadoConsulta.next()) {
+					tipoUsuario = resultadoConsulta.getString("tipoUsuario");
+					System.out.println("Tipo de usuario encontrado: " + tipoUsuario);
+				} else {
+					System.out.println("No se encontró tipo de usuario para el correo: " + correo);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 			if (conexionBD != null) {
 				try {
-					String consulta = "SELECT 'alumno' AS tipoUsuario FROM Alumno WHERE correoAlumno = ? "
-							+ "UNION "
-							+ "SELECT 'profesor' AS tipoUsuario FROM Profesor WHERE correoProfesor = ?";
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-					prepararSentencia.setString(1, correo);
-					prepararSentencia.setString(2, correo);
-
-					ResultSet resultadoConsulta = prepararSentencia.executeQuery();
-					if (resultadoConsulta.next()) {
-						tipoUsuario = resultadoConsulta.getString("tipoUsuario");
-					}
 					conexionBD.close();
+					System.out.println("Conexión cerrada correctamente.");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
-			return tipoUsuario;
-		} catch (SQLException ex) {
-			ex.getMessage();
 		}
+
 		return tipoUsuario;
 	}
 
@@ -75,6 +89,7 @@ public class UsuarioDAO {
 					if (resultadoConsulta.next()) {
 						alumno = AlumnoDAO.serializarAlumno(resultadoConsulta);
 					}
+					System.out.println("Verificando credenciales para correo: " + correo);//quitar
 					conexionBD.close();
 				} catch (SQLException e) {
 					e.printStackTrace();

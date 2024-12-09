@@ -39,7 +39,7 @@ public class ProfesorDAO {
         profesor.setNombreProfesor(resultado.getString("nombreProfesor"));
         profesor.setApellidoProfesor(resultado.getString("apellidoProfesor"));
         profesor.setClave(resultado.getString("clave"));
-        profesor.setCorreoProfesor(resultado.getString("correoProfesor"));
+        profesor.setCorreo(resultado.getString("correoProfesor"));
         return profesor;
     }
 

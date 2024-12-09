@@ -10,7 +10,7 @@ public interface IUsuario {
 
 	void setCorreo(String correo);
 
-	String getNombre();
+	String getContrasenia();
 
-	void setNombre(String nombre);
+	void setContrasenia(String contrasenia);
 }

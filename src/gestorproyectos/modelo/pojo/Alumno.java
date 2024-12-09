@@ -1,29 +1,29 @@
 package gestorproyectos.modelo.pojo;
 
-public class Alumno {
+public class Alumno implements IUsuario{
     private Integer idAlumno;
     private String nombreAlumno;
     private String apellidoAlumno;
     private String matricula;
     private String telefonoAlumno;
-    private String correoAlumno;
+    private String correo;
     private Float promedio;
     private String estadoAlumno;
-    private String contraseniaAlumno;
+    private String contrasenia;
 
     public Alumno() {
     }
 
-    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, String matricula, String telefonoAlumno, String correoAlumno, Float promedio, String estadoAlumno, String contraseniaAlumno) {
+    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, String matricula, String telefonoAlumno, String correo, Float promedio, String estadoAlumno, String contrasenia) {
         this.idAlumno = idAlumno;
         this.nombreAlumno = nombreAlumno;
         this.apellidoAlumno = apellidoAlumno;
         this.matricula = matricula;
         this.telefonoAlumno = telefonoAlumno;
-        this.correoAlumno = correoAlumno;
+        this.correo = correo;
         this.promedio = promedio;
         this.estadoAlumno = estadoAlumno;
-        this.contraseniaAlumno = contraseniaAlumno;
+        this.contrasenia = contrasenia;
     }
 
     public Integer getIdAlumno() {
@@ -66,12 +66,12 @@ public class Alumno {
         this.telefonoAlumno = telefonoAlumno;
     }
 
-    public String getCorreoAlumno() {
-        return correoAlumno;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setCorreoAlumno(String correoAlumno) {
-        this.correoAlumno = correoAlumno;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public Float getPromedio() {
@@ -90,12 +90,12 @@ public class Alumno {
         this.estadoAlumno = estadoAlumno;
     }
 
-    public String getContraseniaAlumno() {
-        return contraseniaAlumno;
+    public String getContrasenia() {
+        return contrasenia;
     }
 
-    public void setContraseniaAlumno(String contraseniaAlumno) {
-        this.contraseniaAlumno = contraseniaAlumno;
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 }
 
