@@ -117,8 +117,8 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.setTitle("Inicio Alumno");
 			escenario.show();
 		} catch (IOException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
-					"Error", "Lo sentimos, no se pudo cargar la ventana principal de alumno");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
+					"Lo sentimos, no se pudo cargar la ventana principal de alumno");
 		}
 	}
 
@@ -136,8 +136,8 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.setTitle("Inicio Profesor");
 			escenario.show();
 		} catch (IOException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
-					"Error", "Lo sentimos, no se pudo cargar la ventana principal de profesor");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
+					"Lo sentimos, no se pudo cargar la ventana principal de profesor");
 		}
 	}
 
@@ -145,15 +145,15 @@ public class FXMLInicioSesionController implements Initializable {
 		try {
 			Stage escenario = (Stage) txtFCorreo.getScene().getWindow();
 			Parent vista = FXMLLoader.load(
-					gestorproyectos.GestorProyectos.class.getResource("vista/FXMLProfesor.fxml"));
-
-			Scene escenaPrincipalProfesor = new Scene(vista);
-			escenario.setScene(escenaPrincipalProfesor);
-			escenario.setTitle("Inicio Profesor");
+					gestorproyectos.GestorProyectos.class.getResource(
+							"vista/FXMLCoordinador.fxml"));
+			Scene escenaPrincipalCoordinador = new Scene(vista);
+			escenario.setScene(escenaPrincipalCoordinador);
+			escenario.setTitle("Inicio Coordinador");
 			escenario.show();
 		} catch (IOException ex) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
-					"Error", "Lo sentimos, no se pudo cargar la ventana principal de profesor");
+					"Error", "Lo sentimos, no se pudo cargar la ventana principal de coordinador");
 		}
 	}
 
@@ -162,10 +162,11 @@ public class FXMLInicioSesionController implements Initializable {
 		if (correo.equals(Constantes.USER_COORDINADOR)) {
 			if (contrasenia.equals(Constantes.PASSWORD_COORDINADOR)) {
 				esCoordinador = true;
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Contraseña incorrecta",
+						"La contraseña ingresada es incorrecta, "
+						+ "por favor intente de nuevo");
 			}
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Contraseña incorrecta",
-					"La contraseña ingresada es incorrecta, "
-					+ "por favor intente de nuevo");
 		}
 		return esCoordinador;
 	}
