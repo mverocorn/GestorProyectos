@@ -68,4 +68,15 @@ public class EEDAOTest {
     public void testIsPeriodoActivo() throws Exception {
     }
 
+    @Test
+    public void testObtenerIdEEPorIdAlumno() throws SQLException {
+        int idAlumno = 1;
+        int valorEsperado = 1;
+
+        
+        int valorObtenido = EEDAO.obtenerIdEEPorIdAlumno(idAlumno);
+
+        assertEquals(valorEsperado, valorObtenido);
+    }
+
 }

@@ -187,6 +187,27 @@ public class EEDAO {
         return !fechaActual.before(fechaInicioDate) && !fechaActual.after(fechaFinDate);
     }
     
-    
+    public static int obtenerIdEEPorIdAlumno(int idAlumno) throws SQLException {
+        int idEE = -1;
+        Connection conexionBD = ConexionBD.abrirConexion();
+        if (conexionBD != null) {
+            try {
+                // Consulta para obtener el idEE relacionado con el idAlumno
+                String consulta = "SELECT idEE FROM inscripcionEE WHERE idAlumno = ?";
+                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+                prepararConsulta.setInt(1, idAlumno);
+                ResultSet resultado = prepararConsulta.executeQuery();
+                if (resultado.next()) {
+                    idEE = resultado.getInt("idEE");
+                }
+            } catch (SQLException ex) {
+                throw new SQLException("Error al obtener idEE", ex);
+            } finally {
+                conexionBD.close();
+            }
+        }
+        return idEE;
+    }
+
 
 }

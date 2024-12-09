@@ -54,4 +54,16 @@ public class AlumnoDAOTest {
 
         AlumnoDAO.registrarAlumno(alumno);
     }
+
+    @Test
+    public void testObtenerAlumnos() throws Exception {
+    }
+
+    @Test
+    public void testSerializarAlumno() throws Exception {
+    }
+
+    @Test
+    public void testRegistrarAlumno() throws Exception {
+    }
 }

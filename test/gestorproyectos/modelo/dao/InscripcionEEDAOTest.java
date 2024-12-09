@@ -28,14 +28,12 @@ public class InscripcionEEDAOTest {
 
     @Test
     public void testRegistrarInscripcion() {
-        int idAlumno = 1;  // ID del alumno a asignar
-        int idEE = 1;      // ID de la experiencia educativa
+        int idAlumno = 2; 
+        int idEE = 2;
 
         try {
-            // Realizar la asignación
             InscripcionEEDAO.registrarInscripcion(idAlumno, idEE);
 
-            // Verificar que el alumno está asignado a la EE
             Connection conexionBD = ConexionBD.abrirConexion();
             String consulta = "SELECT * FROM inscripcionee WHERE idAlumno = ? AND idEE = ?";
             PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
@@ -48,13 +46,22 @@ public class InscripcionEEDAOTest {
             assertEquals(idEE, resultado.getInt("idEE"));
             assertEquals("inscrito", resultado.getString("estadoInscripcion"));
 
-            // Cerramos la conexión
             conexionBD.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Error en la base de datos: " + e.getMessage());
         }
+    }
+
+    @Test
+    public void testObtenerIdInscripcionEE() throws Exception {
+        int idAlumno = 1;
+        int valorEsperado = 1;
+        
+        int valorObtenido = InscripcionEEDAO.obtenerIdInscripcionEE(idAlumno);
+
+        assertEquals(valorEsperado, valorObtenido);
     }
     
 }
