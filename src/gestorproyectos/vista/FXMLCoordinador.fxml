@@ -14,19 +14,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLCoordinadorController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLCoordinadorController">
    <children>
-      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/FondoGestorProyectos.jpg" />
          </image>
       </ImageView>
-      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="560.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="40.0" fitWidth="45.0" layoutX="800.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../recursos/logo%20uv%20blanco.png" />
          </image>
       </ImageView>
-      <TabPane prefHeight="400.0" prefWidth="600.0" side="LEFT" style="-fx-tab-min-height: 100; -fx-tab-min-width: 50;" tabClosingPolicy="UNAVAILABLE">
+      <Label layoutX="170.0" layoutY="45.0" text="Bienvenido, Coordinador" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <TabPane prefHeight="600.0" prefWidth="900.0" side="LEFT" style="-fx-tab-min-height: 100; -fx-tab-min-width: 50;" tabClosingPolicy="UNAVAILABLE">
     <tabs>
         <Tab>
             <graphic>
@@ -38,21 +43,22 @@
                 </AnchorPane>
             </graphic>
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="156.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="709.0">
                      <children>
-                        <TextField fx:id="txtFBuscar" layoutX="38.0" layoutY="46.0" prefHeight="26.0" prefWidth="364.0" promptText="Buscar" />
-                        <TableView fx:id="tblAlumno" layoutX="38.0" layoutY="131.0" prefHeight="210.0" prefWidth="418.0">
+                        <TextField fx:id="txtFBuscar" layoutX="55.0" layoutY="80.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
+                        <TableView fx:id="tblAlumno" layoutX="55.0" layoutY="174.0" prefHeight="334.0" prefWidth="690.0">
                           <columns>
-                            <TableColumn fx:id="colNombreAlumno" prefWidth="145.59998321533203" text="Nombre Alumno" />
-                            <TableColumn fx:id="colEE" prefWidth="130.4000244140625" text="EE" />
-                              <TableColumn fx:id="colProyecto" prefWidth="140.79998779296875" text="Proyecto" />
+                            <TableColumn fx:id="colNombreAlumno" prefWidth="314.40003204345703" text="Nombre Alumno" />
+                            <TableColumn fx:id="colEE" prefWidth="116.80001831054688" text="EE" />
+                              <TableColumn fx:id="colProyecto" prefWidth="259.9999084472656" text="Proyecto" />
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cBoxFiltro" layoutX="296.0" layoutY="87.0" prefHeight="26.0" prefWidth="160.0" promptText="Experiencia Educativa" />
-                        <Button layoutX="431.0" layoutY="353.0" mnemonicParsing="false" onAction="#clickRegistrar" style="-fx-background-radius: 30;" text="+" />
-                        <Label layoutX="231.0" layoutY="91.0" text="Filtrar por:" textFill="WHITE" />
-                        <Button layoutX="400.0" layoutY="46.0" mnemonicParsing="false" onAction="#clickBuscar" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
-                     </children></AnchorPane>
+                        <ComboBox fx:id="cBoxFiltro" layoutX="585.0" layoutY="131.0" prefHeight="26.0" prefWidth="160.0" promptText="Experiencia Educativa" />
+                        <Button layoutX="705.0" layoutY="535.0" mnemonicParsing="false" onAction="#clickRegistrar" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
+                        <Label layoutX="512.0" layoutY="135.0" text="Filtrar por:" textFill="WHITE" />
+                        <Button layoutX="689.0" layoutY="80.0" mnemonicParsing="false" onAction="#clickBuscar" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
+                     </children>
+                  </AnchorPane>
             </content>
         </Tab>
         <Tab>
@@ -62,7 +68,57 @@
                 </AnchorPane>
             </graphic>
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TabPane prefHeight="600.0" prefWidth="794.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Listado">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TextField layoutX="52.0" layoutY="53.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
+                                          <Button layoutX="690.0" layoutY="53.0" mnemonicParsing="false" text="Buscar" />
+                                          <TableView layoutX="52.0" layoutY="151.0" prefHeight="330.0" prefWidth="690.0">
+                                            <columns>
+                                              <TableColumn prefWidth="412.00003814697266" text="Nombre Proyecto" />
+                                              <TableColumn prefWidth="279.1999816894531" text="Experiencia Educativa" />
+                                            </columns>
+                                          </TableView>
+                                          <Button layoutX="702.0" layoutY="506.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
+                                          <ComboBox layoutX="591.0" layoutY="104.0" prefWidth="150.0" />
+                                          <Label layoutX="523.0" layoutY="108.0" text="Filtrar por:" textFill="WHITE" />
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="Asignación">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView layoutX="32.0" layoutY="130.0" prefHeight="311.0" prefWidth="346.0">
+                                            <columns>
+                                              <TableColumn prefWidth="129.60004425048828" text="Nombre Alumno" />
+                                              <TableColumn prefWidth="60.79998779296875" text="Promedio" />
+                                                <TableColumn prefWidth="92.800048828125" text="EE" />
+                                                <TableColumn prefWidth="63.2000732421875" text="Bloque" />
+                                            </columns>
+                                          </TableView>
+                                          <ComboBox layoutX="244.0" layoutY="62.0" prefHeight="40.0" prefWidth="306.0" />
+                                          <TableView layoutX="455.0" layoutY="130.0" prefHeight="310.0" prefWidth="295.0">
+                                            <columns>
+                                              <TableColumn prefWidth="132.80001831054688" text="Nombre Proyecto" />
+                                              <TableColumn prefWidth="47.20001220703125" text="Cupo" />
+                                                <TableColumn prefWidth="114.39995117187499" text="Orden Priorización" />
+                                            </columns>
+                                          </TableView>
+                                          <Button layoutX="371.0" layoutY="495.0" mnemonicParsing="false" text="Asignar" />
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children></AnchorPane>
             </content>
         </Tab>
         <Tab>
@@ -72,7 +128,21 @@
                 </AnchorPane>
             </graphic>
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="516.0" layoutY="167.0" prefHeight="18.0" prefWidth="62.0" text="Filtrar por:" textFill="WHITE" />
+                        <TableView layoutX="54.0" layoutY="221.0" prefHeight="250.0" prefWidth="686.0">
+                          <columns>
+                            <TableColumn prefWidth="325.6000442504883" text="Nombre EE" />
+                            <TableColumn prefWidth="178.39996337890625" text="Periodo" />
+                              <TableColumn prefWidth="181.60003662109375" text="Bloque" />
+                          </columns>
+                        </TableView>
+                        <TextField layoutX="54.0" layoutY="112.0" prefHeight="26.0" prefWidth="642.0" promptText="Buscar" />
+                        <Button layoutX="688.0" layoutY="112.0" mnemonicParsing="false" text="Buscar" />
+                        <ComboBox layoutX="589.0" layoutY="164.0" prefWidth="150.0" />
+                        <Button layoutX="700.0" layoutY="509.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
+                     </children></AnchorPane>
             </content>
         </Tab>
     </tabs>

@@ -85,9 +85,6 @@ public class FXMLInicioSesionController implements Initializable {
 					+ "por favor intente más tarde");
 		} else {
 			switch (tipoUsuario) {
-				case "coordinador":
-					irMenuCoordinador();
-					break;
 				case "profesor":
 					irMenuProfesor((Profesor) usuario);
 					break;
