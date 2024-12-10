@@ -32,7 +32,7 @@ public class InscripcionEEDAOTest {
         int idEE = 2;
 
         try {
-            InscripcionEEDAO.registrarInscripcion(idAlumno, idEE);
+            InscripcionEEDAO.registrarInscripcionAlumnoEnEE(idAlumno, idEE);
 
             Connection conexionBD = ConexionBD.abrirConexion();
             String consulta = "SELECT * FROM inscripcionee WHERE idAlumno = ? AND idEE = ?";

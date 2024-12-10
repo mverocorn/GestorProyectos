@@ -11,7 +11,8 @@ public class InscripcionEE {
     private int idProyectoPP;
     private int idProyectoSS;
 
-    public InscripcionEE(int idInscripcionEE, Date fechaInscripcion, String estadoInscripcion, int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {
+    public InscripcionEE(int idInscripcionEE, Date fechaInscripcion, String estadoInscripcion, 
+        int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {
         this.idInscripcionEE = idInscripcionEE;
         this.fechaInscripcion = fechaInscripcion;
         this.estadoInscripcion = estadoInscripcion;

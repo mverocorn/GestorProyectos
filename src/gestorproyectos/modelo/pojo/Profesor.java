@@ -8,7 +8,8 @@ public class Profesor implements IUsuario{
     private String correo;
     private String contrasenia;
 
-    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, String clave, String correo, String contrasenia) {
+    public Profesor(int idProfesor, String nombreProfesor, String apellidoProfesor, 
+        String clave, String correo, String contrasenia) {
         this.idProfesor = idProfesor;
         this.nombreProfesor = nombreProfesor;
         this.apellidoProfesor = apellidoProfesor;

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import gestorproyectos.modelo.pojo.ProyectoPP;
+import gestorproyectos.utilidades.Validador;
 import java.util.logging.Logger;
 
 public class ProyectoPPDAO {
@@ -50,6 +51,18 @@ public class ProyectoPPDAO {
         proyectoPP.setIdResponsable(resultado.getInt("idResponsable"));
 
         return proyectoPP;
+    }
+    
+    public static void validarProyectoSS(ProyectoPP proyecto) {
+        if (proyecto == null) {
+            throw new IllegalArgumentException("El objeto ProyectoSS no puede ser nulo.");
+        }
+
+        Validador.validarTexto(proyecto.getNombreProyecto(), "nombreProyecto", 150);
+        Validador.validarTexto(proyecto.getObjetivoProyecto(), "objetivoProyecto", 255);
+        Validador.validarTexto(proyecto.getDescripcionProyecto(), "descripcionProyecto", 1000);
+        Validador.validarFechaProyecto(proyecto.getFechaProyecto());
+        Validador.validarResponsable(proyecto.getIdResponsable());
     }
 
 }

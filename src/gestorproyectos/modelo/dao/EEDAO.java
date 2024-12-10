@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EEDAO {
+
     private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("MMMyyyy");
 
     private static final Logger logger = Logger.getLogger(
-            EEDAO.class.getName()
+        EEDAO.class.getName()
     );
 
     public static List<EE> obtenerEE() throws SQLException {
@@ -32,7 +33,7 @@ public class EEDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idEE, nombreEE, nrc, bloque, periodo, idProfesor FROM ee;";
+                String consulta = "SELECT idEE, nombreEE, nrc, seccion, periodo, idProfesor FROM ee;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 eeList = new ArrayList<>();
@@ -54,7 +55,7 @@ public class EEDAO {
         ee.setIdEE(resultado.getInt("idEE"));
         ee.setNombreEE(resultado.getString("nombreEE"));
         ee.setNrc(resultado.getInt("nrc"));
-        ee.setBloque(resultado.getInt("bloque"));
+        ee.setSeccion(resultado.getInt("seccion"));
         ee.setPeriodo(resultado.getString("periodo"));
         ee.setIdProfesor(resultado.getInt("idProfesor"));
         return ee;
@@ -88,11 +89,8 @@ public class EEDAO {
         }
 
         Validador.validarTexto(ee.getNombreEE(), "nombreEE", 100);
-
         Validador.validarNRC(ee.getNrc());
-
-        Validador.validarBloque(ee.getBloque());
-        
+        Validador.validarSeccion(ee.getSeccion());
         Validador.validarPeriodo(ee.getPeriodo());
 
         if (ee.getIdProfesor() <= 0) {
@@ -100,9 +98,37 @@ public class EEDAO {
         }
     }
 
-    public static boolean existeEE(int nrc, int bloque, int idProfesor) throws SQLException {
-        //No se si es encesario
-        return false;
+    public static boolean existeEE(String nombreEE, int nrc, int seccion, String periodo) throws SQLException {
+        boolean existe = false;
+        String consulta = "SELECT COUNT(*) AS cantidad FROM EE WHERE (nombreEE = ? AND seccion = ? AND periodo = ?) OR (nrc = ? AND periodo = ?)";
+
+        try (Connection conexion = ConexionBD.abrirConexion();
+            PreparedStatement sentenciaPreparada = conexion.prepareStatement(consulta)) {
+            sentenciaPreparada.setString(1, nombreEE);
+            sentenciaPreparada.setInt(2, seccion);
+            sentenciaPreparada.setString(3, periodo);
+            sentenciaPreparada.setInt(4, nrc);
+            sentenciaPreparada.setString(5, periodo);
+
+            try (ResultSet resultSet = sentenciaPreparada.executeQuery()) {
+                if (resultSet.next() && resultSet.getInt("cantidad") > 0) {
+                    existe = true;
+                }
+            }
+        } catch (SQLTimeoutException ex) {
+            logger.log(Level.SEVERE, "La consulta a la base de datos excedió el tiempo límite", ex);
+            throw new SQLException("Tiempo de espera agotado al comprobar la existencia del EE.", ex);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al comprobar la existencia del EE", ex);
+            throw new SQLException("Error al comprobar la existencia del EE: "
+                + ex.getMessage(), ex);
+        }
+
+        if (existe) {
+            throw new SQLException("Ya existe una EE con el mismo nombre, sección, nrc o periodo.");
+        }
+
+        return existe;
     }
 
     public static HashMap<String, Object> registrarEE(EE ee) throws SQLException {
@@ -113,15 +139,15 @@ public class EEDAO {
             PreparedStatement prepararSentencia = null;
             int idEEGenerado = -1;
             try {
-                validarEE(ee);
+                existeEE(ee.getNombreEE(), ee.getNrc(), ee.getSeccion(), ee.getPeriodo());
 
-                String sentencia = "INSERT INTO EE (nombreEE, nrc, bloque, periodo, idProfesor) "
-                        + "VALUES (?, ?, ?, ?, ?)";
+                String sentencia = "INSERT INTO EE (nombreEE, nrc, seccion, periodo, idProfesor) "
+                    + "VALUES (?, ?, ?, ?, ?)";
 
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
                 prepararSentencia.setString(1, ee.getNombreEE());
                 prepararSentencia.setInt(2, ee.getNrc());
-                prepararSentencia.setInt(3, ee.getBloque());
+                prepararSentencia.setInt(3, ee.getSeccion());
                 prepararSentencia.setString(4, ee.getPeriodo());
                 prepararSentencia.setInt(5, ee.getIdProfesor());
 
@@ -133,19 +159,30 @@ public class EEDAO {
                             idEEGenerado = rs.getInt(1);
                         }
                     }
-                }
 
-                respuesta.put("idEE", idEEGenerado);
+                    respuesta.put("error", false);
+                    respuesta.put("mensaje", "El EE " + ee.getNombreEE()
+                        + " fue registrado correctamente.");
+                    respuesta.put("idEE", idEEGenerado);
+                } else {
+                    respuesta.put("error", true);
+                    respuesta.put("mensaje", "No fue posible registrar el EE. Intente más tarde.");
+                }
 
             } catch (SQLTimeoutException ex) {
                 logger.log(Level.SEVERE, "La inserción en la base de datos excedió el tiempo límite", ex);
-                throw new SQLException("Tiempo de espera agotado al registrar el EE.", ex);
+                respuesta.put("error", true);
+                respuesta.put("mensaje", "Tiempo de espera agotado al registrar el EE.");
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Error al registrar el EE", ex);
-                throw new SQLException("Error al registrar el EE", ex);
+                respuesta.put("error", true);
+                respuesta.put("mensaje", ex.getMessage());
             } finally {
                 ConexionBD.cerrarConexion(conexionBD);
             }
+        } else {
+            respuesta.put("error", true);
+            respuesta.put("mensaje", "Lo sentimos, el servicio no está disponible. Intente más tarde.");
         }
 
         return respuesta;
@@ -171,28 +208,24 @@ public class EEDAO {
     }
 
     public static boolean isPeriodoActivo(String periodo) throws ParseException {
-        // Extraer fechas de inicio y fin del periodo
         String[] fechas = periodo.split("-");
-        String fechaInicio = fechas[0]; // Ejemplo: "AGO2024"
-        String fechaFin = fechas[1];    // Ejemplo: "ENE2025"
+        String fechaInicio = fechas[0];
+        String fechaFin = fechas[1];
 
-        // Convertir las fechas a objetos Date
         Date fechaInicioDate = formatoFecha.parse(fechaInicio);
         Date fechaFinDate = formatoFecha.parse(fechaFin);
 
-        // Obtener la fecha actual
         Date fechaActual = new Date();
 
-        // Verificar si la fecha actual está dentro del rango
-        return !fechaActual.before(fechaInicioDate) && !fechaActual.after(fechaFinDate);
+        return !fechaActual.before(fechaInicioDate)
+            && !fechaActual.after(fechaFinDate);
     }
-    
+
     public static int obtenerIdEEPorIdAlumno(int idAlumno) throws SQLException {
         int idEE = -1;
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                // Consulta para obtener el idEE relacionado con el idAlumno
                 String consulta = "SELECT idEE FROM inscripcionEE WHERE idAlumno = ?";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 prepararConsulta.setInt(1, idAlumno);
@@ -208,6 +241,5 @@ public class EEDAO {
         }
         return idEE;
     }
-
 
 }

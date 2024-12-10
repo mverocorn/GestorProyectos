@@ -11,7 +11,8 @@ public class ProyectoPP {
     private int cupoProyecto;
     private int idResponsable;
 
-    public ProyectoPP(int idProyectoPP, Date fechaProyecto, String nombreProyecto, String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
+    public ProyectoPP(int idProyectoPP, Date fechaProyecto, String nombreProyecto, 
+        String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
         this.idProyectoPP = idProyectoPP;
         this.fechaProyecto = fechaProyecto;
         this.nombreProyecto = nombreProyecto;

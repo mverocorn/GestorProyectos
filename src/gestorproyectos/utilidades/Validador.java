@@ -194,8 +194,8 @@ public class Validador {
         }
     }
     
-    public static void validarBloque(int bloque) {
-        if (bloque < 7 || bloque > 12) {
+    public static void validarSeccion(int seccion) {
+        if (seccion < 1 || seccion > 3) {
             throw new IllegalArgumentException("El bloque debe ser 1, 2 o 3.");
         }
     }

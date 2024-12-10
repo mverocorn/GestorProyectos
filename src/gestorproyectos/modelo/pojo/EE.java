@@ -4,15 +4,15 @@ public class EE {
     private int idEE;
     private String nombreEE;
     private int nrc;
-    private int bloque;
+    private int seccion;
     private String periodo;
     private int idProfesor;
 
-    public EE(int idEE, String nombreEE, int nrc, int bloque, String periodo, int idProfesor) {
+    public EE(int idEE, String nombreEE, int nrc, int seccion, String periodo, int idProfesor) {
         this.idEE = idEE;
         this.nombreEE = nombreEE;
         this.nrc = nrc;
-        this.bloque = bloque;
+        this.seccion = seccion;
         this.periodo = periodo;
         this.idProfesor = idProfesor;
     }
@@ -44,12 +44,12 @@ public class EE {
         this.nrc = nrc;
     }
 
-    public int getBloque() {
-        return bloque;
+    public int getSeccion() {
+        return seccion;
     }
 
-    public void setBloque(int bloque) {
-        this.bloque = bloque;
+    public void setSeccion(int seccion) {
+        this.seccion = seccion;
     }
 
     public String getPeriodo() {

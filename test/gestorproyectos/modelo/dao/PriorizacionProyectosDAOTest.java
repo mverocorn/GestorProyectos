@@ -24,7 +24,7 @@ public class PriorizacionProyectosDAOTest {
 
     @Test
     public void testGuardarPriorizacionProyectosSS() throws Exception {
-        int idAlumno = 1;
+        int idAlumno = 2;
 
         int idEE = EEDAO.obtenerIdEEPorIdAlumno(idAlumno);
 

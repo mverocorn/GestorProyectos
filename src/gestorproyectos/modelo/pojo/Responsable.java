@@ -7,7 +7,8 @@ public class Responsable {
     private String correoResponsable;
     private String cargoResponsable;
 
-    public Responsable(int idResponsable, String nombreResponsable, String apellidoResponsable, String correoResponsable, String cargoResponsable) {
+    public Responsable(int idResponsable, String nombreResponsable, String apellidoResponsable, 
+        String correoResponsable, String cargoResponsable) {
         this.idResponsable = idResponsable;
         this.nombreResponsable = nombreResponsable;
         this.apellidoResponsable = apellidoResponsable;

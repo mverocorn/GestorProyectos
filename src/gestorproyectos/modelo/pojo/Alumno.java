@@ -1,6 +1,7 @@
 package gestorproyectos.modelo.pojo;
 
-public class Alumno implements IUsuario{
+public class Alumno implements IUsuario {
+
     private Integer idAlumno;
     private String nombreAlumno;
     private String apellidoAlumno;
@@ -14,7 +15,9 @@ public class Alumno implements IUsuario{
     public Alumno() {
     }
 
-    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, String matricula, String telefonoAlumno, String correo, Float promedio, String estadoAlumno, String contrasenia) {
+    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, 
+        String matricula, String telefonoAlumno, String correo, Float promedio, 
+        String estadoAlumno, String contrasenia) {
         this.idAlumno = idAlumno;
         this.nombreAlumno = nombreAlumno;
         this.apellidoAlumno = apellidoAlumno;
@@ -98,4 +101,3 @@ public class Alumno implements IUsuario{
         this.contrasenia = contrasenia;
     }
 }
-

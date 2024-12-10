@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class EmpresaDAO {
 
     private static final Logger logger = Logger.getLogger(
-            EmpresaDAO.class.getName()
+        EmpresaDAO.class.getName()
     );
 
     public static List<Empresa> obtenerEmpresas() throws SQLException {
@@ -22,7 +22,10 @@ public class EmpresaDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idEmpresa, nombreEmpresa, correoEmpresa, telefonoEmpresa, calleEmpresa, colonia, numExt, codigoPostal FROM empresa;";
+                String consulta = "SELECT idEmpresa, nombreEmpresa, correoEmpresa, "
+                    + "telefonoEmpresa, calleEmpresa, colonia, numExt, "
+                    + "codigoPostal FROM empresa;";
+
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 empresas = new ArrayList<>();
@@ -63,14 +66,14 @@ public class EmpresaDAO {
                 ResultSet resultado = prepararConsulta.executeQuery();
                 if (resultado.next()) {
                     empresa = new Empresa(
-                            resultado.getInt("idEmpresa"),
-                            resultado.getString("nombreEmpresa"),
-                            resultado.getString("correoEmpresa"),
-                            resultado.getString("telefonoEmpresa"),
-                            resultado.getString("calleEmpresa"),
-                            resultado.getString("colonia"),
-                            resultado.getString("numExt"),
-                            resultado.getString("codigoPostal")
+                        resultado.getInt("idEmpresa"),
+                        resultado.getString("nombreEmpresa"),
+                        resultado.getString("correoEmpresa"),
+                        resultado.getString("telefonoEmpresa"),
+                        resultado.getString("calleEmpresa"),
+                        resultado.getString("colonia"),
+                        resultado.getString("numExt"),
+                        resultado.getString("codigoPostal")
                     );
                 }
             } catch (SQLException ex) {

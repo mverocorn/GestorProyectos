@@ -58,25 +58,14 @@ public class ProyectoSSDAO {
             throw new IllegalArgumentException("El objeto ProyectoSS no puede ser nulo.");
         }
 
-        // Validar nombreProyecto
         Validador.validarTexto(proyecto.getNombreProyecto(), "nombreProyecto", 150);
-
-        // Validar objetivoProyecto
         Validador.validarTexto(proyecto.getObjetivoProyecto(), "objetivoProyecto", 255);
-
-        // Validar descripcionProyecto
         Validador.validarTexto(proyecto.getDescripcionProyecto(), "descripcionProyecto", 1000);
-
-        // Validar fechaProyecto
         Validador.validarFechaProyecto(proyecto.getFechaProyecto());
-
-        // Validar idResponsable
         Validador.validarResponsable(proyecto.getIdResponsable());
     }
 
-    public boolean existeProyectoSS(String nombre, String objetivo, String descripcion, int idProyectoActual) throws SQLException {
-        ConexionBD.verificarConexionBD();
-
+    public static boolean existeProyectoSS(String nombre, String objetivo, String descripcion, int idProyectoActual) throws SQLException {
         boolean existe = false;
         String consulta = "SELECT COUNT(*) AS cantidad FROM ProyectoSS WHERE nombreProyecto = ? "
                 + "AND objetivoProyecto = ? AND descripcionProyecto = ? AND idProyectoSS != ?";
@@ -92,9 +81,16 @@ public class ProyectoSSDAO {
                     existe = true;
                 }
             }
+        } catch (SQLTimeoutException ex) {
+            logger.log(Level.SEVERE, "La consulta a la base de datos excedió el tiempo límite", ex);
+            throw new SQLException("Tiempo de espera agotado al comprobar la existencia del ProyectoSS.", ex);
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error al comprobar la existencia del ProyectoSS", ex);
-            throw new SQLException("Error al comprobar la existencia del ProyectoSS", ex);
+            throw new SQLException("Error al comprobar la existencia del ProyectoSS: " + ex.getMessage(), ex);
+        }
+
+        if (existe) {
+            throw new SQLException("Ya existe un ProyectoSS con el mismo nombre, objetivo y descripción.");
         }
 
         return existe;
@@ -102,6 +98,9 @@ public class ProyectoSSDAO {
 
     public static HashMap<String, Object> registrarProyectoSS(ProyectoSS proyecto) throws SQLException {
         HashMap<String, Object> respuesta = new HashMap<>();
+
+        existeProyectoSS(proyecto.getNombreProyecto(), proyecto.getObjetivoProyecto(),
+                proyecto.getDescripcionProyecto(), -1);
 
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
@@ -127,7 +126,7 @@ public class ProyectoSSDAO {
                 if (filasAfectadas == 1) {
                     try (ResultSet rs = prepararSentencia.getGeneratedKeys()) {
                         if (rs.next()) {
-                            idProyectoGenerado = rs.getInt(1); // Obtener el id generado
+                            idProyectoGenerado = rs.getInt(1);
                         }
                     }
                 }
@@ -184,11 +183,9 @@ public class ProyectoSSDAO {
 
         if (conexionBD != null) {
             try {
-                // Obtener las fechas de inicio y fin del periodo
                 java.sql.Date fechaInicio = obtenerFechaInicioSQL(periodo);
                 java.sql.Date fechaFin = obtenerFechaFinSQL(periodo);
 
-                // Modificar la consulta SQL para seleccionar solo los campos necesarios
                 String consulta = "SELECT idProyectoSS, nombreProyecto FROM proyectoss WHERE fechaProyecto BETWEEN ? AND ? AND cupoProyecto > 0";
                 try (PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
                     prepararConsulta.setDate(1, fechaInicio);
@@ -196,20 +193,17 @@ public class ProyectoSSDAO {
 
                     try (ResultSet resultado = prepararConsulta.executeQuery()) {
                         if (!resultado.isBeforeFirst()) {
-                            System.out.println("No se encontraron proyectos en el rango de fechas.");
+                            System.out.println("No se encontraron proyectos asignados a esta EE.");
                             return proyectosDisponibles;
                         }
 
                         while (resultado.next()) {
-                            // Crear un objeto ProyectoSS con solo los campos necesarios
                             ProyectoSS proyecto = new ProyectoSS(
                                     resultado.getInt("idProyectoSS"),
-                                    null, // No necesitamos la fecha en este caso
+                                    null, 
                                     resultado.getString("nombreProyecto"),
-                                    null, // Los otros campos no son necesarios
-                                    null,
-                                    0, // El cupoProyecto no es necesario
-                                    0 // El idResponsable tampoco es necesario
+                                    null, null,
+                                    0, 0
                             );
                             proyectosDisponibles.add(proyecto);
                         }
@@ -249,29 +243,29 @@ public class ProyectoSSDAO {
     private int convertirMesANumero(String mes) {
         switch (mes.toUpperCase()) {
             case "ENE":
-                return 1; // Enero
+                return 1;
             case "FEB":
-                return 2; // Febrero
+                return 2;
             case "MAR":
-                return 3; // Marzo
+                return 3;
             case "ABR":
-                return 4; // Abril
+                return 4;
             case "MAY":
-                return 5; // Mayo
+                return 5;
             case "JUN":
-                return 6; // Junio
+                return 6;
             case "JUL":
-                return 7; // Julio
+                return 7;
             case "AGO":
-                return 8; // Agosto
+                return 8;
             case "SEP":
-                return 9; // Septiembre
+                return 9;
             case "OCT":
-                return 10; // Octubre
+                return 10;
             case "NOV":
-                return 11; // Noviembre
+                return 11;
             case "DIC":
-                return 12; // Diciembre
+                return 12;
             default:
                 throw new IllegalArgumentException("Mes inválido: " + mes);
         }

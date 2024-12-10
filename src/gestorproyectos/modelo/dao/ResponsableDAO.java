@@ -14,9 +14,9 @@ import java.util.logging.Logger;
 public class ResponsableDAO {
 
     private static final Logger logger = Logger.getLogger(
-            ResponsableDAO.class.getName()
+        ResponsableDAO.class.getName()
     );
-    
+
     public static List<Responsable> obtenerResponsables() throws SQLException {
         List<Responsable> responsables = null;
         Connection conexionBD = ConexionBD.abrirConexion();
@@ -60,11 +60,11 @@ public class ResponsableDAO {
                 ResultSet resultado = prepararConsulta.executeQuery();
                 if (resultado.next()) {
                     responsable = new Responsable(
-                            resultado.getInt("idResponsable"),
-                            resultado.getString("nombreResponsable"),
-                            resultado.getString("apellidoResponsable"),
-                            resultado.getString("correoResponsable"),
-                            resultado.getString("cargoResponsable")
+                        resultado.getInt("idResponsable"),
+                        resultado.getString("nombreResponsable"),
+                        resultado.getString("apellidoResponsable"),
+                        resultado.getString("correoResponsable"),
+                        resultado.getString("cargoResponsable")
                     );
                 }
             } catch (SQLException ex) {

@@ -10,7 +10,8 @@ public class Empresa {
     private String numExt;
     private String codigoPostal;
 
-    public Empresa(int idEmpresa, String nombreEmpresa, String correoEmpresa, String telefonoEmpresa, String calleEmpresa, String colonia, String numExt, String codigoPostal) {
+    public Empresa(int idEmpresa, String nombreEmpresa, String correoEmpresa, 
+        String telefonoEmpresa, String calleEmpresa, String colonia, String numExt, String codigoPostal) {
         this.idEmpresa = idEmpresa;
         this.nombreEmpresa = nombreEmpresa;
         this.correoEmpresa = correoEmpresa;

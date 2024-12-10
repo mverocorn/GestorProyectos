@@ -8,7 +8,8 @@ public class PriorizacionProyectos {
     private Integer idProyectoSS;
     private int prioridad;
 
-    public PriorizacionProyectos(int idPriorizacionProyectos, int idInscripcionEE, Integer idProyectoPP, Integer idProyectoSS, int prioridad) {
+    public PriorizacionProyectos(int idPriorizacionProyectos, int idInscripcionEE, 
+        Integer idProyectoPP, Integer idProyectoSS, int prioridad) {
         this.idPriorizacionProyectos = idPriorizacionProyectos;
         this.idInscripcionEE = idInscripcionEE;
         this.idProyectoPP = idProyectoPP;

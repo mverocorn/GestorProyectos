@@ -63,7 +63,4 @@ public class AlumnoDAOTest {
     public void testSerializarAlumno() throws Exception {
     }
 
-    @Test
-    public void testRegistrarAlumno() throws Exception {
-    }
 }
