@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,12 +15,28 @@
             <Image url="@../recursos/FondoGestorProyectos.jpg" />
          </image>
       </ImageView>
-      <TextField layoutX="61.0" layoutY="104.0" prefHeight="26.0" prefWidth="483.0" />
-      <TextField layoutX="61.0" layoutY="154.0" prefHeight="26.0" prefWidth="200.0" />
-      <TextField layoutX="338.0" layoutY="154.0" prefHeight="26.0" prefWidth="200.0" />
-      <TextField layoutX="61.0" layoutY="200.0" prefHeight="26.0" prefWidth="200.0" />
-      <TextField layoutX="338.0" layoutY="200.0" prefHeight="26.0" prefWidth="200.0" />
-      <TextField layoutX="61.0" layoutY="248.0" prefHeight="26.0" prefWidth="270.0" />
-      <TextField layoutX="388.0" layoutY="248.0" />
+      <TextField fx:id="txtFNombreAlumno" layoutX="61.0" layoutY="104.0" prefHeight="26.0" prefWidth="483.0" />
+      <TextField fx:id="txtFApellidoPaterno" layoutX="61.0" layoutY="164.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField fx:id="txtFApellidoMaterno" layoutX="342.0" layoutY="164.0" prefHeight="26.0" prefWidth="200.0" />
+      <TextField fx:id="txtFMatricula" layoutX="61.0" layoutY="218.0" prefHeight="26.0" prefWidth="134.0" />
+      <TextField fx:id="txtFCorreo" layoutX="61.0" layoutY="277.0" prefHeight="26.0" prefWidth="270.0" />
+      <ImageView fitHeight="49.0" fitWidth="47.0" layoutX="538.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/logo%20uv%20blanco.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="61.0" layoutY="78.0" text="Nombre:" textFill="WHITE" />
+      <Label layoutX="61.0" layoutY="140.0" text="Apellido Paterno:" textFill="WHITE" />
+      <Label layoutX="342.0" layoutY="140.0" text="Apellido Materno:" textFill="WHITE" />
+      <Label layoutX="61.0" layoutY="200.0" text="Matrícula:" textFill="WHITE" />
+      <Label layoutX="232.0" layoutY="200.0" text="Teléfono:" textFill="WHITE" />
+      <Label layoutX="61.0" layoutY="257.0" text="Correo:" textFill="WHITE" />
+      <Label layoutX="388.0" layoutY="257.0" text="Contraseña:" textFill="WHITE" />
+      <TextField fx:id="txtFTelefono" layoutX="232.0" layoutY="218.0" prefHeight="26.0" prefWidth="134.0" />
+      <TextField fx:id="txtFPromedio" layoutX="409.0" layoutY="218.0" prefHeight="26.0" prefWidth="134.0" />
+      <PasswordField fx:id="txtFContrasenia" layoutX="390.0" layoutY="278.0" prefHeight="26.0" prefWidth="152.0" />
+      <Label layoutX="409.0" layoutY="200.0" text="Promedio:" textFill="WHITE" />
+      <Button layoutX="480.0" layoutY="333.0" mnemonicParsing="false" onAction="#clickRegistrar" text="Registrar" />
+      <Button layoutX="61.0" layoutY="333.0" mnemonicParsing="false" onAction="#clickCancelar" text="Cancelar" />
    </children>
 </AnchorPane>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLEntregaDeArchivoController">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/FondoGestorProyectos.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="60.0" fitWidth="56.0" layoutX="830.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/logo%20uv%20blanco.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="133.0" layoutY="91.0" text="Nombre de la entrega:" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtFNombreEntrega" layoutX="293.0" layoutY="87.0" prefHeight="26.0" prefWidth="474.0" />
+      <Label layoutX="222.0" layoutY="153.0" text="Selecciona el tipo de archivo:" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="cBoxTipoArchivo" layoutX="423.0" layoutY="150.0" prefHeight="26.0" prefWidth="254.0" />
+      <Button layoutX="355.0" layoutY="267.0" mnemonicParsing="false" onAction="#clickSubirArchivo" prefHeight="65.0" prefWidth="189.0" text="Subir Archivo" />
+      <TextField fx:id="txtFCantidadHoras" layoutX="245.0" layoutY="456.0" prefHeight="26.0" prefWidth="75.0" />
+      <Label layoutX="133.0" layoutY="461.0" text="Cantidad de horas:" textFill="WHITE" />
+      <Button layoutX="706.0" layoutY="457.0" mnemonicParsing="false" onAction="#clickEntregar" text="Entregar" />
+   </children>
+</AnchorPane>
