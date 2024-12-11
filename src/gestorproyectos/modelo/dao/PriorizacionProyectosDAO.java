@@ -20,13 +20,15 @@ public class PriorizacionProyectosDAO {
     public static boolean validarPriorizacion(Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         Set<Integer> prioridades = new HashSet<>(proyectosYPrioridades.values());
         if (prioridades.size() != proyectosYPrioridades.size()) {
-            throw new SQLException("Detectamos la repetición de un mismo número en 2 o más proyectos. Por favor asigne un número a cada proyecto sin repetir.");
+            throw new SQLException("Detectamos la repetición de un mismo número en 2 o más proyectos. "
+                + "Por favor asigne un número a cada proyecto sin repetir.");
         }
 
         return true;
     }
 
-    public static void guardarPriorizacionProyectosSS(int idInscripcionEE, Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
+    public static void guardarPriorizacionProyectosSS(int idInscripcionEE, 
+        Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         validarPriorizacion(proyectosYPrioridades);
 
         Connection conexionBD = ConexionBD.abrirConexion();
@@ -34,7 +36,8 @@ public class PriorizacionProyectosDAO {
 
         if (conexionBD != null) {
             try {
-                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, idProyectoSS, prioridad) VALUES (?, ?, ?)";
+                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
+                    + "idProyectoSS, prioridad) VALUES (?, ?, ?)";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
 
                 for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
@@ -48,10 +51,13 @@ public class PriorizacionProyectosDAO {
 
                 if (resultado.length > 0) {
                     respuesta.put("error", false);
-                    respuesta.put("mensaje", "Se ha guardado tu orden de preferencia para proyecto de Servicio Social. Tu coordinador pronto te asignará tu proyecto.");
+                    respuesta.put("mensaje", "Se ha guardado tu orden de "
+                        + "preferencia para proyecto de Servicio Social. Tu "
+                        + "coordinador pronto te asignará tu proyecto.");
                 } else {
                     respuesta.put("error", true);
-                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar la priorización de los proyectos. Intenta nuevamente más tarde.");
+                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
+                        + "la priorización de los proyectos. Intenta nuevamente más tarde.");
                 }
 
             } catch (SQLException ex) {
@@ -64,11 +70,13 @@ public class PriorizacionProyectosDAO {
             }
         } else {
             respuesta.put("error", true);
-            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio no está disponible. Intente más tarde.");
+            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
+                + "no está disponible. Intente más tarde.");
         }
     }
 
-    public static void guardarPriorizacionProyectosPP(int idInscripcionEE, Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
+    public static void guardarPriorizacionProyectosPP(int idInscripcionEE, 
+        Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         validarPriorizacion(proyectosYPrioridades);
 
         Connection conexionBD = ConexionBD.abrirConexion();
@@ -76,7 +84,8 @@ public class PriorizacionProyectosDAO {
 
         if (conexionBD != null) {
             try {
-                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, idProyectoPP, prioridad) VALUES (?, ?, ?)";
+                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
+                    + "idProyectoPP, prioridad) VALUES (?, ?, ?)";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
 
                 for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
@@ -90,10 +99,12 @@ public class PriorizacionProyectosDAO {
 
                 if (resultado.length > 0) {
                     respuesta.put("error", false);
-                    respuesta.put("mensaje", "Se ha guardado tu orden de preferencia para proyecto de Practica Profesional. Tu coordinador pronto te asignará tu proyecto.");
+                    respuesta.put("mensaje", "Se ha guardado tu orden de "
+                        + "preferencia para proyecto de Practica Profesional. Tu coordinador pronto te asignará tu proyecto.");
                 } else {
                     respuesta.put("error", true);
-                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar la priorización de los proyectos. Intenta nuevamente más tarde.");
+                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
+                        + "la priorización de los proyectos. Intenta nuevamente más tarde.");
                 }
 
             } catch (SQLException ex) {
@@ -106,7 +117,8 @@ public class PriorizacionProyectosDAO {
             }
         } else {
             respuesta.put("error", true);
-            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio no está disponible. Intente más tarde.");
+            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
+                + "no está disponible. Intente más tarde.");
         }
     }
     
