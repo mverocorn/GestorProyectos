@@ -45,8 +45,6 @@ public class UsuarioDAO {
 				prepararSentencia.setString(1, correo.trim().toLowerCase());
 				prepararSentencia.setString(2, correo.trim().toLowerCase());
 
-				System.out.println("Consulta SQL: " + prepararSentencia.toString());
-
 				ResultSet resultadoConsulta = prepararSentencia.executeQuery();
 				if (resultadoConsulta.next()) {
 					tipoUsuario = resultadoConsulta.getString("tipoUsuario");

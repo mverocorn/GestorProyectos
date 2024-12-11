@@ -14,7 +14,7 @@ public class GestorProyectos extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("vista/FXMLPriorizacion.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("vista/FXMLInicioSesion.fxml"));
 		
 		Scene scene = new Scene(root);
 		

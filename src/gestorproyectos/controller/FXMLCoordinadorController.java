@@ -1,15 +1,25 @@
 package gestorproyectos.controller;
 
+import gestorproyectos.interfaces.IObservador;
+import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.utilidades.MisUtilidades;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -89,7 +99,7 @@ public class FXMLCoordinadorController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
-	}	
+	}
 
 	@FXML
 	private void clickCerrarSesion(ActionEvent event) {
@@ -97,6 +107,7 @@ public class FXMLCoordinadorController implements Initializable {
 
 	@FXML
 	private void clickRegistrarAlumno(ActionEvent event) {
+		irFormularioAlumno();
 	}
 
 	@FXML
@@ -123,4 +134,23 @@ public class FXMLCoordinadorController implements Initializable {
 	private void clickRegistrarEE(ActionEvent event) {
 	}
 	
+	private void irFormularioAlumno() {
+		try {
+			FXMLLoader loader = new FXMLLoader(
+					gestorproyectos.GestorProyectos.class.getResource(
+							"vista/FXMLRegistroAlumno.fxml"));
+			Parent vista = loader.load();
+			FXMLRegistroAlumnoController controlador = loader.getController();
+			controlador.inicializarValores();
+			Stage escenario = new Stage();
+			Scene escena = new Scene(vista);
+			escenario.setScene(escena);
+			escenario.setTitle("Registro de clientes");
+			escenario.initModality(Modality.APPLICATION_MODAL);
+			escenario.showAndWait();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 }

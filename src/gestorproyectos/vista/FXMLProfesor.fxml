@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLProfesorController">
-    
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLProfesorController">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/FondoGestorProyectos.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="88.0" fitWidth="66.0" layoutX="820.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recursos/logo%20uv%20blanco.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="37.0" layoutY="35.0" text="Bienvenido(a), " textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblNombreProfesor" layoutX="174.0" layoutY="35.0" text="nombreProfesor" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <HBox fx:id="experienciasContenedor" layoutX="37.0" layoutY="98.0" prefHeight="230.0" prefWidth="683.0" />
+   </children>
 </AnchorPane>

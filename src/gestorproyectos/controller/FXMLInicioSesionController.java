@@ -2,6 +2,7 @@ package gestorproyectos.controller;
 
 import gestorproyectos.modelo.dao.UsuarioDAO;
 import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.modelo.pojo.IUsuario;
 import gestorproyectos.modelo.pojo.Profesor;
 import gestorproyectos.utilidades.MisUtilidades;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class FXMLInicioSesionController implements Initializable {
 				tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
 				System.out.println("Tipo usuario: " + tipoUsuario);
 				if (tipoUsuario != null) {
-					Object usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
+					IUsuario usuario = UsuarioDAO.verificarCredencialesUsuario(tipoUsuario, correo, contrasenia);
 					if (usuario != null) {
 						irSiguientePantalla(usuario);
 					} else {
@@ -78,7 +79,7 @@ public class FXMLInicioSesionController implements Initializable {
 		return !(correo == null || correo.isEmpty() || contrasenia == null || contrasenia.isEmpty());
 	}
 
-	private void irSiguientePantalla(Object usuario) {
+	private void irSiguientePantalla(IUsuario usuario) {
 		if (null == tipoUsuario) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
 					"Lo sentimos, no se ha podido recuperar la información, "
@@ -114,6 +115,7 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.setTitle("Inicio Alumno");
 			escenario.show();
 		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
 					"Lo sentimos, no se pudo cargar la ventana principal de alumno");
 		}
@@ -134,7 +136,7 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.show();
 		} catch (IOException ex) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
-					"Lo sentimos, no se pudo cargar la ventana principal de profesor");
+					"Lo sentimos, no se pudo cargar la ventana principal de profesor" + ex.getMessage());
 		}
 	}
 
