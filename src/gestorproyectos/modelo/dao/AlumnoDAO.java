@@ -173,7 +173,6 @@ public class AlumnoDAO {
             respuesta.put("error", true);
             respuesta.put("mensaje", "Lo sentimos, el servicio no está disponible. Intente más tarde.");
         }
-
         return respuesta;
     }
 
