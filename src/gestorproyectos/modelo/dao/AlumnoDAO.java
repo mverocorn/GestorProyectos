@@ -71,6 +71,8 @@ public class AlumnoDAO {
         Validador.validarCorreo(alumno.getCorreo());
         Validador.validarPromedio(alumno.getPromedio());
         Validador.validarTexto(alumno.getEstadoAlumno(), "estadoAlumno", 50);
+        Validador.validarTexto(alumno.getContrasenia(), "contraseña", 50);
+        Validador.validarContrasenia(alumno.getContrasenia());
     }
 
     public boolean existeAlumno(String correo, String telefono, String matricula, int idAlumnoActual) throws SQLException {
@@ -126,8 +128,8 @@ public class AlumnoDAO {
                 );
 
                 String sentencia = "INSERT INTO alumno (nombreAlumno, apellidoAlumno, matricula, "
-                    + "telefonoAlumno, correo, promedio, estadoAlumno) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, 'inscrito')";
+                    + "telefonoAlumno, correo, promedio, estadoAlumno, contrasenia) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, 'inscrito', ?)";
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
                 prepararSentencia.setString(1, alumno.getNombreAlumno());
                 prepararSentencia.setString(2, alumno.getApellidoAlumno());
@@ -135,6 +137,7 @@ public class AlumnoDAO {
                 prepararSentencia.setString(4, alumno.getTelefonoAlumno());
                 prepararSentencia.setString(5, alumno.getCorreo());
                 prepararSentencia.setFloat(6, alumno.getPromedio());
+                prepararSentencia.setString(7, alumno.getContrasenia());
 
                 int filasAfectadas = prepararSentencia.executeUpdate();
 
