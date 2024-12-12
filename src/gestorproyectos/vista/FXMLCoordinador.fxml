@@ -46,18 +46,28 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="552.0" prefWidth="794.0">
                      <children>
-                        <TextField fx:id="txtFBuscarAlumno" layoutX="55.0" layoutY="80.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
-                        <TableView fx:id="tblAlumno" layoutX="55.0" layoutY="174.0" prefHeight="334.0" prefWidth="690.0">
+                        <TextField fx:id="txtFBuscarAlumno" layoutX="55.0" layoutY="127.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
+                        <TableView fx:id="tblAlumno" layoutX="55.0" layoutY="218.0" prefHeight="291.0" prefWidth="690.0">
                           <columns>
-                            <TableColumn fx:id="colNombreAlumno" prefWidth="314.40003204345703" text="Nombre Alumno" />
-                            <TableColumn fx:id="colEEAlumno" prefWidth="116.80001831054688" text="EE" />
+                            <TableColumn fx:id="colNombreAlumno" prefWidth="308.00000762939453" text="Nombre Alumno" />
+                            <TableColumn fx:id="colEEAlumno" prefWidth="124.80001831054688" text="EE" />
                               <TableColumn fx:id="colProyectoAlumno" prefWidth="259.9999084472656" text="Proyecto" />
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="585.0" layoutY="131.0" prefHeight="26.0" prefWidth="160.0" promptText="Seleccione Tipo de Proyecto" />
+                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="585.0" layoutY="173.0" prefHeight="26.0" prefWidth="160.0" promptText="Seleccione Tipo de Proyecto" />
                         <Button layoutX="701.0" layoutY="520.0" mnemonicParsing="false" onAction="#clickRegistrarAlumno" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
-                        <Label layoutX="512.0" layoutY="135.0" text="Filtrar por:" textFill="WHITE" />
-                        <Button layoutX="689.0" layoutY="80.0" mnemonicParsing="false" onAction="#clickBuscarAlumno" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
+                        <Label layoutX="512.0" layoutY="177.0" text="Filtrar por:" textFill="WHITE" />
+                        <Button layoutX="689.0" layoutY="127.0" mnemonicParsing="false" onAction="#clickBuscarAlumno" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
+                        <Label layoutX="55.0" layoutY="101.0" text="Ingrese el nombre del alumno a buscar:" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="55.0" layoutY="176.0" text="Alumnos inscritos en Experiencias Educativas" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>

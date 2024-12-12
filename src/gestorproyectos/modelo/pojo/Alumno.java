@@ -2,120 +2,129 @@ package gestorproyectos.modelo.pojo;
 
 public class Alumno implements IUsuario {
 
-    private Integer idAlumno;
-    private String nombreAlumno;
-    private String apellidoAlumno;
-    private String matricula;
-    private String telefonoAlumno;
-    private String correo;
-    private Float promedio;
-    private String estadoAlumno;
-    private String contrasenia;
-    private String nombreEE;
-    private String nombreProyecto;
-	
-    public Alumno() {
-    }
+	private Integer idAlumno;
+	private String nombreAlumno;
+	private String apellidoAlumno;
+	private String matricula;
+	private String telefonoAlumno;
+	private String correo;
+	private Float promedio;
+	private String estadoAlumno;
+	private String contrasenia;
+	private String nombreEE;
+	private String nombreProyecto;
+	private String tipoProyecto;
 
-    public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno, 
-        String matricula, String telefonoAlumno, String correo, Float promedio, 
-        String estadoAlumno, String contrasenia) {
-        this.idAlumno = idAlumno;
-        this.nombreAlumno = nombreAlumno;
-        this.apellidoAlumno = apellidoAlumno;
-        this.matricula = matricula;
-        this.telefonoAlumno = telefonoAlumno;
-        this.correo = correo;
-        this.promedio = promedio;
-        this.estadoAlumno = estadoAlumno;
-        this.contrasenia = contrasenia;
-    }
+	public Alumno() {
+	}
 
-    public Integer getIdAlumno() {
-        return idAlumno;
-    }
+	public Alumno(Integer idAlumno, String nombreAlumno, String apellidoAlumno,
+			String matricula, String telefonoAlumno, String correo, Float promedio,
+			String estadoAlumno, String contrasenia) {
+		this.idAlumno = idAlumno;
+		this.nombreAlumno = nombreAlumno;
+		this.apellidoAlumno = apellidoAlumno;
+		this.matricula = matricula;
+		this.telefonoAlumno = telefonoAlumno;
+		this.correo = correo;
+		this.promedio = promedio;
+		this.estadoAlumno = estadoAlumno;
+		this.contrasenia = contrasenia;
+	}
 
-    public void setIdAlumno(Integer idAlumno) {
-        this.idAlumno = idAlumno;
-    }
+	public Integer getIdAlumno() {
+		return idAlumno;
+	}
 
-    public String getNombreAlumno() {
-        return nombreAlumno;
-    }
+	public void setIdAlumno(Integer idAlumno) {
+		this.idAlumno = idAlumno;
+	}
 
-    public void setNombreAlumno(String nombreAlumno) {
-        this.nombreAlumno = nombreAlumno;
-    }
+	public String getNombreAlumno() {
+		return nombreAlumno;
+	}
 
-    public String getApellidoAlumno() {
-        return apellidoAlumno;
-    }
+	public void setNombreAlumno(String nombreAlumno) {
+		this.nombreAlumno = nombreAlumno;
+	}
 
-    public void setApellidoAlumno(String apellidoAlumno) {
-        this.apellidoAlumno = apellidoAlumno;
-    }
+	public String getApellidoAlumno() {
+		return apellidoAlumno;
+	}
 
-    public String getMatricula() {
-        return matricula;
-    }
+	public void setApellidoAlumno(String apellidoAlumno) {
+		this.apellidoAlumno = apellidoAlumno;
+	}
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
+	public String getMatricula() {
+		return matricula;
+	}
 
-    public String getTelefonoAlumno() {
-        return telefonoAlumno;
-    }
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
+	}
 
-    public void setTelefonoAlumno(String telefonoAlumno) {
-        this.telefonoAlumno = telefonoAlumno;
-    }
+	public String getTelefonoAlumno() {
+		return telefonoAlumno;
+	}
 
-    public String getCorreo() {
-        return correo;
-    }
+	public void setTelefonoAlumno(String telefonoAlumno) {
+		this.telefonoAlumno = telefonoAlumno;
+	}
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
+	public String getCorreo() {
+		return correo;
+	}
 
-    public Float getPromedio() {
-        return promedio;
-    }
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
 
-    public void setPromedio(Float promedio) {
-        this.promedio = promedio;
-    }
+	public Float getPromedio() {
+		return promedio;
+	}
 
-    public String getEstadoAlumno() {
-        return estadoAlumno;
-    }
+	public void setPromedio(Float promedio) {
+		this.promedio = promedio;
+	}
 
-    public void setEstadoAlumno(String estadoAlumno) {
-        this.estadoAlumno = estadoAlumno;
-    }
+	public String getEstadoAlumno() {
+		return estadoAlumno;
+	}
 
-    public String getContrasenia() {
-        return contrasenia;
-    }
+	public void setEstadoAlumno(String estadoAlumno) {
+		this.estadoAlumno = estadoAlumno;
+	}
 
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
+	public String getContrasenia() {
+		return contrasenia;
+	}
 
-    public String getNombreEE() {
-        return nombreEE;
-    }
+	public void setContrasenia(String contrasenia) {
+		this.contrasenia = contrasenia;
+	}
 
-    public void setNombreEE(String nombreEE) {
-        this.nombreEE = nombreEE;
-    }
+	public String getNombreEE() {
+		return nombreEE;
+	}
 
-    public String getNombreProyecto() {
-        return nombreProyecto;
-    }
+	public void setNombreEE(String nombreEE) {
+		this.nombreEE = nombreEE;
+	}
 
-    public void setNombreProyecto(String nombreProyecto) {
-        this.nombreProyecto = nombreProyecto;
-    }
+	public String getNombreProyecto() {
+		return nombreProyecto;
+	}
+
+	public void setNombreProyecto(String nombreProyecto) {
+		this.nombreProyecto = nombreProyecto;
+	}
+
+	public String getTipoProyecto() {
+		return tipoProyecto;
+	}
+
+	public void setTipoProyecto(String tipoProyecto) {
+		this.tipoProyecto = tipoProyecto;
+	}
 }

@@ -180,19 +180,24 @@ public class AlumnoDAO {
         return respuesta;
     }
 
-   public static List<Alumno> obtenerAlumnoYProyecto(String nombreBusqueda, String tipoProyecto) throws SQLException {
+  public static List<Alumno> obtenerAlumnoYProyecto(String nombreBusqueda, String tipoProyecto) throws SQLException {
     List<Alumno> resultados = new ArrayList<>();
     Connection conexionBD = ConexionBD.abrirConexion();
 
     if (conexionBD != null) {
-        String consulta = "SELECT " +
-            "a.nombreAlumno, " +
+       String consulta = "SELECT " +
+            "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreAlumno, " +  
             "e.nombreEE, " +
             "CASE " +
             "  WHEN pp.nombreProyecto IS NOT NULL THEN pp.nombreProyecto " +
             "  WHEN ss.nombreProyecto IS NOT NULL THEN ss.nombreProyecto " +
             "  ELSE 'Sin proyecto asignado' " +
-            "END AS nombreProyecto " +
+            "END AS nombreProyecto, " +
+            "CASE " +
+            "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' " +
+            "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' " +
+            "  ELSE 'Sin proyecto' " +
+            "END AS tipoProyecto " +
             "FROM inscripcionee i " +
             "INNER JOIN alumno a ON i.idAlumno = a.idAlumno " +
             "INNER JOIN ee e ON i.idEE = e.idEE " +
@@ -201,17 +206,19 @@ public class AlumnoDAO {
             "WHERE LOWER(a.nombreAlumno) LIKE LOWER(?) ";
 
         if (tipoProyecto != null && !tipoProyecto.isEmpty()) {
-            if (tipoProyecto.equalsIgnoreCase("Servicio Social")) {
-                consulta += "AND ss.nombreProyecto IS NOT NULL ";
-            } else if (tipoProyecto.equalsIgnoreCase("Práctica Profesional")) {
-                consulta += "AND pp.nombreProyecto IS NOT NULL ";
-            }
+            consulta += "AND CASE " +
+                        "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' " +
+                        "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' " +
+                        "  ELSE 'Sin proyecto' " +
+                        "END = ?";
         }
 
         try (PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
             prepararSentencia.setString(1, "%" + nombreBusqueda + "%");
 
-            System.out.println("Ejecutando consulta: " + prepararSentencia.toString());
+            if (tipoProyecto != null && !tipoProyecto.isEmpty()) {
+                prepararSentencia.setString(2, tipoProyecto);
+            }
 
             try (ResultSet resultadoConsulta = prepararSentencia.executeQuery()) {
                 if (!resultadoConsulta.isBeforeFirst()) {
@@ -223,6 +230,7 @@ public class AlumnoDAO {
                     alumno.setNombreAlumno(resultadoConsulta.getString("nombreAlumno"));
                     alumno.setNombreEE(resultadoConsulta.getString("nombreEE"));
                     alumno.setNombreProyecto(resultadoConsulta.getString("nombreProyecto"));
+                    alumno.setTipoProyecto(resultadoConsulta.getString("tipoProyecto"));
                     resultados.add(alumno);
                 }
             }
@@ -239,6 +247,8 @@ public class AlumnoDAO {
 
     return resultados;
 }
+
+
 
 
 

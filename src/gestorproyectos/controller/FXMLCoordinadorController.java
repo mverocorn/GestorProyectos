@@ -114,7 +114,13 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		cBoxFiltroAlumno.getItems().addAll("Servicio Social", "Práctica Profesional");
+		cBoxFiltroAlumno.getItems().addAll("Servicio Social", "Práctica Profesional", "Todos");
+		cBoxFiltroAlumno.setValue("Todos");
+		cBoxFiltroAlumno.setOnAction(event -> {
+			configurarTablaAlumno();
+			cargarTablaAlumno();
+		});
+
 		configurarTablaProyectoSS();
 		cargarTablaProyectoSS();
 	}
@@ -128,17 +134,17 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	private void cargarTablaAlumno() {
 		String nombreBusqueda = txtFBuscarAlumno.getText().trim();
-		String tipoProyecto = (String) cBoxFiltroAlumno.getValue(); // Obtienes el valor seleccionado en el ComboBox
+		String tipoProyecto = (String) cBoxFiltroAlumno.getValue();
 
 		alumnos = FXCollections.observableArrayList();
 
 		try {
-			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnoYProyecto(nombreBusqueda, tipoProyecto);
-			for (Alumno alumno : alumnos) {
-				System.out.println("Alumno: " + alumno.getNombreAlumno()
-						+ ", EE: " + alumno.getNombreEE()
-						+ ", Proyecto: " + alumno.getNombreProyecto());
+			if ("Todos".equals(tipoProyecto)) {
+				tipoProyecto = null;
 			}
+
+			// Recuperar los alumnos filtrados
+			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnoYProyecto(nombreBusqueda, tipoProyecto);
 
 			if (alumnosBD != null && !alumnosBD.isEmpty()) {
 				alumnos.addAll(alumnosBD);
