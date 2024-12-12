@@ -278,4 +278,33 @@ public class InscripcionEEDAO {
         return resultados;
     }
 
+    public static HashMap<String, Object> DarDeBaja(int idInscripcionEE) throws SQLException{
+        HashMap<String, Object> respuesta = new HashMap<>();
+        respuesta.put("error", true);
+        Connection conexionBD = ConexionBD.abrirConexion();
+        if(conexionBD != null){
+            String sentencia = "DELETE FROM InscripcionEE "
+                    + "WHERE idInscripcionEE = ?";
+            try {
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(sentencia);
+                prepararSentencia.setInt(1, idInscripcionEE);
+                int filasAfectadas = prepararSentencia.executeUpdate();
+                if (filasAfectadas == 1){
+                    respuesta.put("error", false);
+                    respuesta.put("mensaje", "El alumno fue dado de baja correctamente");
+                } else{
+                    respuesta.put("mensaje", "Lo sentimos, hubo un error al dar de baja "
+                            + "al alumno, por favor intenta mas tarde");
+                }
+                conexionBD.close();
+            } catch (SQLException ex) {
+                respuesta.put("mensaje", ex.getMessage());
+            }
+            
+        } else{
+            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio no está disponible. Intente más tarde.");
+        }
+        return respuesta;
+    }    
+    
 }
