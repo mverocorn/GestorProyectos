@@ -193,8 +193,9 @@ public class InscripcionEEDAO {
 
         return nombresEE;
     }
-    
-    public static List<Map<String, Object>> obtenerDetalleInscripciones() throws SQLException {
+  
+    //FALTA CUANDO ESTADOINSCRIPCION = EN CURSO
+    public static List<Map<String, Object>> obtenerEEAlumno() throws SQLException {
         List<Map<String, Object>> resultados = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
 
