@@ -55,7 +55,7 @@ public class FXMLRegistroAlumnoController implements Initializable {
 	}
 	
 	private boolean sonCamposValidos() {
-			boolean valido = false;
+			boolean valido = true;
 
 			return valido;
 		}
@@ -69,6 +69,7 @@ public class FXMLRegistroAlumnoController implements Initializable {
 			String telefonoAlumno = txtFTelefono.getText().trim();
 			String correo = txtFCorreo.getText().trim();
 			float promedio = Float.parseFloat(txtFPromedio.getText().trim());
+			String contrasenia = txtFContrasenia.getText().trim();
 
 			
 			Alumno alumno = new Alumno();
@@ -78,6 +79,7 @@ public class FXMLRegistroAlumnoController implements Initializable {
 			alumno.setTelefonoAlumno(telefonoAlumno);
 			alumno.setCorreo(correo);
 			alumno.setPromedio(promedio);
+			alumno.setContrasenia(contrasenia);
 			
 			guardarNuevoAlumno(alumno);
 		} 
@@ -89,7 +91,7 @@ public class FXMLRegistroAlumnoController implements Initializable {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,
 					"Alumno registrado", respuesta.get("mensaje").toString());
 			cerrarFormulario();
-			observador.notificarAlumnoGuardado(alumno.getNombreAlumno(), "Registro nuevo");
+			//observador.notificarAlumnoGuardado(alumno.getNombreAlumno(), "Registro nuevo");
 		} else {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, 
 					"Error al guardar", respuesta.get("mensaje").toString());

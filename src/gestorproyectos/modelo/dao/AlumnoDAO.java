@@ -70,8 +70,6 @@ public class AlumnoDAO {
         }
         Validador.validarCorreo(alumno.getCorreo());
         Validador.validarPromedio(alumno.getPromedio());
-        Validador.validarTexto(alumno.getEstadoAlumno(), "estadoAlumno", 50);
-        Validador.validarTexto(alumno.getContrasenia(), "contraseña", 50);
         Validador.validarContrasenia(alumno.getContrasenia());
     }
 
@@ -128,7 +126,7 @@ public class AlumnoDAO {
                 );
 
                 String sentencia = "INSERT INTO alumno (nombreAlumno, apellidoAlumno, matricula, "
-                    + "telefonoAlumno, correo, promedio, estadoAlumno, contrasenia) "
+                    + "telefonoAlumno, correoAlumno, promedio, estadoAlumno, contraseniaAlumno) "
                     + "VALUES (?, ?, ?, ?, ?, ?, 'inscrito', ?)";
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
                 prepararSentencia.setString(1, alumno.getNombreAlumno());

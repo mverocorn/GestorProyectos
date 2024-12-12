@@ -101,7 +101,7 @@
                                               <TableColumn fx:id="colNombreAlumnoAsignacion" prefWidth="129.60004425048828" text="Nombre Alumno" />
                                               <TableColumn fx:id="colPromedioAsignacion" prefWidth="60.79998779296875" text="Promedio" />
                                                 <TableColumn fx:id="colEEAsignacion" prefWidth="92.800048828125" text="EE" />
-                                                <TableColumn fx:id="colBloqueAsignacion" prefWidth="63.2000732421875" text="Bloque" />
+                                                <TableColumn fx:id="colSeccionAsignacion" prefWidth="63.2000732421875" text="Seccion" />
                                             </columns>
                                           </TableView>
                                           <ComboBox fx:id="cBoxFiltroAsignarProyecto" layoutX="244.0" layoutY="62.0" prefHeight="40.0" prefWidth="306.0" />
