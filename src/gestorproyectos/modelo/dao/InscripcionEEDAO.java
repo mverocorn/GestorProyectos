@@ -193,9 +193,8 @@ public class InscripcionEEDAO {
 
         return nombresEE;
     }
-  
-    //FALTA CUANDO ESTADOINSCRIPCION = EN CURSO
-    public static List<Map<String, Object>> obtenerEEAlumno() throws SQLException {
+
+    public static List<Map<String, Object>> obtenerAlumnosSSParaAsignarProyectoSS() throws SQLException {
         List<Map<String, Object>> resultados = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
 
@@ -207,7 +206,8 @@ public class InscripcionEEDAO {
                 + "e.seccion "
                 + "FROM alumno a "
                 + "INNER JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
-                + "INNER JOIN ee e ON i.idEE = e.idEE";
+                + "INNER JOIN ee e ON i.idEE = e.idEE "
+                + "WHERE i.estadoInscripcion = 'en curso' AND e.nombreEE = 'Servicio social'";
 
             try (
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
