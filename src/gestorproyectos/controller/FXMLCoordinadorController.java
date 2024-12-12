@@ -1,11 +1,21 @@
 package gestorproyectos.controller;
 
 import gestorproyectos.interfaces.IObservador;
+import gestorproyectos.modelo.dao.AlumnoDAO;
 import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.modelo.dao.ProyectoSSDAO;
+import gestorproyectos.modelo.pojo.ProyectoSS;
+import gestorproyectos.modelo.dao.ProyectoPPDAO;
+import gestorproyectos.modelo.pojo.ProyectoPP;
 import gestorproyectos.utilidades.MisUtilidades;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +28,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -26,10 +37,10 @@ import javafx.stage.Stage;
  *
  * @author Vero
  */
-public class FXMLCoordinadorController implements Initializable {
+public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	@FXML
-	private TableView<?> tblAlumno;
+	private TableView<Alumno> tblAlumno;
 	@FXML
 	private TableColumn<?, ?> colNombreAlumno;
 	@FXML
@@ -49,11 +60,11 @@ public class FXMLCoordinadorController implements Initializable {
 	@FXML
 	private TextField txtFBuscarProyecto;
 	@FXML
-	private TableView<?> tblProyecto;
+	private TableView<ProyectoSS> tblProyecto;
 	@FXML
 	private TableColumn<?, ?> colNombreProyecto;
 	@FXML
-	private TableColumn<?, ?> colEEProyecto;
+	private TableColumn<ProyectoSS, String> colEEProyecto;
 	@FXML
 	private ComboBox<?> cBoxFiltroProyecto;
 	@FXML
@@ -93,12 +104,45 @@ public class FXMLCoordinadorController implements Initializable {
 	@FXML
 	private ComboBox<?> cBoxFiltroEE;
 
+	private ObservableList<Alumno> alumnos;
+	private ObservableList<ProyectoSS> proyectosSS;
+	private ObservableList<ProyectoPP> proyectosPP;
+
 	/**
 	 * Initializes the controller class.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
+		configurarTablaAlumno();
+		cargarTablaAlumno();
+		configurarTablaProyectoSS();
+		cargarTablaProyectoSS();
+	}
+
+	private void configurarTablaAlumno() {
+		colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
+		colEEAlumno.setCellValueFactory(new PropertyValueFactory("ee"));
+		colProyectoAlumno.setCellValueFactory(new PropertyValueFactory(""));
+
+	}
+
+	private void cargarTablaAlumno() {
+		alumnos = FXCollections.observableArrayList();
+		try {
+			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnos();
+			if (alumnosBD != null) {
+				alumnos.addAll(alumnosBD);
+				tblAlumno.setItems(alumnos);
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+						"Error", "Lo sentimos, no se puede cargar en "
+						+ "este momento la tabla de alumnos");
+			}
+		} catch (SQLException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
+					+ "vuelva a intentar");
+		}
 	}
 
 	@FXML
@@ -112,6 +156,56 @@ public class FXMLCoordinadorController implements Initializable {
 
 	@FXML
 	private void clickBuscarAlumno(ActionEvent event) {
+	}
+
+	private void configurarTablaProyectoSS() {
+		colNombreProyecto.setCellValueFactory(new PropertyValueFactory("nombreProyecto"));
+		colEEProyecto.setCellValueFactory(celda -> new SimpleStringProperty("Servicio Social"));
+	}
+
+	private void cargarTablaProyectoSS() {
+		proyectosSS = FXCollections.observableArrayList();
+		try {
+			List<ProyectoSS> proyectoSSBD = ProyectoSSDAO.obtenerProyectosSS();
+			if (proyectoSSBD != null) {
+				proyectosSS.addAll(proyectoSSBD);
+				tblProyecto.setItems(proyectosSS);
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+						"Error", "Lo sentimos, no se puede cargar en "
+						+ "este momento la tabla de proyectosSS");
+			}
+		} catch (SQLException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
+					+ "vuelva a intentar");
+		}
+	}
+
+	private void configurarTablaProyectoPP() {
+		colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
+		colEEAlumno.setCellValueFactory(new PropertyValueFactory("ee"));
+		colProyectoAlumno.setCellValueFactory(new PropertyValueFactory(""));
+
+	}
+
+	private void cargarTablaProyectoPP() {
+		alumnos = FXCollections.observableArrayList();
+		try {
+			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnos();
+			if (alumnosBD != null) {
+				alumnos.addAll(alumnosBD);
+				tblAlumno.setItems(alumnos);
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+						"Error", "Lo sentimos, no se puede cargar en "
+						+ "este momento la tabla de alumnos");
+			}
+		} catch (SQLException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
+					+ "vuelva a intentar");
+		}
 	}
 
 	@FXML
@@ -133,15 +227,13 @@ public class FXMLCoordinadorController implements Initializable {
 	@FXML
 	private void clickRegistrarEE(ActionEvent event) {
 	}
-	
+
 	private void irFormularioAlumno() {
 		try {
 			FXMLLoader loader = new FXMLLoader(
 					gestorproyectos.GestorProyectos.class.getResource(
 							"vista/FXMLRegistroAlumno.fxml"));
 			Parent vista = loader.load();
-			FXMLRegistroAlumnoController controlador = loader.getController();
-			controlador.inicializarValores();
 			Stage escenario = new Stage();
 			Scene escena = new Scene(vista);
 			escenario.setScene(escena);
@@ -151,6 +243,11 @@ public class FXMLCoordinadorController implements Initializable {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	public void notificarAlumnoGuardado(String nombreAlumno, String operacion) {
+
 	}
 
 }

@@ -4,6 +4,7 @@ import gestorproyectos.interfaces.IObservador;
 import gestorproyectos.modelo.dao.AlumnoDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.utilidades.MisUtilidades;
+import gestorproyectos.utilidades.Validador;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -23,89 +24,122 @@ import javafx.stage.Stage;
  */
 public class FXMLRegistroAlumnoController implements Initializable {
 
-	@FXML
-	private TextField txtFNombreAlumno;
-	@FXML
-	private TextField txtFApellidoPaterno;
-	@FXML
-	private TextField txtFApellidoMaterno;
-	@FXML
-	private TextField txtFMatricula;
-	@FXML
-	private TextField txtFCorreo;
-	@FXML
-	private TextField txtFTelefono;
-	@FXML
-	private TextField txtFPromedio;
-	@FXML
-	private PasswordField txtFContrasenia;
+    @FXML
+    private TextField txtFNombreAlumno;
+    @FXML
+    private TextField txtFApellidoPaterno;
+    @FXML
+    private TextField txtFApellidoMaterno;
+    @FXML
+    private TextField txtFMatricula;
+    @FXML
+    private TextField txtFCorreo;
+    @FXML
+    private TextField txtFTelefono;
+    @FXML
+    private TextField txtFPromedio;
+    @FXML
+    private PasswordField txtFContrasenia;
 
-	private IObservador observador;
+    private IObservador observador;
 
-	/**
-	 * Initializes the controller class.
-	 */
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
-	}
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Inicialización necesaria.
+    }
 
-	public void inicializarValores() {
+    /*public void inicializarValores(IObservador observador) {
+        this.observador = observador;
+    }*/
 
-	}
-	
-	private boolean sonCamposValidos() {
-			boolean valido = true;
+    @FXML
+    private void clickRegistrar(ActionEvent event) {
+        try {
+            Alumno alumno = construirAlumnoDesdeFormulario();
+            if (AlumnoDAO.validarAlumnoARegistrar(alumno)) {
+                guardarNuevoAlumno(alumno);
+            }
+        } catch (IllegalArgumentException ex) {
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Validación", ex.getMessage());
+        } catch (SQLException ex) {
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo registrar el alumno.");
+        }
+    }
 
-			return valido;
-		}
-	
-	@FXML
-	private void clickRegistrar(ActionEvent event) throws SQLException {
-		if (sonCamposValidos()) {
-			String nombreAlumno = txtFNombreAlumno.getText().trim();
-			String apellidoAlumno = (txtFApellidoPaterno.getText().trim() + " " + txtFApellidoMaterno.getText().trim());
-			String matricula = txtFMatricula.getText().trim();
-			String telefonoAlumno = txtFTelefono.getText().trim();
-			String correo = txtFCorreo.getText().trim();
-			float promedio = Float.parseFloat(txtFPromedio.getText().trim());
-			String contrasenia = txtFContrasenia.getText().trim();
+    private Alumno construirAlumnoDesdeFormulario() {
+        String nombreAlumno = txtFNombreAlumno.getText().trim();
+        String apellidoPaterno = txtFApellidoPaterno.getText().trim();
+        String apellidoMaterno = txtFApellidoMaterno.getText().trim();
+        String matricula = txtFMatricula.getText().trim();
+        String telefono = txtFTelefono.getText().trim();
+        String correo = txtFCorreo.getText().trim();
+        String promedioStr = txtFPromedio.getText().trim();
+        String contrasenia = txtFContrasenia.getText().trim();
 
-			
-			Alumno alumno = new Alumno();
-			alumno.setNombreAlumno(nombreAlumno);
-			alumno.setApellidoAlumno(apellidoAlumno);
-			alumno.setMatricula(matricula);
-			alumno.setTelefonoAlumno(telefonoAlumno);
-			alumno.setCorreo(correo);
-			alumno.setPromedio(promedio);
-			alumno.setContrasenia(contrasenia);
-			
-			guardarNuevoAlumno(alumno);
-		} 
-	}
+        // Validaciones
+        Validador.validarTexto(nombreAlumno, "Nombre del alumno", 50);
+        Validador.validarTexto(apellidoPaterno, "Apellido paterno", 50);
+        Validador.validarTexto(apellidoMaterno, "Apellido materno", 50);
+        Validador.validarMatricula(matricula);
+        Validador.validarTelefono(telefono);
+        Validador.validarCorreo(correo);
+        Validador.validarContrasenia(contrasenia);
 
-	private void guardarNuevoAlumno(Alumno alumno) throws SQLException {
-		HashMap<String, Object> respuesta = AlumnoDAO.registrarAlumno(alumno);
-		if (!((Boolean) respuesta.get("error"))) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,
-					"Alumno registrado", respuesta.get("mensaje").toString());
-			cerrarFormulario();
-			//observador.notificarAlumnoGuardado(alumno.getNombreAlumno(), "Registro nuevo");
-		} else {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, 
-					"Error al guardar", respuesta.get("mensaje").toString());
-		}
-	}
+        float promedio;
+        try {
+            promedio = Float.parseFloat(promedioStr);
+            Validador.validarPromedio(promedio);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("El promedio debe ser un número válido entre 0.0 y 10.0.");
+        }
 
-	@FXML
-	private void clickCancelar(ActionEvent event) {
-		cerrarFormulario();
-	}
+        // Crear objeto Alumno
+        Alumno alumno = new Alumno();
+        alumno.setNombreAlumno(nombreAlumno);
+        alumno.setApellidoAlumno(apellidoPaterno + " " + apellidoMaterno);
+        alumno.setMatricula(matricula);
+        alumno.setTelefonoAlumno(telefono);
+        alumno.setCorreo(correo);
+        alumno.setPromedio(promedio);
+        alumno.setContrasenia(contrasenia);
 
-	private void cerrarFormulario() {
-		Stage escenarioBase = (Stage) txtFNombreAlumno.getScene().getWindow();
-		escenarioBase.close();
-	}
+        return alumno;
+    }
 
+    private void guardarNuevoAlumno(Alumno alumno) throws SQLException {
+        HashMap<String, Object> respuesta = AlumnoDAO.registrarAlumno(alumno);
+        if (!((Boolean) respuesta.get("error"))) {
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Éxito", respuesta.get("mensaje").toString());
+            limpiarFormulario();
+            if (observador != null) {
+                observador.notificarAlumnoGuardado(alumno.getNombreAlumno(), "Registro nuevo");
+            }
+        } else {
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", respuesta.get("mensaje").toString());
+        }
+    }
+
+    @FXML
+    private void clickCancelar(ActionEvent event) {
+        cerrarFormulario();
+    }
+
+    private void limpiarFormulario() {
+        txtFNombreAlumno.clear();
+        txtFApellidoPaterno.clear();
+        txtFApellidoMaterno.clear();
+        txtFMatricula.clear();
+        txtFTelefono.clear();
+        txtFCorreo.clear();
+        txtFPromedio.clear();
+        txtFContrasenia.clear();
+    }
+
+    private void cerrarFormulario() {
+        Stage stage = (Stage) txtFNombreAlumno.getScene().getWindow();
+        stage.close();
+    }
 }

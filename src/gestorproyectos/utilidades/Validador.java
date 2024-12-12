@@ -7,6 +7,21 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Validador {
+	
+	String mensaje;
+
+	public Validador(String mensaje) {
+		this.mensaje = mensaje;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+	
 
     public static void validarMatricula(String matricula) {
         if (matricula == null || !matricula.matches("^[\\w\\d]+$")) {
