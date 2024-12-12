@@ -80,4 +80,52 @@ public class PriorizacionProyectosDAOTest {
 
         conexionBD.close();
     }
+
+    @Test
+    public void testValidarPriorizacion() throws Exception {
+    }
+
+    @Test
+    public void testObtenerPriorizacionDeAlumnoProyectoSS() throws Exception {
+    }
+
+    @Test
+    public void testObtenerPriorizacionDeAlumnoProyectoPP() throws Exception {
+    }
+
+    @Test
+    public void testAsignarProyectoSS() throws SQLException {
+        int idAlumno = 1;
+        int idProyectoSS = 3;
+
+        // Llamamos al método que estamos probando
+        PriorizacionProyectosDAO.asignarProyectoSS(idAlumno, idProyectoSS);
+
+        // Ahora verificamos que el proyecto se asignó correctamente en la base de datos
+        Connection conexionBD = ConexionBD.abrirConexion();
+        String consulta = "SELECT idProyectoSS FROM inscripcionee WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+        PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+        prepararConsulta.setInt(1, idAlumno);
+
+        ResultSet resultado = prepararConsulta.executeQuery();
+
+        boolean proyectoAsignado = false;
+        while (resultado.next()) {
+            // Comprobamos si el idProyectoSS coincide
+            if (resultado.getInt("idProyectoSS") == idProyectoSS) {
+                proyectoAsignado = true;
+                break;
+            }
+        }
+
+        // Verificamos que el proyecto fue asignado
+        assertTrue(proyectoAsignado);
+
+        // Cerramos la conexión
+        conexionBD.close();
+    }
+
+    @Test
+    public void testAsignarProyectoPP() throws Exception {
+    }
 }

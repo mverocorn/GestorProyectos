@@ -200,6 +200,7 @@ public class InscripcionEEDAO {
 
         if (conexionBD != null) {
             String consulta = "SELECT "
+                + "a.idAlumno, "
                 + "a.nombreAlumno, "
                 + "a.promedio, "
                 + "e.nombreEE, "
@@ -207,7 +208,7 @@ public class InscripcionEEDAO {
                 + "FROM alumno a "
                 + "INNER JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
                 + "INNER JOIN ee e ON i.idEE = e.idEE "
-                + "WHERE i.estadoInscripcion = 'en curso' AND e.nombreEE = 'Servicio social'";
+                + "WHERE i.estadoInscripcion = 'en curso' AND e.nombreEE = 'Servicio Social'";
 
             try (
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
@@ -215,6 +216,7 @@ public class InscripcionEEDAO {
 
                 while (resultado.next()) {
                     Map<String, Object> fila = new HashMap<>();
+                    fila.put("idAlumno", resultado.getInt("idAlumno"));
                     fila.put("nombreAlumno", resultado.getString("nombreAlumno"));
                     fila.put("promedio", resultado.getFloat("promedio"));
                     fila.put("nombreEE", resultado.getString("nombreEE"));
@@ -240,6 +242,7 @@ public class InscripcionEEDAO {
 
         if (conexionBD != null) {
             String consulta = "SELECT "
+                + "a.idAlumno, "
                 + "a.nombreAlumno, "
                 + "a.promedio, "
                 + "e.nombreEE, "
@@ -255,6 +258,7 @@ public class InscripcionEEDAO {
 
                 while (resultado.next()) {
                     Map<String, Object> fila = new HashMap<>();
+                    fila.put("idAlumno", resultado.getInt("idAlumno"));
                     fila.put("nombreAlumno", resultado.getString("nombreAlumno"));
                     fila.put("promedio", resultado.getFloat("promedio"));
                     fila.put("nombreEE", resultado.getString("nombreEE"));
@@ -273,4 +277,5 @@ public class InscripcionEEDAO {
 
         return resultados;
     }
+
 }

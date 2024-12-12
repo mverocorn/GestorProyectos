@@ -5,7 +5,6 @@ import gestorproyectos.utilidades.Validador;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;

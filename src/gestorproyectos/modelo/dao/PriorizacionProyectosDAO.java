@@ -133,6 +133,7 @@ public class PriorizacionProyectosDAO {
 
         if (conexionBD != null) {
             String consulta = "SELECT "
+                + "ss.idProyectoSS, "
                 + "ss.nombreProyecto, "
                 + "ss.cupoProyecto, "
                 + "p.prioridad "
@@ -143,11 +144,12 @@ public class PriorizacionProyectosDAO {
 
             try (
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-                prepararSentencia.setInt(1, idAlumno);  // Establecer el id del alumno en la consulta
+                prepararSentencia.setInt(1, idAlumno); // Establecer el id del alumno en la consulta
 
                 try (ResultSet resultado = prepararSentencia.executeQuery()) {
                     while (resultado.next()) {
                         Map<String, Object> fila = new HashMap<>();
+                        fila.put("idProyectoSS", resultado.getInt("idProyectoSS"));
                         fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
                         fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
                         fila.put("prioridad", resultado.getInt("prioridad"));
@@ -173,21 +175,23 @@ public class PriorizacionProyectosDAO {
 
         if (conexionBD != null) {
             String consulta = "SELECT "
+                + "ss.idProyectoPP, "
                 + "ss.nombreProyecto, "
                 + "ss.cupoProyecto, "
                 + "p.prioridad "
-                + "FROM proyectoss ss "
-                + "INNER JOIN priorizacionproyectos p ON p.idProyectoSS = ss.idProyectoSS "
+                + "FROM proyectopp pp "
+                + "INNER JOIN priorizacionproyectos p ON p.idProyectoPP = ss.idProyectoPP "
                 + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
                 + "WHERE ie.idAlumno = ?";
 
             try (
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-                prepararSentencia.setInt(1, idAlumno);  // Establecer el id del alumno en la consulta
+                prepararSentencia.setInt(1, idAlumno); // Establecer el id del alumno en la consulta
 
                 try (ResultSet resultado = prepararSentencia.executeQuery()) {
                     while (resultado.next()) {
                         Map<String, Object> fila = new HashMap<>();
+                        fila.put("idProyectoSS", resultado.getInt("idProyectoSS"));
                         fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
                         fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
                         fila.put("prioridad", resultado.getInt("prioridad"));
@@ -206,4 +210,68 @@ public class PriorizacionProyectosDAO {
 
         return resultados;
     }
+
+    public static void asignarProyectoSS(int idAlumno, int idProyectoSS) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "UPDATE inscripcionee "
+                + "SET idProyectoSS = ? "
+                + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idProyectoSS);
+                prepararSentencia.setInt(2, idAlumno); 
+
+                int filasAfectadas = prepararSentencia.executeUpdate();
+
+                if (filasAfectadas > 0) {
+                    System.out.println("Proyecto asignado correctamente al alumno.");
+                } else {
+                    System.out.println("No se encontró una inscripción activa para el alumno especificado.");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al asignar el proyecto al alumno", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+    }
+
+    public static void asignarProyectoPP(int idAlumno, int idProyectoPP) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "UPDATE inscripcionee "
+                + "SET idProyectoPP = ? "
+                + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idProyectoPP);
+                prepararSentencia.setInt(2, idAlumno);
+
+                int filasAfectadas = prepararSentencia.executeUpdate();
+
+                if (filasAfectadas > 0) {
+                    System.out.println("Proyecto asignado correctamente al alumno.");
+                } else {
+                    System.out.println("No se encontró una inscripción activa para el alumno especificado.");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al asignar el proyecto al alumno", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+    }
+    
+    
 }
