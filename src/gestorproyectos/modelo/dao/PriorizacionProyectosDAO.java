@@ -15,11 +15,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PriorizacionProyectosDAO {
-    
+
     private static final Logger logger = Logger.getLogger(
-            InscripcionEEDAO.class.getName()
+        InscripcionEEDAO.class.getName()
     );
-    
+
     public static boolean validarPriorizacion(Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         Set<Integer> prioridades = new HashSet<>(proyectosYPrioridades.values());
         if (prioridades.size() != proyectosYPrioridades.size()) {
@@ -30,7 +30,7 @@ public class PriorizacionProyectosDAO {
         return true;
     }
 
-    public static void guardarPriorizacionProyectosSS(int idInscripcionEE, 
+    public static void guardarPriorizacionProyectosSS(int idInscripcionEE,
         Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         validarPriorizacion(proyectosYPrioridades);
 
@@ -65,7 +65,8 @@ public class PriorizacionProyectosDAO {
 
             } catch (SQLException ex) {
                 respuesta.put("error", true);
-                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: " + ex.getMessage());
+                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
+                    + ex.getMessage());
                 logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
                 throw new SQLException("Error al guardar priorización de proyectos", ex);
             } finally {
@@ -78,7 +79,7 @@ public class PriorizacionProyectosDAO {
         }
     }
 
-    public static void guardarPriorizacionProyectosPP(int idInscripcionEE, 
+    public static void guardarPriorizacionProyectosPP(int idInscripcionEE,
         Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
         validarPriorizacion(proyectosYPrioridades);
 
@@ -112,7 +113,8 @@ public class PriorizacionProyectosDAO {
 
             } catch (SQLException ex) {
                 respuesta.put("error", true);
-                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: " + ex.getMessage());
+                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
+                    + ex.getMessage());
                 logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
                 throw new SQLException("Error al guardar priorización de proyectos", ex);
             } finally {
@@ -124,9 +126,8 @@ public class PriorizacionProyectosDAO {
                 + "no está disponible. Intente más tarde.");
         }
     }
-    
-    //FALTA CUANDO ESTADOINSCRIPCION = EN CURSO
-    public static List<Map<String, Object>> obtenerPriorizacionProyectoSS() throws SQLException {
+
+    public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoSS(int idAlumno) throws SQLException {
         List<Map<String, Object>> resultados = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
 
@@ -134,23 +135,27 @@ public class PriorizacionProyectosDAO {
             String consulta = "SELECT "
                 + "ss.nombreProyecto, "
                 + "ss.cupoProyecto, "
-                + "p.prioridad"
+                + "p.prioridad "
                 + "FROM proyectoss ss "
-                + "INNER JOIN priorizacionproyectos p ON p.idProyectoSS = ss.idProyectoSS";
+                + "INNER JOIN priorizacionproyectos p ON p.idProyectoSS = ss.idProyectoSS "
+                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
+                + "WHERE ie.idAlumno = ?";
 
             try (
-                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-                ResultSet resultado = prepararSentencia.executeQuery()) {
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);  // Establecer el id del alumno en la consulta
 
-                while (resultado.next()) {
-                    Map<String, Object> fila = new HashMap<>();
-                    fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
-                    fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
-                    fila.put("prioridad", resultado.getInt("prioridad"));
-                    resultados.add(fila);
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        Map<String, Object> fila = new HashMap<>();
+                        fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
+                        fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
+                        fila.put("prioridad", resultado.getInt("prioridad"));
+                        resultados.add(fila);
+                    }
                 }
             } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Error al obtener detalles de inscripciones", ex);
+                logger.log(Level.SEVERE, "Error al obtener detalles de priorización de proyectos", ex);
                 throw ex;
             } finally {
                 ConexionBD.cerrarConexion(conexionBD);
@@ -162,4 +167,43 @@ public class PriorizacionProyectosDAO {
         return resultados;
     }
 
+    public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
+        List<Map<String, Object>> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "SELECT "
+                + "ss.nombreProyecto, "
+                + "ss.cupoProyecto, "
+                + "p.prioridad "
+                + "FROM proyectoss ss "
+                + "INNER JOIN priorizacionproyectos p ON p.idProyectoSS = ss.idProyectoSS "
+                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
+                + "WHERE ie.idAlumno = ?";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);  // Establecer el id del alumno en la consulta
+
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        Map<String, Object> fila = new HashMap<>();
+                        fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
+                        fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
+                        fila.put("prioridad", resultado.getInt("prioridad"));
+                        resultados.add(fila);
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al obtener detalles de priorización de proyectos", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return resultados;
+    }
 }

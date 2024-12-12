@@ -234,4 +234,43 @@ public class InscripcionEEDAO {
         return resultados;
     }
 
+    public static List<Map<String, Object>> obtenerAlumnosPPParaAsignarProyectoPP() throws SQLException {
+        List<Map<String, Object>> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "SELECT "
+                + "a.nombreAlumno, "
+                + "a.promedio, "
+                + "e.nombreEE, "
+                + "e.seccion "
+                + "FROM alumno a "
+                + "INNER JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
+                + "INNER JOIN ee e ON i.idEE = e.idEE "
+                + "WHERE i.estadoInscripcion = 'en curso' AND e.nombreEE = 'Practica Profesional'";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+                ResultSet resultado = prepararSentencia.executeQuery()) {
+
+                while (resultado.next()) {
+                    Map<String, Object> fila = new HashMap<>();
+                    fila.put("nombreAlumno", resultado.getString("nombreAlumno"));
+                    fila.put("promedio", resultado.getFloat("promedio"));
+                    fila.put("nombreEE", resultado.getString("nombreEE"));
+                    fila.put("seccion", resultado.getInt("seccion"));
+                    resultados.add(fila);
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al obtener detalles de inscripciones", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return resultados;
+    }
 }
