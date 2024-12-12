@@ -151,26 +151,51 @@ public class ProyectoSSDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT * FROM proyectoss WHERE idProyectoSS = ?";
+                String consulta = "SELECT p.*, "
+                    + "r.nombreResponsable, r.apellidoResponsable, r.correoResponsable, "
+                    + "e.nombreEmpresa, e.correoEmpresa " + "FROM proyectoss p "
+                    + "JOIN responsable r ON p.idResponsable = r.idResponsable "
+                    + "JOIN empresa e ON r.idEmpresa = e.idEmpresa "
+                    + "WHERE p.idProyectoSS = ?;";
+
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 prepararConsulta.setInt(1, idProyectoSS);
                 ResultSet resultado = prepararConsulta.executeQuery();
+
                 if (resultado.next()) {
+                    // Crear el objeto ProyectoSS con los datos básicos
                     proyectoSS = new ProyectoSS(
-                            resultado.getInt("idProyectoSS"),
-                            resultado.getDate("fechaProyecto"),
-                            resultado.getString("nombreProyecto"),
-                            resultado.getString("objetivoProyecto"),
-                            resultado.getString("descripcionProyecto"),
-                            resultado.getInt("cupoProyecto"),
-                            resultado.getInt("idResponsable")
+                        resultado.getInt("idProyectoSS"),
+                        resultado.getDate("fechaProyecto"),
+                        resultado.getString("nombreProyecto"),
+                        resultado.getString("objetivoProyecto"),
+                        resultado.getString("descripcionProyecto"),
+                        resultado.getInt("cupoProyecto"),
+                        resultado.getInt("idResponsable")
                     );
+
+                    // Obtener datos adicionales
+                    String nombreResponsable = resultado.getString("nombreResponsable");
+                    String apellidoResponsable = resultado.getString("apellidoResponsable");
+                    String correoResponsable = resultado.getString("correoResponsable");
+                    String nombreEmpresa = resultado.getString("nombreEmpresa");
+                    String correoEmpresa = resultado.getString("correoEmpresa");
+
+                    // Manejar los datos adicionales según sea necesario
+                    System.out.println("Responsable: " + nombreResponsable + " "
+                        + apellidoResponsable + ", Correo: " + correoResponsable);
+                    System.out.println("Empresa: " + nombreEmpresa
+                        + ", Correo: " + correoEmpresa);
                 }
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Error al obtener ProyectoSS por ID", ex);
                 throw new SQLException("Error al obtener ProyectoSS por ID", ex);
             } finally {
-                conexionBD.close();
+                try {
+                    conexionBD.close();
+                } catch (SQLException ex) {
+                    logger.log(Level.WARNING, "Error al cerrar la conexión", ex);
+                }
             }
         }
         return proyectoSS;
