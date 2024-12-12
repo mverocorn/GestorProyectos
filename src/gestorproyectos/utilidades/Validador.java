@@ -7,21 +7,20 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Validador {
-	
-	String mensaje;
 
-	public Validador(String mensaje) {
-		this.mensaje = mensaje;
-	}
+    String mensaje;
 
-	public String getMensaje() {
-		return mensaje;
-	}
+    public Validador(String mensaje) {
+        this.mensaje = mensaje;
+    }
 
-	public void setMensaje(String mensaje) {
-		this.mensaje = mensaje;
-	}
-	
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
 
     public static void validarMatricula(String matricula) {
         if (matricula == null || !matricula.matches("^[\\w\\d]+$")) {
@@ -31,23 +30,30 @@ public class Validador {
 
     public static void validarTexto(String texto, String campo, int maxLength) {
         if (texto == null || texto.trim().isEmpty()) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede estar vacío.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede estar vacío.");
         }
         if (texto.length() > maxLength) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede exceder los " + maxLength + " caracteres.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede exceder los " + maxLength + " caracteres.");
         }
         String patronTexto = "^[\\p{L} .,'-]+$";
         if (!Pattern.matches(patronTexto, texto)) {
-            throw new IllegalArgumentException("El campo " + campo + " contiene caracteres no permitidos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " contiene caracteres no permitidos.");
         }
         if (texto.contains("  ")) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede contener múltiples espacios en blanco consecutivos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede contener múltiples espacios en blanco consecutivos.");
         }
         if (texto.chars().allMatch(c -> c == texto.charAt(0))) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede contener caracteres repetidos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede contener caracteres repetidos.");
         }
-        if (Pattern.compile("[.,]{2,}").matcher(texto).find() || Pattern.compile("[.,]\\s+[.,]").matcher(texto).find()) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede contener múltiples caracteres especiales consecutivos o separados por múltiples espacios.");
+        if (Pattern.compile("[.,]{2,}").matcher(texto).find()
+            || Pattern.compile("[.,]\\s+[.,]").matcher(texto).find()) {
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede contener múltiples caracteres especiales consecutivos o separados por múltiples espacios.");
         }
     }
 
@@ -121,23 +127,30 @@ public class Validador {
 
     public static void validarTitulo(String titulo, String campo, int maxLength) {
         if (titulo == null || titulo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede estar vacío.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede estar vacío.");
         }
         if (titulo.length() > maxLength) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede exceder los " + maxLength + " caracteres.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede exceder los " + maxLength + " caracteres.");
         }
         String patronTitulo = "^[\\p{L}\\d .,'-]+$";
         if (!Pattern.matches(patronTitulo, titulo)) {
-            throw new IllegalArgumentException("El campo " + campo + "  contiene caracteres no permitidos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + "  contiene caracteres no permitidos.");
         }
         if (titulo.contains("  ")) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede contener múltiples espacios en blanco consecutivos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede contener múltiples espacios en blanco consecutivos.");
         }
         if (titulo.chars().allMatch(c -> c == titulo.charAt(0))) {
-            throw new IllegalArgumentException("El campo " + campo + " no puede contener caracteres repetidos.");
+            throw new IllegalArgumentException("El campo " + campo
+                + " no puede contener caracteres repetidos.");
         }
-        if (Pattern.compile("(\\.\\s*){2,}").matcher(titulo).find() || Pattern.compile("(,\\s*){2,}").matcher(titulo).find()) {
-            throw new IllegalArgumentException("El campo " + campo + "  no puede contener múltiples caracteres especiales consecutivos.");
+        if (Pattern.compile("(\\.\\s*){2,}").matcher(titulo).find()
+            || Pattern.compile("(,\\s*){2,}").matcher(titulo).find()) {
+            throw new IllegalArgumentException("El campo " + campo
+                + "  no puede contener múltiples caracteres especiales consecutivos.");
         }
     }
 
@@ -150,7 +163,8 @@ public class Validador {
             throw new IllegalArgumentException("El formato del enlace es incorrecto.");
         }
         if (enlace.length() > maxLength) {
-            throw new IllegalArgumentException(campo + " no puede tener más de " + maxLength + " caracteres.");
+            throw new IllegalArgumentException(campo + " no puede tener más de "
+                + maxLength + " caracteres.");
         }
     }
 
@@ -160,7 +174,17 @@ public class Validador {
         }
     }
 
-    public static void validarPromedio(float promedio) {
+    public static void validarPromedio(Float promedio) {
+        if (promedio == null) {
+            throw new IllegalArgumentException("El promedio no puede ser nulo.");
+        }
+
+        String promedioStr = String.valueOf(promedio);
+
+        if (!promedioStr.matches("^[0-9]+(\\.[0-9]{1,2})?$")) {
+            throw new IllegalArgumentException("El promedio debe ser un número válido (ejemplo: 9.5 o 10.00).");
+        }
+
         if (promedio < 0.0 || promedio > 10.0) {
             throw new IllegalArgumentException("El promedio debe estar en el rango de 0.0 a 10.0.");
         }
@@ -187,20 +211,18 @@ public class Validador {
         }
     }
 
-    // Método para validar el responsable (idResponsable)
     public static void validarResponsable(int idResponsable) {
         if (idResponsable <= 0) {
             throw new IllegalArgumentException("El responsable asociado es inválido.");
         }
     }
 
-    // Método para validar la empresa (idEmpresa)
     public static void validarEmpresa(int idEmpresa) {
         if (idEmpresa <= 0) {
             throw new IllegalArgumentException("La empresa asociada es inválida.");
         }
     }
-    
+
     public static void validarNRC(int nrc) {
         String nrcStr = String.valueOf(nrc);
 
@@ -208,13 +230,13 @@ public class Validador {
             throw new IllegalArgumentException("El NRC debe contener exactamente 5 números.");
         }
     }
-    
+
     public static void validarSeccion(int seccion) {
         if (seccion < 1 || seccion > 3) {
             throw new IllegalArgumentException("El bloque debe ser 1, 2 o 3.");
         }
     }
-    
+
     public static void validarProyectosAPriorizar(Map<Integer, Integer> proyectosYPrioridades, int totalProyectos) {
         Set<Integer> prioridades = new HashSet<>();
 
