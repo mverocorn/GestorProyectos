@@ -48,12 +48,14 @@ public class AlumnoDAO {
     public static Alumno serializarAlumno(ResultSet resultado) throws SQLException {
         Alumno alumno = new Alumno();
         alumno.setIdAlumno(resultado.getInt("idAlumno"));
+        
         alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
         alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
         alumno.setMatricula(resultado.getString("matricula"));
+        alumno.setPromedio(resultado.getFloat("promedio"));
         alumno.setTelefonoAlumno(resultado.getString("telefonoAlumno"));
         alumno.setCorreo(resultado.getString("correoAlumno"));
-        alumno.setPromedio(resultado.getFloat("promedio"));
+        
         alumno.setEstadoAlumno(resultado.getString("estadoAlumno"));
         return alumno;
     }

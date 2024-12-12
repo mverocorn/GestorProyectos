@@ -71,7 +71,7 @@ public class Validador {
         String telefonoStr = String.valueOf(telefono);
         String patronTelefono = "^\\+[0-9]{1,3}\\s[0-9]{10}$";
         if (!Pattern.matches(patronTelefono, telefonoStr)) {
-            throw new IllegalArgumentException("El formato del teléfono es incorrecto. Debe incluir la lada del país, un espacio y 10 dígitos.");
+            throw new IllegalArgumentException("El formato del teléfono es incorrecto. Debe incluir un simbolo '+', la lada del país, un espacio y 10 dígitos.");
         }
     }
 
@@ -174,20 +174,28 @@ public class Validador {
         }
     }
 
-    public static void validarPromedio(Float promedio) {
-        if (promedio == null) {
-            throw new IllegalArgumentException("El promedio no puede ser nulo.");
+    public static float validarPromedio(float input) throws NumberFormatException {
+        // Validamos el rango primero
+        if (input < 0.0 || input >= 10.00) {
+            throw new NumberFormatException("El valor debe estar entre 0.0 y 10.0.");
         }
 
-        String promedioStr = String.valueOf(promedio);
+        // Convertimos el float a String
+        String inputString = String.valueOf(input);
 
-        if (!promedioStr.matches("^[0-9]+(\\.[0-9]{1,2})?$")) {
-            throw new IllegalArgumentException("El promedio debe ser un número válido (ejemplo: 9.5 o 10.00).");
+        // Validamos que el String contenga solo números y un punto decimal
+        if (!inputString.matches("\\d+(\\.\\d{1,2})?")) {
+            throw new NumberFormatException("El valor ingresado contiene caracteres no válidos.");
         }
 
-        if (promedio < 0.0 || promedio > 10.0) {
-            throw new IllegalArgumentException("El promedio debe estar en el rango de 0.0 a 10.0.");
+        // Verificar si el número tiene más de dos decimales
+        if (inputString.contains(".") && inputString.split("\\.")[1].length()
+            > 2) {
+            throw new NumberFormatException("El valor no puede tener más de dos decimales.");
         }
+
+        // Si pasa todas las validaciones, regresamos el valor
+        return input;
     }
 
     public static void validarPeriodo(String periodo) {
