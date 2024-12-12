@@ -11,7 +11,9 @@ public class Alumno implements IUsuario {
     private Float promedio;
     private String estadoAlumno;
     private String contrasenia;
-
+    private String nombreEE;
+    private String nombreProyecto;
+	
     public Alumno() {
     }
 
@@ -99,5 +101,21 @@ public class Alumno implements IUsuario {
 
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
+    }
+
+    public String getNombreEE() {
+        return nombreEE;
+    }
+
+    public void setNombreEE(String nombreEE) {
+        this.nombreEE = nombreEE;
+    }
+
+    public String getNombreProyecto() {
+        return nombreProyecto;
+    }
+
+    public void setNombreProyecto(String nombreProyecto) {
+        this.nombreProyecto = nombreProyecto;
     }
 }

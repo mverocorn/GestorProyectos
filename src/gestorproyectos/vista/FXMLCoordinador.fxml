@@ -54,7 +54,7 @@
                               <TableColumn fx:id="colProyectoAlumno" prefWidth="259.9999084472656" text="Proyecto" />
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="585.0" layoutY="131.0" prefHeight="26.0" prefWidth="160.0" promptText="Experiencia Educativa" />
+                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="585.0" layoutY="131.0" prefHeight="26.0" prefWidth="160.0" promptText="Seleccione Tipo de Proyecto" />
                         <Button layoutX="701.0" layoutY="520.0" mnemonicParsing="false" onAction="#clickRegistrarAlumno" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
                         <Label layoutX="512.0" layoutY="135.0" text="Filtrar por:" textFill="WHITE" />
                         <Button layoutX="689.0" layoutY="80.0" mnemonicParsing="false" onAction="#clickBuscarAlumno" prefHeight="26.0" prefWidth="56.0" text="Buscar" />

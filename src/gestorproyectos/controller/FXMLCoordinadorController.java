@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -52,7 +53,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	@FXML
 	private TableColumn<?, ?> colProyectoAlumno;
 	@FXML
-	private ComboBox<?> cBoxFiltroAlumno;
+	private ComboBox<String> cBoxFiltroAlumno;
 	@FXML
 	private Tab tabProyectos;
 	@FXML
@@ -113,35 +114,44 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		configurarTablaAlumno();
-		cargarTablaAlumno();
+		cBoxFiltroAlumno.getItems().addAll("Servicio Social", "Práctica Profesional");
 		configurarTablaProyectoSS();
 		cargarTablaProyectoSS();
 	}
 
 	private void configurarTablaAlumno() {
 		colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
-		colEEAlumno.setCellValueFactory(new PropertyValueFactory("ee"));
-		colProyectoAlumno.setCellValueFactory(new PropertyValueFactory(""));
+		colEEAlumno.setCellValueFactory(new PropertyValueFactory("nombreEE"));
+		colProyectoAlumno.setCellValueFactory(new PropertyValueFactory("nombreProyecto"));
 
 	}
 
 	private void cargarTablaAlumno() {
+		String nombreBusqueda = txtFBuscarAlumno.getText().trim();
+		String tipoProyecto = (String) cBoxFiltroAlumno.getValue(); // Obtienes el valor seleccionado en el ComboBox
+
 		alumnos = FXCollections.observableArrayList();
+
 		try {
-			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnos();
-			if (alumnosBD != null) {
+			List<Alumno> alumnosBD = AlumnoDAO.obtenerAlumnoYProyecto(nombreBusqueda, tipoProyecto);
+			for (Alumno alumno : alumnos) {
+				System.out.println("Alumno: " + alumno.getNombreAlumno()
+						+ ", EE: " + alumno.getNombreEE()
+						+ ", Proyecto: " + alumno.getNombreProyecto());
+			}
+
+			if (alumnosBD != null && !alumnosBD.isEmpty()) {
 				alumnos.addAll(alumnosBD);
 				tblAlumno.setItems(alumnos);
 			} else {
-				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
-						"Error", "Lo sentimos, no se puede cargar en "
-						+ "este momento la tabla de alumnos");
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,
+						"Sin resultados", "No se encontraron alumnos con ese criterio de búsqueda.");
+				tblAlumno.setItems(null);
 			}
 		} catch (SQLException ex) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
-					+ "vuelva a intentar");
+					"Lo sentimos, el sistema presenta fallas para recuperar la información. Inténtelo de nuevo más tarde.");
+			ex.printStackTrace();
 		}
 	}
 
@@ -156,6 +166,8 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	@FXML
 	private void clickBuscarAlumno(ActionEvent event) {
+		configurarTablaAlumno();
+		cargarTablaAlumno();
 	}
 
 	private void configurarTablaProyectoSS() {
