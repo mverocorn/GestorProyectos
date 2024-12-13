@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.*;
 
 public class AlumnoDAO {
@@ -180,73 +179,107 @@ public class AlumnoDAO {
         return respuesta;
     }
 
-  public static List<Alumno> obtenerAlumnoYProyecto(String nombreBusqueda, String tipoProyecto) throws SQLException {
-    List<Alumno> resultados = new ArrayList<>();
-    Connection conexionBD = ConexionBD.abrirConexion();
+    public static List<Alumno> obtenerAlumnoYProyecto(String nombreBusqueda, String tipoProyecto) throws SQLException {
+        List<Alumno> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
 
-    if (conexionBD != null) {
-       String consulta = "SELECT " +
-            "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreAlumno, " +  
-            "e.nombreEE, " +
-            "CASE " +
-            "  WHEN pp.nombreProyecto IS NOT NULL THEN pp.nombreProyecto " +
-            "  WHEN ss.nombreProyecto IS NOT NULL THEN ss.nombreProyecto " +
-            "  ELSE 'Sin proyecto asignado' " +
-            "END AS nombreProyecto, " +
-            "CASE " +
-            "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' " +
-            "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' " +
-            "  ELSE 'Sin proyecto' " +
-            "END AS tipoProyecto " +
-            "FROM inscripcionee i " +
-            "INNER JOIN alumno a ON i.idAlumno = a.idAlumno " +
-            "INNER JOIN ee e ON i.idEE = e.idEE " +
-            "LEFT JOIN proyectopp pp ON i.idProyectoPP = pp.idProyectoPP " +
-            "LEFT JOIN proyectoss ss ON i.idProyectoSS = ss.idProyectoSS " +
-            "WHERE LOWER(a.nombreAlumno) LIKE LOWER(?) ";
-
-        if (tipoProyecto != null && !tipoProyecto.isEmpty()) {
-            consulta += "AND CASE " +
-                        "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' " +
-                        "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' " +
-                        "  ELSE 'Sin proyecto' " +
-                        "END = ?";
-        }
-
-        try (PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-            prepararSentencia.setString(1, "%" + nombreBusqueda + "%");
+        if (conexionBD != null) {
+            String consulta = "SELECT "
+                + "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreAlumno, "
+                + "e.nombreEE, " + "CASE "
+                + "  WHEN pp.nombreProyecto IS NOT NULL THEN pp.nombreProyecto "
+                + "  WHEN ss.nombreProyecto IS NOT NULL THEN ss.nombreProyecto "
+                + "  ELSE 'Sin proyecto asignado' " + "END AS nombreProyecto, "
+                + "CASE "
+                + "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' "
+                + "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' "
+                + "  ELSE 'Sin proyecto' " + "END AS tipoProyecto "
+                + "FROM inscripcionee i "
+                + "INNER JOIN alumno a ON i.idAlumno = a.idAlumno "
+                + "INNER JOIN ee e ON i.idEE = e.idEE "
+                + "LEFT JOIN proyectopp pp ON i.idProyectoPP = pp.idProyectoPP "
+                + "LEFT JOIN proyectoss ss ON i.idProyectoSS = ss.idProyectoSS "
+                + "WHERE LOWER(a.nombreAlumno) LIKE LOWER(?) ";
 
             if (tipoProyecto != null && !tipoProyecto.isEmpty()) {
-                prepararSentencia.setString(2, tipoProyecto);
+                consulta += "AND CASE "
+                    + "  WHEN pp.nombreProyecto IS NOT NULL THEN 'Práctica Profesional' "
+                    + "  WHEN ss.nombreProyecto IS NOT NULL THEN 'Servicio Social' "
+                    + "  ELSE 'Sin proyecto' " + "END = ?";
             }
 
-            try (ResultSet resultadoConsulta = prepararSentencia.executeQuery()) {
-                if (!resultadoConsulta.isBeforeFirst()) {
-                    System.out.println("No se encontraron resultados con el criterio: " + nombreBusqueda);
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setString(1, "%" + nombreBusqueda + "%");
+
+                if (tipoProyecto != null && !tipoProyecto.isEmpty()) {
+                    prepararSentencia.setString(2, tipoProyecto);
                 }
 
-                while (resultadoConsulta.next()) {
-                    Alumno alumno = new Alumno();
-                    alumno.setNombreAlumno(resultadoConsulta.getString("nombreAlumno"));
-                    alumno.setNombreEE(resultadoConsulta.getString("nombreEE"));
-                    alumno.setNombreProyecto(resultadoConsulta.getString("nombreProyecto"));
-                    alumno.setTipoProyecto(resultadoConsulta.getString("tipoProyecto"));
-                    resultados.add(alumno);
+                try (
+                    ResultSet resultadoConsulta = prepararSentencia.executeQuery()) {
+                    if (!resultadoConsulta.isBeforeFirst()) {
+                        System.out.println("No se encontraron resultados con el criterio: "
+                            + nombreBusqueda);
+                    }
+
+                    while (resultadoConsulta.next()) {
+                        Alumno alumno = new Alumno();
+                        alumno.setNombreAlumno(resultadoConsulta.getString("nombreAlumno"));
+                        alumno.setNombreEE(resultadoConsulta.getString("nombreEE"));
+                        alumno.setNombreProyecto(resultadoConsulta.getString("nombreProyecto"));
+                        alumno.setTipoProyecto(resultadoConsulta.getString("tipoProyecto"));
+                        resultados.add(alumno);
+                    }
                 }
+            } catch (SQLException ex) {
+                Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
+                    "Error al obtener los detalles de los alumnos, EE y proyectos.", ex);
+                throw new SQLException("Error al realizar la consulta en la base de datos.", ex);
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE, 
-                "Error al obtener los detalles de los alumnos, EE y proyectos.", ex);
-            throw new SQLException("Error al realizar la consulta en la base de datos.", ex);
-        } finally {
-            ConexionBD.cerrarConexion(conexionBD);
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
         }
-    } else {
-        throw new SQLException("No se pudo establecer conexión con la base de datos.");
+
+        return resultados;
     }
 
-    return resultados;
-}
+    public static List<Alumno> obtenerAlumnosNoInscritosEnEE() throws SQLException {
+        List<Alumno> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
 
+        if (conexionBD != null) {
+            String consulta = "SELECT a.idAlumno, a.nombreAlumno, a.apellidoAlumno, a.matricula "
+                + "FROM alumno a "
+                + "LEFT JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
+                + "WHERE i.idInscripcionEE IS NULL "
+                + "OR i.estadoInscripcion = 'Finalizada'";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+                ResultSet resultado = prepararSentencia.executeQuery()) {
+                while (resultado.next()) {
+                    Alumno alumno = new Alumno();
+                    alumno.setIdAlumno(resultado.getInt("idAlumno"));
+                    alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
+                    alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
+                    alumno.setMatricula(resultado.getString("matricula"));
+                    resultados.add(alumno);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
+                    "Error al obtener los alumnos no inscritos en EE o cuya inscripción esté finalizada.", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return resultados;
+    }
 
 }
