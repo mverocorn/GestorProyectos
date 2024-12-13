@@ -60,7 +60,7 @@ public class ProyectoPPDAO {
         return proyectoPP;
     }
 
-    public static void validarProyectoSS(ProyectoPP proyecto) {
+    public static void validarProyectoPP(ProyectoPP proyecto) {
         if (proyecto == null) {
             throw new IllegalArgumentException("El objeto ProyectoSS no puede ser nulo.");
         }
@@ -105,7 +105,7 @@ public class ProyectoPPDAO {
         return existe;
     }
 
-    public static HashMap<String, Object> registrarProyectoSS(ProyectoPP proyecto) throws SQLException {
+    public static HashMap<String, Object> registrarProyectoPP(ProyectoPP proyecto) throws SQLException {
         HashMap<String, Object> respuesta = new HashMap<>();
 
         existeProyectoPP(proyecto.getNombreProyecto(), proyecto.getObjetivoProyecto(),
@@ -116,7 +116,7 @@ public class ProyectoPPDAO {
             PreparedStatement prepararSentencia = null;
             int idProyectoGenerado = -1;
             try {
-                validarProyectoSS(proyecto);
+                validarProyectoPP(proyecto);
 
                 String sentencia = "INSERT INTO ProyectoPP (fechaProyecto, nombreProyecto, "
                     + "objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable) "

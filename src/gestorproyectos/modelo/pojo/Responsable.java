@@ -58,4 +58,11 @@ public class Responsable {
     public void setCargoResponsable(String cargoResponsable) {
         this.cargoResponsable = cargoResponsable;
     }
+
+	@Override
+	public String toString() {
+		return nombreResponsable + " " + apellidoResponsable;
+	}
+	
+	
 }

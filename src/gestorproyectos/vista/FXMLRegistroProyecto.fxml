@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLRegistroProyectoController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLRegistroProyectoController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -39,13 +38,11 @@
       <Label layoutX="85.0" layoutY="290.0" text="Objetivo:" textFill="WHITE" />
       <Label layoutX="469.0" layoutY="290.0" text="Descripción:" textFill="WHITE" />
       <Label layoutX="466.0" layoutY="228.0" text="Responsable:" textFill="WHITE" />
-      <Label layoutX="655.0" layoutY="228.0" text="Empresa:" textFill="WHITE" />
       <TextField fx:id="txtFNombreProyecto" layoutX="82.0" layoutY="185.0" prefHeight="26.0" prefWidth="457.0" promptText="Nombre" />
       <DatePicker fx:id="dpFechaInicio" layoutX="581.0" layoutY="185.0" prefHeight="26.0" prefWidth="222.0" promptText="Fecha" />
       <TextField fx:id="txtFPeriodo" layoutX="86.0" layoutY="246.0" promptText="MesAAAA-MesAAAA" />
       <TextField fx:id="txtFCupo" layoutX="274.0" layoutY="246.0" promptText="Cupo" />
-      <TextField fx:id="txtFEmpresa" layoutX="653.0" layoutY="246.0" promptText="Empresa" />
-      <ComboBox fx:id="cBoxResponsable" layoutX="464.0" layoutY="246.0" prefWidth="150.0" promptText="Responsable" />
+      <ComboBox fx:id="cBoxResponsable" layoutX="464.0" layoutY="246.0" prefHeight="26.0" prefWidth="343.0" promptText="Responsable" />
       <TextArea fx:id="txtAObjetivo" layoutX="82.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />
       <TextArea fx:id="txtADescripcion" layoutX="464.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />
       <Button layoutX="739.0" layoutY="442.0" mnemonicParsing="false" onAction="#clickRegistrar" text="Registrar" />

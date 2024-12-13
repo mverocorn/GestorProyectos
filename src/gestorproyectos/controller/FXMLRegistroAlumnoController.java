@@ -48,12 +48,7 @@ public class FXMLRegistroAlumnoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicialización necesaria.
     }
-
-    /*public void inicializarValores(IObservador observador) {
-        this.observador = observador;
-    }*/
 
     @FXML
     private void clickRegistrar(ActionEvent event) {
