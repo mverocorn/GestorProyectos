@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -149,22 +150,22 @@ public class FXMLEntregaDeArchivoController implements Initializable {
         }
     }
 
-    private int obtenerNumeroReporte() {
-        try{
-        HashMap<String,Object> respuesta = (HashMap<String,Object>) ReporteDAO.obtenerReportes(idExpediente);
-        boolean isError = (boolean) respuesta.get("error");
-        if(!isError){
-            ArrayList<Reporte> reportesBD = (ArrayList<Reporte>) respuesta.get("reportes");
-            return reportesBD.size();
-        }else{
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error","" + respuesta.get("mensaje"));
-            return -1;
-        }
-        }catch (SQLException ex) {
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo subir el archivo.");
-            return -1;
-        } 
-    }
+	private int obtenerNumeroReporte() {
+		try {
+			List<Reporte> reportesBD = ReporteDAO.obtenerReportes(idExpediente);
+
+			if (reportesBD != null) {
+				return reportesBD.size(); 
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se encontraron reportes.");
+				return -1; 
+			}
+		} catch (SQLException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo obtener los reportes.");
+			return -1;
+		}
+	}
+
 
     private void llenarCombo() {
         ObservableList<String> opcionesArchivo = FXCollections.observableArrayList("Documento","Reporte");
