@@ -298,4 +298,45 @@ public class ProyectoPPDAO {
                 throw new IllegalArgumentException("Mes inválido: " + mes);
         }
     }
+    
+    public static List<ProyectoPP> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
+        List<ProyectoPP> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "SELECT pp.idProyectoPP, pp.nombreProyecto, pp.cupoProyecto, "
+                + "p.prioridad "
+                + "FROM priorizacionproyectos p "
+                + "INNER JOIN proyectopp pp ON p.idProyectoPP = pp.idProyectoPP "
+                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
+                + "WHERE ie.idAlumno = ?";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
+
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        ProyectoPP proyecto = new ProyectoPP();
+                        proyecto.setIdProyectoPP(resultado.getInt("idProyectoPP"));
+                        proyecto.setNombreProyecto(resultado.getString("nombreProyecto"));
+                        proyecto.setCupoProyecto(resultado.getInt("cupoProyecto"));
+                        proyecto.setPrioridad(resultado.getInt("prioridad"));
+                        resultados.add(proyecto);
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
+                    "Error al obtener detalles de priorización de proyectos de práctica profesional.", ex);
+                throw new SQLException("Error al realizar la consulta en la base de datos.", ex);
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return resultados;
+    }
+
 }

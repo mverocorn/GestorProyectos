@@ -11,6 +11,7 @@ public class ProyectoSS {
     private String descripcionProyecto;
     private int cupoProyecto;
     private int idResponsable;
+    private int prioridad;
 
     public ProyectoSS(int idProyectoSS, Date fechaProyecto, String nombreProyecto, 
         String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
@@ -80,6 +81,14 @@ public class ProyectoSS {
 
     public void setIdResponsable(int idResponsable) {
         this.idResponsable = idResponsable;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
     }
     
     @Override

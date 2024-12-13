@@ -10,6 +10,7 @@ public class ProyectoPP {
     private String descripcionProyecto;
     private int cupoProyecto;
     private int idResponsable;
+    private int prioridad;
 
     public ProyectoPP(int idProyectoPP, Date fechaProyecto, String nombreProyecto, 
         String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
@@ -80,4 +81,13 @@ public class ProyectoPP {
     public void setIdResponsable(int idResponsable) {
         this.idResponsable = idResponsable;
     }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+ 
 }

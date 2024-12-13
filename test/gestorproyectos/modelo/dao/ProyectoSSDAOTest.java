@@ -107,4 +107,36 @@ public class ProyectoSSDAOTest {
         }
     }
 
+    @Test
+    public void testObtenerPriorizacionDeAlumnoProyectoSS() throws SQLException {
+        List<ProyectoSS> proyectos = ProyectoSSDAO.obtenerPriorizacionDeAlumnoProyectoSS(1);
+
+        assertNotNull(proyectos);
+        assertEquals(4, proyectos.size()); 
+
+        ProyectoSS proyecto1 = proyectos.get(0);
+        assertEquals(3, proyecto1.getIdProyectoSS());
+        assertEquals("Implementación de ERP", proyecto1.getNombreProyecto());
+        assertEquals(4, proyecto1.getCupoProyecto());
+        assertEquals(1, proyecto1.getPrioridad());
+
+        ProyectoSS proyecto2 = proyectos.get(1);
+        assertEquals(4, proyecto2.getIdProyectoSS());
+        assertEquals("Gestión de Infraestructura", proyecto2.getNombreProyecto());
+        assertEquals(6, proyecto2.getCupoProyecto());
+        assertEquals(2, proyecto2.getPrioridad());
+
+        ProyectoSS proyecto3 = proyectos.get(2);
+        assertEquals(5, proyecto3.getIdProyectoSS());
+        assertEquals("Diseño Educativo", proyecto3.getNombreProyecto());
+        assertEquals(12, proyecto3.getCupoProyecto());
+        assertEquals(3, proyecto3.getPrioridad());
+
+        ProyectoSS proyecto4 = proyectos.get(3);
+        assertEquals(9, proyecto4.getIdProyectoSS());
+        assertEquals("Proyecto Innovador", proyecto4.getNombreProyecto());
+        assertEquals(30, proyecto4.getCupoProyecto());
+        assertEquals(4, proyecto4.getPrioridad());
+    }
+
 }

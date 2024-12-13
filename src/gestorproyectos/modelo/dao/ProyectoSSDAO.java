@@ -295,4 +295,44 @@ public class ProyectoSSDAO {
         }
     }
 
+    public static List<ProyectoSS> obtenerPriorizacionDeAlumnoProyectoSS(int idAlumno) throws SQLException {
+        List<ProyectoSS> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "SELECT ss.idProyectoSS, ss.nombreProyecto, ss.cupoProyecto, "
+                + "p.prioridad "
+                + "FROM priorizacionproyectos p "
+                + "INNER JOIN proyectoss ss ON p.idProyectoSS = ss.idProyectoSS "
+                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
+                + "WHERE ie.idAlumno = ?"; 
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
+
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        ProyectoSS proyecto = new ProyectoSS();
+                        proyecto.setIdProyectoSS(resultado.getInt("idProyectoSS"));
+                        proyecto.setNombreProyecto(resultado.getString("nombreProyecto"));
+                        proyecto.setCupoProyecto(resultado.getInt("cupoProyecto"));
+                        proyecto.setPrioridad(resultado.getInt("prioridad"));
+                        resultados.add(proyecto);
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
+                    "Error al obtener detalles de priorización de proyectos de servicio social.", ex);
+                throw new SQLException("Error al realizar la consulta en la base de datos.", ex);
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return resultados;
+    }
+
 }

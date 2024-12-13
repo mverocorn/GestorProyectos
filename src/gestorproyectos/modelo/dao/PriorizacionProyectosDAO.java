@@ -127,48 +127,6 @@ public class PriorizacionProyectosDAO {
         }
     }
 
-    public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoSS(int idAlumno) throws SQLException {
-        List<Map<String, Object>> resultados = new ArrayList<>();
-        Connection conexionBD = ConexionBD.abrirConexion();
-
-        if (conexionBD != null) {
-            String consulta = "SELECT "
-                + "ss.idProyectoSS, "
-                + "ss.nombreProyecto, "
-                + "ss.cupoProyecto, "
-                + "p.prioridad "
-                + "FROM proyectoss ss "
-                + "INNER JOIN priorizacionproyectos p ON p.idProyectoSS = ss.idProyectoSS "
-                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
-                + "WHERE ie.idAlumno = ?";
-
-            try (
-                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-                prepararSentencia.setInt(1, idAlumno); // Establecer el id del alumno en la consulta
-
-                try (ResultSet resultado = prepararSentencia.executeQuery()) {
-                    while (resultado.next()) {
-                        Map<String, Object> fila = new HashMap<>();
-                        fila.put("idProyectoSS", resultado.getInt("idProyectoSS"));
-                        fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
-                        fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
-                        fila.put("prioridad", resultado.getInt("prioridad"));
-                        resultados.add(fila);
-                    }
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Error al obtener detalles de priorización de proyectos", ex);
-                throw ex;
-            } finally {
-                ConexionBD.cerrarConexion(conexionBD);
-            }
-        } else {
-            throw new SQLException("No se pudo establecer conexión con la base de datos.");
-        }
-
-        return resultados;
-    }
-
     public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
         List<Map<String, Object>> resultados = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
