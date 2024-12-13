@@ -7,6 +7,8 @@ public class EE {
     private int seccion;
     private String periodo;
     private int idProfesor;
+    private String nombreProfesor;
+    private String apellidoProfesor;
 
     public EE(int idEE, String nombreEE, int nrc, int seccion, String periodo, int idProfesor) {
         this.idEE = idEE;
@@ -67,4 +69,21 @@ public class EE {
     public void setIdProfesor(int idProfesor) {
         this.idProfesor = idProfesor;
     }
+
+    public String getNombreProfesor() {
+        return nombreProfesor;
+    }
+
+    public void setNombreProfesor(String nombreProfesor) {
+        this.nombreProfesor = nombreProfesor;
+    }
+
+    public String getApellidoProfesor() {
+        return apellidoProfesor;
+    }
+
+    public void setApellidoProfesor(String apellidoProfesor) {
+        this.apellidoProfesor = apellidoProfesor;
+    }
+    
 }

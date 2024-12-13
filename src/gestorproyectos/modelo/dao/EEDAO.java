@@ -33,12 +33,16 @@ public class EEDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idEE, nombreEE, nrc, seccion, periodo, idProfesor FROM ee;";
+                // Modificamos la consulta para incluir el nombre y apellido del profesor
+                String consulta = "SELECT ee.idEE, ee.nombreEE, ee.nrc, ee.seccion, ee.periodo, ee.idProfesor, "
+                    + "profesor.nombre AS nombreProfesor, profesor.apellido AS apellidoProfesor "
+                    + "FROM ee "
+                    + "JOIN profesor ON ee.idProfesor = profesor.idProfesor;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 eeList = new ArrayList<>();
                 while (resultado.next()) {
-                    eeList.add(serializarEE(resultado));
+                    eeList.add(serializarEE(resultado)); // Llamamos a serializarEE para mapear los resultados
                 }
             } catch (SQLException e) {
                 eeList = null;
@@ -57,9 +61,12 @@ public class EEDAO {
         ee.setNrc(resultado.getInt("nrc"));
         ee.setSeccion(resultado.getInt("seccion"));
         ee.setPeriodo(resultado.getString("periodo"));
-        ee.setIdProfesor(resultado.getInt("idProfesor"));
+        ee.setNombreProfesor(resultado.getString("nombreProfesor"));
+        ee.setApellidoProfesor(resultado.getString("apellidoProfesor"));
+
         return ee;
     }
+
 
     public static List<String> obtenerNombresProyectosPorTipo(String tipo) throws SQLException {
         List<String> nombresProyectos = new ArrayList<>();
