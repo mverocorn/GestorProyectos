@@ -28,6 +28,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
@@ -79,7 +80,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	@FXML
 	private TableColumn<?, ?> colSeccionAsignacionSS;
 	@FXML
-	private TableView<InscripcionEE> tblPriorizacionSS;
+	private TableView<ProyectoSS> tblPriorizacionSS;
 	@FXML
 	private TableColumn<?, ?> colNombreProyectoPriorizacionSS;
 	@FXML
@@ -97,7 +98,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	@FXML
 	private TableColumn<?, ?> colSeccionAsignacionPP;
 	@FXML
-	private TableView<?> tblPriorizacionPP;
+	private TableView<ProyectoPP> tblPriorizacionPP;
 	@FXML
 	private TableColumn<?, ?> colNombreProyectoPriorizacionPP;
 	@FXML
@@ -132,6 +133,9 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	private TableColumn<?, ?> colNombreProyectoPP;
 	@FXML
 	private TableColumn<ProyectoPP, String> colEEProyectoPP;
+	@FXML
+	private Button btnAsignar;
+	@FXML
 	private TableColumn<?, ?> colSeccionAsignacion;
 
 	private ObservableList<Alumno> alumnos;
@@ -140,6 +144,8 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	private ObservableList<EE> experiencias;
 	private ObservableList<InscripcionEE> inscripcionesSS;
 	private ObservableList<InscripcionEE> inscripcionesPP;
+	private ObservableList<ProyectoSS> priorizacionesSS;
+	private ObservableList<ProyectoPP> priorizacionesPP;
 
 	/**
 	 * Initializes the controller class.
@@ -164,6 +170,9 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 		});
 		configurarTablaEE();
 		cargarTablaEE();
+		tblPriorizacionPP.setVisible(false);
+		tblPriorizacionSS.setVisible(false);
+		btnAsignar.setVisible(false);
 	}
 
 	private void configurarTablaAlumno() {
@@ -403,6 +412,83 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 						+ "este momento la tabla de Inscripciones");
 			}
 		} catch (SQLException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
+					+ "vuelva a intentar");
+		}
+	}
+
+	@FXML
+	private void clickSiguienteAsignación(ActionEvent event) {
+		agregarListenersTablasAsignacion();
+	}
+
+	private void agregarListenersTablasAsignacion() {
+		tblPriorizacionPP.setVisible(true);
+		int posicionSeleccion = tblAlumnoAsignacionPP.getSelectionModel().getSelectedIndex();
+		InscripcionEE inscripcionPP = inscripcionesPP.get(posicionSeleccion);
+		int idAlumno = inscripcionPP.getIdAlumno();
+		System.out.println("IDALUMNO:" + idAlumno);
+		tblPriorizacionPP.setVisible(true);
+		configurarTablaAlumnoPriorizacionPP();
+		cargarTablaAlumnoPriorizacionPP(idAlumno);
+	}
+
+	private void configurarTablaAlumnoPriorizacionSS() {
+		colNombreProyectoPriorizacionSS.setCellValueFactory(new PropertyValueFactory("nombreProyecto"));
+		colCupoPriorizacionSS.setCellValueFactory(new PropertyValueFactory("cupoProyecto"));
+		colOrdenPriorizacionSS.setCellValueFactory(new PropertyValueFactory("prioridad"));
+	}
+
+	private void cargarTablaAlumnoPriorizacionSS(int idAlumno) {
+		priorizacionesSS = FXCollections.observableArrayList();
+		try {
+			List<ProyectoSS> priorizacionesSSBD = ProyectoSSDAO.obtenerPriorizacionDeAlumnoProyectoSS(idAlumno);
+			if (priorizacionesSSBD != null && !priorizacionesSSBD.isEmpty()) {
+				priorizacionesSSBD.forEach(priorizacion -> {
+					System.out.println("Proyecto ID: " + priorizacion.getIdProyectoSS() + ", Nombre: " + priorizacion.getNombreProyecto());
+				});
+				priorizacionesSS.addAll(priorizacionesSSBD);
+				tblPriorizacionSS.setItems(priorizacionesSS);
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+						"Error", "Lo sentimos, no se puede cargar en "
+						+ "este momento la tabla de priorizacionesSS");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			System.out.println("Error al recuperar las priorizaciones: " + ex.getMessage());
+
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
+					+ "vuelva a intentar");
+		}
+	}
+
+	private void configurarTablaAlumnoPriorizacionPP() {
+		colNombreProyectoPriorizacionPP.setCellValueFactory(new PropertyValueFactory("nombreProyecto"));
+		colCupoPriorizacionPP.setCellValueFactory(new PropertyValueFactory("cupoProyecto"));
+		colOrdenPriorizacionPP.setCellValueFactory(new PropertyValueFactory("prioridad"));
+	}
+
+	private void cargarTablaAlumnoPriorizacionPP(int idAlumno) {
+		priorizacionesPP = FXCollections.observableArrayList();
+		try {
+			List<ProyectoPP> priorizacionesPPBD = ProyectoPPDAO.obtenerPriorizacionDeAlumnoProyectoPP(idAlumno);
+			if (priorizacionesPPBD != null && !priorizacionesPPBD.isEmpty()) {
+				priorizacionesPPBD.forEach(priorizacion -> {
+				});
+				priorizacionesPP.addAll(priorizacionesPPBD);
+				tblPriorizacionPP.setItems(priorizacionesPP);
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+						"Error", "Lo sentimos, no se puede cargar en "
+						+ "este momento la tabla de priorizacionesPP");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			System.out.println("Error al recuperar las priorizaciones: " + ex.getMessage());
+
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
 					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
 					+ "vuelva a intentar");

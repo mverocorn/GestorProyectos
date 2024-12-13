@@ -68,5 +68,12 @@ public class Profesor implements IUsuario{
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+
+	@Override
+	public String toString() {
+		return nombreProfesor + " " + apellidoProfesor;
+	}
+	
+	
     
 }
