@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class ProyectoPP {
     private int idProyectoPP;
-    private Date fechaProyecto;
+    private String fechaProyecto;
     private String nombreProyecto;
     private String objetivoProyecto;
     private String descripcionProyecto;
@@ -12,7 +12,7 @@ public class ProyectoPP {
     private int idResponsable;
     private int prioridad;
 
-    public ProyectoPP(int idProyectoPP, Date fechaProyecto, String nombreProyecto, 
+    public ProyectoPP(int idProyectoPP, String fechaProyecto, String nombreProyecto, 
         String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
         this.idProyectoPP = idProyectoPP;
         this.fechaProyecto = fechaProyecto;
@@ -34,11 +34,11 @@ public class ProyectoPP {
         this.idProyectoPP = idProyectoPP;
     }
 
-    public Date getFechaProyecto() {
+    public String getFechaProyecto() {
         return fechaProyecto;
     }
 
-    public void setFechaProyecto(Date fechaProyecto) {
+    public void setFechaProyecto(String fechaProyecto) {
         this.fechaProyecto = fechaProyecto;
     }
 

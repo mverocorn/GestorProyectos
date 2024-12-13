@@ -37,7 +37,7 @@ public class ProyectoSSDAOTest {
         int valorEsperado = 9;
 
         proyectoSS = new ProyectoSS(
-                0, Date.valueOf("2024-12-25"), "Proyecto Innovador",
+                0, "01ENE2024-30JUN2024", "Proyecto Innovador",
                 "Desarrollar tecnología innovadora.",
                 "Este proyecto tiene como objetivo desarrollar nuevas soluciones tecnológicas.",
                 30, 1
@@ -53,7 +53,7 @@ public class ProyectoSSDAOTest {
     @Test(expected = SQLException.class)
     public void testRegistrarProyectoSSExcepcionSQL() throws SQLException {
         ProyectoSS proyecto = new ProyectoSS(
-                0, Date.valueOf("2024-01-01"), "Proyecto Innovador",
+                0, "01ENE2024-30JUN2024", "Proyecto Innovador",
                 "Desarrollar tecnología innovadora.",
                 "Este proyecto tiene como objetivo desarrollar nuevas soluciones tecnológicas.",
                 30, 1
@@ -73,13 +73,11 @@ public class ProyectoSSDAOTest {
     @Test
     public void testObtenerProyectoSSPorIdProyectoSS() throws SQLException {
         ProyectoSS proyectoEsperado = new ProyectoSS(
-                3,
-                java.sql.Date.valueOf("2024-08-01"), 
+                3,"01ENE2024-30JUN2024", 
                 "Implementación de ERP",
                 "Implementar sistemas ERP en pequeñas empresas.",
                 "Optimizar procesos internos en las empresas.",
-                4,
-                8
+                4,8
         );
 
         ProyectoSS proyectoObtenido = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(3);
@@ -90,12 +88,16 @@ public class ProyectoSSDAOTest {
     @Test
     public void testObtenerProyectosDisponiblesPorPeriodo() throws SQLException {
         List<ProyectoSS> listaEsperada = new ArrayList<>();
-        listaEsperada.add(new ProyectoSS(3, null, "Implementación de ERP", null, null, 0, 0));
-        listaEsperada.add(new ProyectoSS(4, null, "Gestión de Infraestructura", null, null, 0, 0));
-        listaEsperada.add(new ProyectoSS(5, null, "Diseño Educativo", null, null, 0, 0));
-        listaEsperada.add(new ProyectoSS(9, null, "Proyecto Innovador", null, null, 0, 0));
+        listaEsperada.add(new ProyectoSS(3, null, "Implementación de ERP", 
+            null, null, 0, 0));
+        listaEsperada.add(new ProyectoSS(4, null, "Gestión de Infraestructura", 
+            null, null, 0, 0));
+        listaEsperada.add(new ProyectoSS(5, null, "Diseño Educativo", 
+            null, null, 0, 0));
+        listaEsperada.add(new ProyectoSS(9, null, "Proyecto Innovador", 
+            null, null, 0, 0));
 
-        List<ProyectoSS> listaObtenida = proyectoSSDAO.obtenerProyectosDisponiblesPorPeriodo("AGO2024-ENE2025");
+        List<ProyectoSS> listaObtenida = proyectoSSDAO.obtenerProyectosDisponiblesPorPeriodoDeEESS("AGO2024-ENE2025");
 
         assertEquals(listaEsperada.size(), listaObtenida.size());
 

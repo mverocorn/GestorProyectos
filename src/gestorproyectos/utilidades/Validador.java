@@ -1,10 +1,13 @@
 package gestorproyectos.utilidades;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.text.ParseException;
 
 public class Validador {
 
@@ -112,62 +115,6 @@ public class Validador {
         }
     }
 
-    public static void validarFechas(Date fechaInicio, Date fechaFin) {
-        Date fechaActual = new Date(System.currentTimeMillis());
-        if (fechaInicio.before(fechaActual)) {
-            throw new IllegalArgumentException("La fecha de inicio debe ser mayor a la fecha actual.");
-        }
-        if (fechaFin.before(fechaActual)) {
-            throw new IllegalArgumentException("La fecha de fin debe ser mayor a la fecha actual.");
-        }
-        if (!fechaFin.after(fechaInicio)) {
-            throw new IllegalArgumentException("La fecha de fin debe ser mayor a la fecha de inicio.");
-        }
-    }
-
-    public static void validarTitulo(String titulo, String campo, int maxLength) {
-        if (titulo == null || titulo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El campo " + campo
-                + " no puede estar vacío.");
-        }
-        if (titulo.length() > maxLength) {
-            throw new IllegalArgumentException("El campo " + campo
-                + " no puede exceder los " + maxLength + " caracteres.");
-        }
-        String patronTitulo = "^[\\p{L}\\d .,'-]+$";
-        if (!Pattern.matches(patronTitulo, titulo)) {
-            throw new IllegalArgumentException("El campo " + campo
-                + "  contiene caracteres no permitidos.");
-        }
-        if (titulo.contains("  ")) {
-            throw new IllegalArgumentException("El campo " + campo
-                + " no puede contener múltiples espacios en blanco consecutivos.");
-        }
-        if (titulo.chars().allMatch(c -> c == titulo.charAt(0))) {
-            throw new IllegalArgumentException("El campo " + campo
-                + " no puede contener caracteres repetidos.");
-        }
-        if (Pattern.compile("(\\.\\s*){2,}").matcher(titulo).find()
-            || Pattern.compile("(,\\s*){2,}").matcher(titulo).find()) {
-            throw new IllegalArgumentException("El campo " + campo
-                + "  no puede contener múltiples caracteres especiales consecutivos.");
-        }
-    }
-
-    public static void validarEnlace(String enlace, String campo, int maxLength) {
-        if (enlace == null || enlace.trim().isEmpty()) {
-            throw new IllegalArgumentException("El enlace no puede estar vacío.");
-        }
-        String patronEnlace = "^(https?://)?[\\w.-]+\\.[a-z]{2,}(?::\\d{1,5})?(?:/[\\w\\-._~:/?#\\[\\]@!$&'()*+,;=%]*)?$";
-        if (!Pattern.matches(patronEnlace, enlace)) {
-            throw new IllegalArgumentException("El formato del enlace es incorrecto.");
-        }
-        if (enlace.length() > maxLength) {
-            throw new IllegalArgumentException(campo + " no puede tener más de "
-                + maxLength + " caracteres.");
-        }
-    }
-
     public static void validarCupo(int cupo) {
         if (cupo <= 1 || cupo > 30) {
             throw new IllegalArgumentException("El cupo debe ser un valor numérico mayor a 1 y menor o igual a 30.");
@@ -175,26 +122,21 @@ public class Validador {
     }
 
     public static float validarPromedio(float input) throws NumberFormatException {
-        // Validamos el rango primero
         if (input < 0.0 || input >= 10.00) {
             throw new NumberFormatException("El valor debe estar entre 0.0 y 10.0.");
         }
 
-        // Convertimos el float a String
         String inputString = String.valueOf(input);
 
-        // Validamos que el String contenga solo números y un punto decimal
         if (!inputString.matches("\\d+(\\.\\d{1,2})?")) {
             throw new NumberFormatException("El valor ingresado contiene caracteres no válidos.");
         }
 
-        // Verificar si el número tiene más de dos decimales
         if (inputString.contains(".") && inputString.split("\\.")[1].length()
             > 2) {
             throw new NumberFormatException("El valor no puede tener más de dos decimales.");
         }
 
-        // Si pasa todas las validaciones, regresamos el valor
         return input;
     }
 
@@ -208,14 +150,37 @@ public class Validador {
         }
     }
 
-    // Método para validar la fecha de proyecto
-    public static void validarFechaProyecto(Date fechaProyecto) {
+    public static void validarFechaProyecto(String fechaProyecto) {
         if (fechaProyecto == null) {
             throw new IllegalArgumentException("La fecha de proyecto no puede ser nula.");
         }
-        Date fechaActual = new Date(System.currentTimeMillis());
-        if (fechaProyecto.before(fechaActual)) {
-            throw new IllegalArgumentException("La fecha del proyecto no puede ser anterior a la fecha actual.");
+
+        String regex = "^([A-Za-z]{3})(\\d{4})-([A-Za-z]{3})(\\d{4})$";
+
+        if (!fechaProyecto.matches(regex)) {
+            throw new IllegalArgumentException("La fecha del proyecto debe tener el formato MMMAAAA-MMMAAAA.");
+        }
+
+        String[] fechas = fechaProyecto.split("-");
+        String fechaInicio = fechas[0];
+        String fechaFin = fechas[1];
+        
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("MMMyyyy", Locale.ENGLISH);
+        try {
+            Date fechaInicioDate = formatoFecha.parse(fechaInicio);
+            Date fechaFinDate = formatoFecha.parse(fechaFin);
+
+            if (fechaInicioDate.after(fechaFinDate)) {
+                throw new IllegalArgumentException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+            }
+
+            Date fechaActual = new Date(System.currentTimeMillis());
+            if (fechaInicioDate.before(fechaActual)) {
+                throw new IllegalArgumentException("La fecha de inicio del proyecto no puede ser anterior a la fecha actual.");
+            }
+
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException("Error al analizar las fechas. Asegúrese de que el formato sea MMMAAAA-MMMAAAA.");
         }
     }
 

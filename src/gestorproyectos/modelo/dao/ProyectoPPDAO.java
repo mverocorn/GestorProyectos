@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class ProyectoPPDAO {
 
     private static final Logger logger = Logger.getLogger(
-            ProyectoPPDAO.class.getName()
+        ProyectoPPDAO.class.getName()
     );
 
     public static List<ProyectoPP> obtenerProyectosPP() throws SQLException {
@@ -50,7 +50,7 @@ public class ProyectoPPDAO {
         ProyectoPP proyectoPP = new ProyectoPP();
 
         proyectoPP.setIdProyectoPP(resultado.getInt("idProyectoPP"));
-        proyectoPP.setFechaProyecto(resultado.getDate("fechaProyecto"));
+        proyectoPP.setFechaProyecto(resultado.getString("fechaProyecto"));
         proyectoPP.setNombreProyecto(resultado.getString("nombreProyecto"));
         proyectoPP.setObjetivoProyecto(resultado.getString("objetivoProyecto"));
         proyectoPP.setDescripcionProyecto(resultado.getString("descripcionProyecto"));
@@ -59,7 +59,7 @@ public class ProyectoPPDAO {
 
         return proyectoPP;
     }
-    
+
     public static void validarProyectoSS(ProyectoPP proyecto) {
         if (proyecto == null) {
             throw new IllegalArgumentException("El objeto ProyectoSS no puede ser nulo.");
@@ -75,9 +75,10 @@ public class ProyectoPPDAO {
     public static boolean existeProyectoPP(String nombre, String objetivo, String descripcion, int idProyectoActual) throws SQLException {
         boolean existe = false;
         String consulta = "SELECT COUNT(*) AS cantidad FROM ProyectoPP WHERE nombreProyecto = ? "
-                + "AND objetivoProyecto = ? AND descripcionProyecto = ? AND idProyectoPP != ?";
+            + "AND objetivoProyecto = ? AND descripcionProyecto = ? AND idProyectoPP != ?";
 
-        try (Connection conexion = ConexionBD.abrirConexion(); PreparedStatement sentenciaPreparada = conexion.prepareStatement(consulta)) {
+        try (Connection conexion = ConexionBD.abrirConexion();
+            PreparedStatement sentenciaPreparada = conexion.prepareStatement(consulta)) {
             sentenciaPreparada.setString(1, nombre);
             sentenciaPreparada.setString(2, objetivo);
             sentenciaPreparada.setString(3, descripcion);
@@ -93,7 +94,8 @@ public class ProyectoPPDAO {
             throw new SQLException("Tiempo de espera agotado al comprobar la existencia del ProyectoSS.", ex);
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error al comprobar la existencia del ProyectoSS", ex);
-            throw new SQLException("Error al comprobar la existencia del ProyectoSS: " + ex.getMessage(), ex);
+            throw new SQLException("Error al comprobar la existencia del ProyectoSS: "
+                + ex.getMessage(), ex);
         }
 
         if (existe) {
@@ -107,7 +109,7 @@ public class ProyectoPPDAO {
         HashMap<String, Object> respuesta = new HashMap<>();
 
         existeProyectoPP(proyecto.getNombreProyecto(), proyecto.getObjetivoProyecto(),
-                proyecto.getDescripcionProyecto(), -1);
+            proyecto.getDescripcionProyecto(), -1);
 
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
@@ -117,11 +119,11 @@ public class ProyectoPPDAO {
                 validarProyectoSS(proyecto);
 
                 String sentencia = "INSERT INTO ProyectoPP (fechaProyecto, nombreProyecto, "
-                        + "objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable) "
-                        + "VALUES (?, ?, ?, ?, ?, ?)";
+                    + "objetivoProyecto, descripcionProyecto, cupoProyecto, idResponsable) "
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
 
                 prepararSentencia = conexionBD.prepareStatement(sentencia, Statement.RETURN_GENERATED_KEYS);
-                prepararSentencia.setDate(1, proyecto.getFechaProyecto());
+                prepararSentencia.setString(1, proyecto.getFechaProyecto());
                 prepararSentencia.setString(2, proyecto.getNombreProyecto());
                 prepararSentencia.setString(3, proyecto.getObjetivoProyecto());
                 prepararSentencia.setString(4, proyecto.getDescripcionProyecto());
@@ -172,23 +174,15 @@ public class ProyectoPPDAO {
 
                 if (resultado.next()) {
                     // Crear el objeto ProyectoSS con los datos básicos
-                    proyectoPP= new ProyectoPP(
+                    proyectoPP = new ProyectoPP(
                         resultado.getInt("idProyectoPP"),
-                        resultado.getDate("fechaProyecto"),
+                        resultado.getString("fechaProyecto"),
                         resultado.getString("nombreProyecto"),
                         resultado.getString("objetivoProyecto"),
                         resultado.getString("descripcionProyecto"),
                         resultado.getInt("cupoProyecto"),
                         resultado.getInt("idResponsable")
                     );
-
-                    // Obtener datos adicionales
-                    String nombreResponsable = resultado.getString("nombreResponsable");
-                    String apellidoResponsable = resultado.getString("apellidoResponsable");
-                    String correoResponsable = resultado.getString("correoResponsable");
-                    String nombreEmpresa = resultado.getString("nombreEmpresa");
-                    String correoEmpresa = resultado.getString("correoEmpresa");
-
                 }
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Error al obtener ProyectoPP por ID", ex);
@@ -203,42 +197,41 @@ public class ProyectoPPDAO {
         }
         return proyectoPP;
     }
-    
-    public List<ProyectoPP> obtenerProyectosDisponiblesPorPeriodo(String periodo) throws SQLException {
+
+    public List<ProyectoPP> obtenerProyectosDisponiblesPorPeriodoDeEEPP(String periodo) throws SQLException {
         List<ProyectoPP> proyectosDisponibles = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
 
         if (conexionBD != null) {
             try {
-                java.sql.Date fechaInicio = obtenerFechaInicioSQL(periodo);
-                java.sql.Date fechaFin = obtenerFechaFinSQL(periodo);
-
                 String consulta = "SELECT idProyectoPP, nombreProyecto "
-                    + "FROM proyectopp WHERE fechaProyecto BETWEEN ? AND ? AND cupoProyecto > 0";
-                try (PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
-                    prepararConsulta.setDate(1, fechaInicio);
-                    prepararConsulta.setDate(2, fechaFin);
+                    + "FROM proyectopp WHERE fechaProyecto = ? AND cupoProyecto > 0";
+
+                try (
+                    PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
+                    prepararConsulta.setString(1, periodo);
 
                     try (ResultSet resultado = prepararConsulta.executeQuery()) {
                         if (!resultado.isBeforeFirst()) {
-                            System.out.println("No se encontraron proyectos asignados a esta EE.");
+                            System.out.println("No se encontraron proyectos con cupo disponible para este periodo.");
                             return proyectosDisponibles;
                         }
 
                         while (resultado.next()) {
                             ProyectoPP proyecto = new ProyectoPP(
-                                    resultado.getInt("idProyectoPP"),
-                                    null, 
-                                    resultado.getString("nombreProyecto"),
-                                    null, null,
-                                    0, 0
+                                resultado.getInt("idProyectoPP"),
+                                null, // Asegúrate de asignar los valores necesarios
+                                resultado.getString("nombreProyecto"),
+                                null, null,
+                                0, 0 // Ajusta estos valores según la estructura del ProyectoPP
                             );
                             proyectosDisponibles.add(proyecto);
                         }
                     }
                 }
             } catch (SQLException ex) {
-                throw new SQLException("Error al obtener proyectos disponibles por periodo: " + ex.getMessage(), ex);
+                throw new SQLException("Error al obtener proyectos disponibles por periodo: "
+                    + ex.getMessage(), ex);
             } finally {
                 ConexionBD.cerrarConexion(conexionBD);
             }
@@ -246,59 +239,6 @@ public class ProyectoPPDAO {
         return proyectosDisponibles;
     }
 
-    private java.sql.Date obtenerFechaInicioSQL(String periodo) {
-        String mesInicio = periodo.substring(0, 3).toUpperCase();
-        int anioInicio = Integer.parseInt(periodo.substring(3, 7));
-        return java.sql.Date.valueOf(obtenerPrimerDiaMes(mesInicio, anioInicio));
-    }
-
-    private java.sql.Date obtenerFechaFinSQL(String periodo) {
-        String mesFin = periodo.substring(8, 11).toUpperCase();
-        int anioFin = Integer.parseInt(periodo.substring(11, 15));
-        return java.sql.Date.valueOf(obtenerUltimoDiaMes(mesFin, anioFin));
-    }
-
-    private String obtenerPrimerDiaMes(String mes, int anio) {
-        int numeroMes = convertirMesANumero(mes);
-        return LocalDate.of(anio, numeroMes, 1).toString();
-    }
-
-    private String obtenerUltimoDiaMes(String mes, int anio) {
-        int numeroMes = convertirMesANumero(mes);
-        return LocalDate.of(anio, numeroMes, 1).withDayOfMonth(LocalDate.of(anio, numeroMes, 1).lengthOfMonth()).toString();
-    }
-
-    private int convertirMesANumero(String mes) {
-        switch (mes.toUpperCase()) {
-            case "ENE":
-                return 1;
-            case "FEB":
-                return 2;
-            case "MAR":
-                return 3;
-            case "ABR":
-                return 4;
-            case "MAY":
-                return 5;
-            case "JUN":
-                return 6;
-            case "JUL":
-                return 7;
-            case "AGO":
-                return 8;
-            case "SEP":
-                return 9;
-            case "OCT":
-                return 10;
-            case "NOV":
-                return 11;
-            case "DIC":
-                return 12;
-            default:
-                throw new IllegalArgumentException("Mes inválido: " + mes);
-        }
-    }
-    
     public static List<ProyectoPP> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
         List<ProyectoPP> resultados = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();

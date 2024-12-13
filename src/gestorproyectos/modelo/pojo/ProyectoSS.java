@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class ProyectoSS {
     private int idProyectoSS;
-    private Date fechaProyecto;
+    private String fechaProyecto;
     private String nombreProyecto;
     private String objetivoProyecto;
     private String descripcionProyecto;
@@ -13,7 +13,7 @@ public class ProyectoSS {
     private int idResponsable;
     private int prioridad;
 
-    public ProyectoSS(int idProyectoSS, Date fechaProyecto, String nombreProyecto, 
+    public ProyectoSS(int idProyectoSS, String fechaProyecto, String nombreProyecto, 
         String objetivoProyecto, String descripcionProyecto, int cupoProyecto, int idResponsable) {
         this.idProyectoSS = idProyectoSS;
         this.fechaProyecto = fechaProyecto;
@@ -35,11 +35,11 @@ public class ProyectoSS {
         this.idProyectoSS = idProyectoSS;
     }
 
-    public Date getFechaProyecto() {
+    public String getFechaProyecto() {
         return fechaProyecto;
     }
 
-    public void setFechaProyecto(Date fechaProyecto) {
+    public void setFechaProyecto(String fechaProyecto) {
         this.fechaProyecto = fechaProyecto;
     }
 
