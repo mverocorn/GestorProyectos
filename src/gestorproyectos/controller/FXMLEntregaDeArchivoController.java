@@ -151,7 +151,7 @@ public class FXMLEntregaDeArchivoController implements Initializable {
 
     private int obtenerNumeroReporte() {
         try{
-        HashMap<String,Object> respuesta = ReporteDAO.obtenerReportes(idExpediente);
+        HashMap<String,Object> respuesta = (HashMap<String,Object>) ReporteDAO.obtenerReportes(idExpediente);
         boolean isError = (boolean) respuesta.get("error");
         if(!isError){
             ArrayList<Reporte> reportesBD = (ArrayList<Reporte>) respuesta.get("reportes");

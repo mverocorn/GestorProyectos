@@ -220,10 +220,10 @@ public class ProyectoSSDAO {
 						while (resultado.next()) {
 							ProyectoSS proyecto = new ProyectoSS(
 									resultado.getInt("idProyectoSS"),
-									null, // Asegúrate de asignar los valores necesarios
+									null,
 									resultado.getString("nombreProyecto"),
 									null, null,
-									0, 0 // Ajusta estos valores según la estructura del ProyectoSS
+									0, 0
 							);
 							proyectosDisponibles.add(proyecto);
 						}

@@ -9,6 +9,7 @@ import gestorproyectos.modelo.dao.ProyectoPPDAO;
 import gestorproyectos.modelo.pojo.EE;
 import gestorproyectos.modelo.dao.EEDAO;
 import gestorproyectos.modelo.dao.InscripcionEEDAO;
+import gestorproyectos.modelo.dao.PriorizacionProyectosDAO;
 import gestorproyectos.modelo.pojo.InscripcionEE;
 import gestorproyectos.modelo.pojo.ProyectoPP;
 import gestorproyectos.utilidades.MisUtilidades;
@@ -146,6 +147,8 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	private ObservableList<ProyectoSS> priorizacionesSS;
 	private ObservableList<ProyectoPP> priorizacionesPP;
 	String tipoProyectoAsignascion;
+	int idProyectoSS = 0;
+	int idProyectoPP = 0;
 
 	/**
 	 * Initializes the controller class.
@@ -313,10 +316,6 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 		irFormularioProyecto();
 	}
 
-	@FXML
-	private void clickAsignar(ActionEvent event) {
-	}
-
 	private void configurarTablaEE() {
 		colNombreEE.setCellValueFactory(new PropertyValueFactory("nombreEE"));
 		colPeriodoEE.setCellValueFactory(new PropertyValueFactory("periodo"));
@@ -463,14 +462,26 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 		btnAsignar.setVisible(true);
 	}
 
-	private void agregarListenersTablaAsignacionPP() {
+	@FXML
+	private void clickAsignar(ActionEvent event) throws SQLException {
+		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+			PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP);
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto");
+		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
+			PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS);
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto");
+		}
+	}
+
+	private int agregarListenersTablaAsignacionPP() {
+		int idAlumno = 0;
 		tblPriorizacionSS.setVisible(false);
 
 		int posicionSeleccion = tblAlumnoAsignacionPP.getSelectionModel().getSelectedIndex();
 
 		if (posicionSeleccion >= 0) {
 			InscripcionEE inscripcionPP = inscripcionesPP.get(posicionSeleccion);
-			int idAlumno = inscripcionPP.getIdAlumno();
+			idAlumno = inscripcionPP.getIdAlumno();
 			System.out.println("IDALUMNO:" + idAlumno);
 			tblPriorizacionPP.setVisible(true);
 			configurarTablaAlumnoPriorizacionPP();
@@ -481,16 +492,18 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 					"Selección requerida",
 					"Por favor, selecciona un alumno de la tabla.");
 		}
+		return idAlumno;
 	}
 
-	private void agregarListenersTablaAsignacionSS() {
+	private int agregarListenersTablaAsignacionSS() {
+		int idAlumno = 0;
 		tblPriorizacionPP.setVisible(false);
 
 		int posicionSeleccion = tblAlumnoAsignacionSS.getSelectionModel().getSelectedIndex();
 
 		if (posicionSeleccion >= 0) {
 			InscripcionEE inscripcionSS = inscripcionesSS.get(posicionSeleccion);
-			int idAlumno = inscripcionSS.getIdAlumno();
+			idAlumno = inscripcionSS.getIdAlumno();
 			System.out.println("IDALUMNO:" + idAlumno);
 			tblPriorizacionSS.setVisible(true);
 			configurarTablaAlumnoPriorizacionSS();
@@ -501,6 +514,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 					"Selección requerida",
 					"Por favor, selecciona un alumno de la tabla.");
 		}
+		return idAlumno;
 	}
 
 	private void configurarTablaAlumnoPriorizacionSS() {
@@ -519,6 +533,13 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 				});
 				priorizacionesSS.addAll(priorizacionesSSBD);
 				tblPriorizacionSS.setItems(priorizacionesSS);
+
+				tblPriorizacionSS.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+					if (newValue != null) {
+						idProyectoSS = newValue.getIdProyectoSS();
+						System.out.println("Proyecto seleccionado, ID: " + idProyectoSS);
+					}
+				});
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
 						"Error", "Lo sentimos, no se puede cargar en "
@@ -546,9 +567,17 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 			List<ProyectoPP> priorizacionesPPBD = ProyectoPPDAO.obtenerPriorizacionDeAlumnoProyectoPP(idAlumno);
 			if (priorizacionesPPBD != null && !priorizacionesPPBD.isEmpty()) {
 				priorizacionesPPBD.forEach(priorizacion -> {
+					System.out.println("Proyecto ID: " + priorizacion.getIdProyectoPP() + ", Nombre: " + priorizacion.getNombreProyecto());
 				});
 				priorizacionesPP.addAll(priorizacionesPPBD);
 				tblPriorizacionPP.setItems(priorizacionesPP);
+
+				tblPriorizacionPP.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+					if (newValue != null) {
+						idProyectoPP = newValue.getIdProyectoPP();
+						System.out.println("Proyecto seleccionado, ID: " + idProyectoPP);
+					}
+				});
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
 						"Error", "Lo sentimos, no se puede cargar en "
