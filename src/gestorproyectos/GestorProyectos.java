@@ -12,7 +12,7 @@ public class GestorProyectos extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        actualizarEstadoInscripcion();
+       // actualizarEstadoInscripcion();
 
         Parent root = FXMLLoader.load(getClass().getResource("vista/FXMLInicioSesion.fxml"));
         

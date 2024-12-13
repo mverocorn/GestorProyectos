@@ -247,39 +247,47 @@ public class AlumnoDAO {
     }
 
     public static List<Alumno> obtenerAlumnosNoInscritosEnEE() throws SQLException {
-        List<Alumno> resultados = new ArrayList<>();
-        Connection conexionBD = ConexionBD.abrirConexion();
+    List<Alumno> resultados = new ArrayList<>();
+    Connection conexionBD = ConexionBD.abrirConexion();
 
-        if (conexionBD != null) {
-            String consulta = "SELECT a.idAlumno, a.nombreAlumno, a.apellidoAlumno, a.matricula "
+    if (conexionBD != null) {
+        String consulta = "SELECT "
+                + "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreCompleto, "
+                + "a.idAlumno, "
+                + "a.matricula "
                 + "FROM alumno a "
                 + "LEFT JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
-                + "WHERE i.idInscripcionEE IS NULL "
-                + "OR i.estadoInscripcion = 'Finalizada'";
+                + "WHERE (i.idInscripcionEE IS NULL OR i.estadoInscripcion = 'Finalizada') "
+                + "AND (LOWER(a.nombreAlumno) LIKE LOWER(?) "
+                + "OR LOWER(a.matricula) LIKE LOWER(?))";
+        try (
+            PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)
+        ) {
 
-            try (
-                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-                ResultSet resultado = prepararSentencia.executeQuery()) {
+
+            try (ResultSet resultado = prepararSentencia.executeQuery()) {
                 while (resultado.next()) {
                     Alumno alumno = new Alumno();
                     alumno.setIdAlumno(resultado.getInt("idAlumno"));
                     alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
-                    alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
+					
                     alumno.setMatricula(resultado.getString("matricula"));
                     resultados.add(alumno);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
-                    "Error al obtener los alumnos no inscritos en EE o cuya inscripción esté finalizada.", ex);
-                throw ex;
-            } finally {
-                ConexionBD.cerrarConexion(conexionBD);
             }
-        } else {
-            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        } catch (SQLException ex) {
+            Logger.getLogger(AlumnoDAO.class.getName()).log(Level.SEVERE,
+                    "Error al obtener los alumnos no inscritos en EE o cuya inscripción esté finalizada.", ex);
+            throw ex;
+        } finally {
+            ConexionBD.cerrarConexion(conexionBD);
         }
-
-        return resultados;
+    } else {
+        throw new SQLException("No se pudo establecer conexión con la base de datos.");
     }
+
+    return resultados;
+}
+
 
 }

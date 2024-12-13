@@ -5,6 +5,7 @@ import gestorproyectos.modelo.dao.InscripcionEEDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.pojo.EE;
 import gestorproyectos.utilidades.MisUtilidades;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
@@ -14,12 +15,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -97,6 +103,30 @@ public class FXMLExperienciaEducativaController implements Initializable {
 
 	@FXML
 	private void clickAsignarAlumno(ActionEvent event) {
+		abrirAsignarAlumnoEE(ee);
+	}
+	
+	private void abrirAsignarAlumnoEE(EE eeSeleccionada) {
+		try {
+			Stage nuevoEscenario = new Stage();
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+					"vista/FXMLAsignacionAlumnoAEE.fxml"));
+			Parent vista = loader.load();
+			FXMLAsignacionAlumnoAEEController controladorDetalle = loader.getController();
+			controladorDetalle.inicializarValores(eeSeleccionada);
+
+			Scene escena = new Scene(vista);
+
+			nuevoEscenario.setScene(escena);
+			nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+			nuevoEscenario.setTitle("Asignación de Alumno a EE");
+
+			nuevoEscenario.showAndWait();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, no se pudo cargar la ventana de Asignació a EE");
+		}
 	}
 
 }
