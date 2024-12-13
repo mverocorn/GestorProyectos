@@ -1,14 +1,10 @@
 package gestorproyectos.controller;
 
-import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.modelo.dao.InscripcionEEDAO;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -25,90 +21,74 @@ import javafx.stage.Stage;
 
 public class FXMLAlumnoController implements Initializable {
 
-	Alumno alumno;
-	@FXML
-	private Label lblNombreAlumno;
-	@FXML
-	private HBox experienciasContenedor;
+    private Alumno alumno;
 
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// Método de inicialización vacío
-	}
+    @FXML
+    private Label lblNombreAlumno;
 
-	public void inicializarValores(Alumno alumno) {
-		this.alumno = alumno;
+    @FXML
+    private HBox experienciasContenedor;
 
-		int idAlumno = alumno.getIdAlumno();
-		try {
-			// Obtener y agregar botones para las EE del alumno
-			List<String> experiencias = obtenerEEPorAlumno(idAlumno);
-			agregarBotonesEE(experiencias);
-		} catch (SQLException ex) {
-			System.err.println("Error al obtener las experiencias educativas: " + ex.getMessage());
-		}
-		saludo(alumno);
-	}
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Método de inicialización vacío
+    }
 
-	public void saludo(Alumno alumno) {
-		lblNombreAlumno.setText(alumno.getNombreAlumno()+ " " + alumno.getApellidoAlumno());
-	}
-	
-	private List<String> obtenerEEPorAlumno(int idAlumno) throws SQLException {
-		List<String> experienciasEducativas = new ArrayList<>();
-		Connection conexionBD = ConexionBD.abrirConexion();
-		if (conexionBD != null) {
-			try {
-				String consulta = "SELECT e.nombreEE "
-						+ "FROM ee e "
-						+ "JOIN inscripcionee i ON e.idEE = i.idEE "
-						+ "WHERE i.idAlumno = ? AND i.estadoInscripcion = 'inscrito';";
+    public void inicializarValores(Alumno alumno) {
+        this.alumno = alumno;
 
-				PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
-				prepararConsulta.setInt(1, idAlumno);
-				ResultSet resultado = prepararConsulta.executeQuery();
-				while (resultado.next()) {
-					experienciasEducativas.add(resultado.getString("nombreEE"));
-				}
-			} finally {
-				conexionBD.close();
-			}
-		}
-		return experienciasEducativas;
-	}
+        try {
+            // Obtener experiencias educativas desde InscripcionEEDAO
+            List<String> experiencias = InscripcionEEDAO.obtenerNombreTodasEEPorAlumno(alumno.getIdAlumno());
+            if (!experiencias.isEmpty()) {
+                agregarBotonesEE(experiencias);
+            } else {
+                System.out.println("No se encontraron experiencias educativas para este alumno.");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al obtener las experiencias educativas: " + ex.getMessage());
+        }
+        saludo(alumno);
+    }
 
-	private void agregarBotonesEE(List<String> experiencias) {
-		experienciasContenedor.getChildren().clear(); // Limpiar contenedor
+    private void saludo(Alumno alumno) {
+        lblNombreAlumno.setText(alumno.getNombreAlumno() + " " + alumno.getApellidoAlumno());
+    }
 
-		for (String ee : experiencias) {
-			Button boton = new Button(ee);
-			boton.setOnAction(event -> {
-				System.out.println("Seleccionaste la EE: " + ee);
-				// Aquí puedes agregar más lógica si es necesario
-			});
+    private void agregarBotonesEE(List<String> experiencias) {
+        experienciasContenedor.getChildren().clear(); // Limpiar contenedor
 
-			boton.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
-			experienciasContenedor.getChildren().add(boton);
-		}
-	}
+        for (String ee : experiencias) {
+            System.out.println("Creando botón para: " + ee); // Mensaje de depuración
+            Button boton = new Button(ee);
+            boton.setOnAction(event -> {
+                System.out.println("Seleccionaste la EE: " + ee);
+                // Agregar lógica adicional si es necesario
+            });
 
-	@FXML
-	private void clickCerrarSesion(ActionEvent event) {
-		try {
-			Stage stage = (Stage) lblNombreAlumno.getScene().getWindow();
-			stage.close();
-			FXMLLoader loader = new FXMLLoader(
-					gestorproyectos.GestorProyectos.class.getResource(
-							"vista/FXMLInicioSesion.fxml"));
-			Parent vista = loader.load();
-			Stage escenario = new Stage();
-			Scene escena = new Scene(vista);
-			escenario.setScene(escena);
-			escenario.setTitle("Inicio Sesion");
-			escenario.initModality(Modality.APPLICATION_MODAL);
-			escenario.show();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+            // Estilo del botón
+            boton.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
+            experienciasContenedor.getChildren().add(boton);
+        }
+    }
+
+    @FXML
+    private void clickCerrarSesion(ActionEvent event) {
+        try {
+            Stage stage = (Stage) lblNombreAlumno.getScene().getWindow();
+            stage.close();
+            FXMLLoader loader = new FXMLLoader(
+                    gestorproyectos.GestorProyectos.class.getResource(
+                            "vista/FXMLInicioSesion.fxml"));
+            Parent vista = loader.load();
+            Stage escenario = new Stage();
+            Scene escena = new Scene(vista);
+            escenario.setScene(escena);
+            escenario.setTitle("Inicio Sesión");
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

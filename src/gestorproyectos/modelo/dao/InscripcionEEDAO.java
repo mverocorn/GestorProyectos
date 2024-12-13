@@ -123,7 +123,7 @@ public class InscripcionEEDAO {
         return idInscripcionEE;
     }
 
-    public static List<String> obtenerEEPorAlumno(int idAlumno) throws SQLException {
+    public static List<String> obtenerEEActivaPorAlumno(int idAlumno) throws SQLException {
         List<String> experienciasEducativas = new ArrayList<>();
         HashMap<String, Object> respuesta = new HashMap<>();
 
@@ -162,7 +162,7 @@ public class InscripcionEEDAO {
         return experienciasEducativas;
     }
 
-    public static List<String> obtenerNombreEEPorAlumno(int idAlumno) throws SQLException {
+    public static List<String> obtenerNombreTodasEEPorAlumno(int idAlumno) throws SQLException {
         List<String> nombresEE = new ArrayList<>();
         Connection conexionBD = ConexionBD.abrirConexion();
 
