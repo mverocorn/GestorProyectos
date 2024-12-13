@@ -330,27 +330,35 @@ public class InscripcionEEDAO {
         String fechaActualStr = fechaActual.format(DateTimeFormatter.ofPattern("MMM-yyyy")).toUpperCase();
 
         Connection conexionBD = ConexionBD.abrirConexion();
-        
+
         if (conexionBD != null) {
             try {
                 String consulta = "SELECT idEE, periodo FROM EE";
-                try (PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
-                     ResultSet resultado = prepararConsulta.executeQuery()) {
-                    
+                try (
+                    PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+                    ResultSet resultado = prepararConsulta.executeQuery()) {
                     while (resultado.next()) {
                         String periodoEE = resultado.getString("periodo");
 
-                        String mesFinal = periodoEE.substring(8, 11); 
-                        int anioFinal = Integer.parseInt(periodoEE.substring(12, 15));
+                        String mesFinal = periodoEE.substring(8, 11);
+                        int anioFinal = Integer.parseInt(periodoEE.substring(12, 16));
 
                         LocalDate fechaFinal = LocalDate.of(anioFinal, convertirMesANumero(mesFinal), 1)
-                                .withDayOfMonth(LocalDate.of(anioFinal, convertirMesANumero(mesFinal), 1).lengthOfMonth());
+                            .withDayOfMonth(LocalDate.of(anioFinal, convertirMesANumero(mesFinal), 1).lengthOfMonth());
 
-                        if (!fechaActual.isBefore(fechaFinal)) {
-                            // Actualizar el estado de la inscripción a "Finalizado"
+                        if (fechaActual.isAfter(fechaFinal)) {
                             String updateQuery = "UPDATE inscripcionee SET estadoInscripcion = 'Finalizado' "
-                                                 + "WHERE idEE = ? AND estadoInscripcion != 'Finalizado'";
-                            try (PreparedStatement preparedStatement = conexionBD.prepareStatement(updateQuery)) {
+                                + "WHERE idEE = ? AND estadoInscripcion != 'Finalizado'";
+                            try (
+                                PreparedStatement preparedStatement = conexionBD.prepareStatement(updateQuery)) {
+                                preparedStatement.setInt(1, resultado.getInt("idEE"));
+                                preparedStatement.executeUpdate();
+                            }
+                        } else {
+                            String updateQuery = "UPDATE inscripcionee SET estadoInscripcion = 'Inscrito' "
+                                + "WHERE idEE = ? AND estadoInscripcion = 'Finalizado'";
+                            try (
+                                PreparedStatement preparedStatement = conexionBD.prepareStatement(updateQuery)) {
                                 preparedStatement.setInt(1, resultado.getInt("idEE"));
                                 preparedStatement.executeUpdate();
                             }
@@ -358,7 +366,8 @@ public class InscripcionEEDAO {
                     }
                 }
             } catch (SQLException ex) {
-                throw new SQLException("Error al actualizar el estado de inscripción: " + ex.getMessage(), ex);
+                throw new SQLException("Error al actualizar el estado de inscripción: "
+                    + ex.getMessage(), ex);
             } finally {
                 ConexionBD.cerrarConexion(conexionBD);
             }
