@@ -35,7 +35,7 @@ public class EEDAO {
             try {
                 // Modificamos la consulta para incluir el nombre y apellido del profesor
                 String consulta = "SELECT ee.idEE, ee.nombreEE, ee.nrc, ee.seccion, ee.periodo, ee.idProfesor, "
-                    + "profesor.nombre AS nombreProfesor, profesor.apellido AS apellidoProfesor "
+                    + "profesor.nombreProfesor AS nombreProfesor, profesor.apellidoProfesor AS apellidoProfesor "
                     + "FROM ee "
                     + "JOIN profesor ON ee.idProfesor = profesor.idProfesor;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);

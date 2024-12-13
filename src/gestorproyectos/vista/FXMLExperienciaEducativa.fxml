@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLExperienciaEducativaController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLExperienciaEducativaController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -59,5 +58,25 @@
          </font>
       </Label>
       <Button layoutX="585.0" layoutY="468.0" mnemonicParsing="false" onAction="#clickAsignarAlumno" text="Asignar Alumno" />
+      <Label layoutX="90.0" layoutY="277.0" prefHeight="26.0" prefWidth="81.0" text="Periodo:" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtFResultadoPeriodo" layoutX="197.0" layoutY="280.0" text="resultadoPeriodo" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="90.0" layoutY="321.0" prefHeight="26.0" prefWidth="81.0" text="Profesor:" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="txtFResultadoProfesor" layoutX="196.0" layoutY="324.0" text="resultadoProfesor" textFill="WHITE">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
