@@ -341,7 +341,7 @@ public class InscripcionEEDAO {
                         String periodoEE = resultado.getString("periodo");
 
                         String mesFinal = periodoEE.substring(8, 11); 
-                        int anioFinal = Integer.parseInt(periodoEE.substring(12, 16));
+                        int anioFinal = Integer.parseInt(periodoEE.substring(12, 15));
 
                         LocalDate fechaFinal = LocalDate.of(anioFinal, convertirMesANumero(mesFinal), 1)
                                 .withDayOfMonth(LocalDate.of(anioFinal, convertirMesANumero(mesFinal), 1).lengthOfMonth());
