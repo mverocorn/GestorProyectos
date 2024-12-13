@@ -35,10 +35,6 @@ import javafx.stage.Stage;
 public class FXMLRegistroProyectoController implements Initializable {
 
 	@FXML
-	private RadioButton rbPractica;
-	@FXML
-	private RadioButton rbServicio;
-	@FXML
 	private TextField txtFNombreProyecto;
 	@FXML
 	private DatePicker dpFechaInicio;
@@ -50,8 +46,6 @@ public class FXMLRegistroProyectoController implements Initializable {
 	private TextArea txtAObjetivo;
 	@FXML
 	private TextArea txtADescripcion;
-	@FXML
-	private ComboBox<Empresa> cBoxEmpresa;
 
 	private ToggleGroup toggleGroup;
 	private ObservableList<Empresa> empresas;
@@ -63,35 +57,12 @@ public class FXMLRegistroProyectoController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		cargarListaResponsables();
-		toggleGroup = new ToggleGroup();
-		rbPractica.setToggleGroup(toggleGroup);
-		rbServicio.setToggleGroup(toggleGroup);
 	}
 
 	@FXML
 	private void clickRegistrar(ActionEvent event) {
-		String seleccion = getRadioButtonSeleccionado();
+		registrarProyectoSS();
 
-		if ("Pŕactica Profesional".equals(seleccion)) {
-			System.out.println("El usuario seleccionó Práctica Profesional.");
-			registrarProyectoPP();
-
-		} else if ("Servicio Social".equals(seleccion)) {
-			System.out.println("El usuario seleccionó Servicio Social.");
-			registrarProyectoSS();
-		} else {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Advertencia",
-					"Por favor, selecciona un tipo de proyecto.");
-		}
-	}
-
-	private String getRadioButtonSeleccionado() {
-		if (toggleGroup.getSelectedToggle() != null) {
-			RadioButton seleccionado = (RadioButton) toggleGroup.getSelectedToggle();
-			return seleccionado.getText();
-		} else {
-			return "No se ha seleccionado ninguna opción.";
-		}
 	}
 
 	private void registrarProyectoSS() {
@@ -129,41 +100,6 @@ public class FXMLRegistroProyectoController implements Initializable {
 		}
 	}
 
-	private void registrarProyectoPP() {
-		try {
-			String nombreProyecto = txtFNombreProyecto.getText().trim();
-			int cupo = Integer.parseInt(txtFCupo.getText());
-			String descripcion = txtADescripcion.getText().trim();
-			String objetivo = txtAObjetivo.getText().trim();
-			String fechaInicio = dpFechaInicio.getValue().toString();
-			int idResponsable = cBoxResponsable.getSelectionModel().getSelectedItem().getIdResponsable();
-
-			Validador.validarTexto(nombreProyecto, "Nombre del proyecto", 150);
-			Validador.validarTexto(descripcion, "Descripción", 500);
-			Validador.validarTexto(objetivo, "Objetivo", 255);
-			Validador.validarCupo(cupo);
-			Validador.validarResponsable(idResponsable);
-			Validador.validarFechaProyecto(fechaInicio);
-
-			ProyectoPP proyectoPP = new ProyectoPP();
-
-			proyectoPP.setNombreProyecto(nombreProyecto);
-			proyectoPP.setCupoProyecto(cupo);
-			proyectoPP.setDescripcionProyecto(descripcion);
-			proyectoPP.setFechaProyecto(fechaInicio);
-			proyectoPP.setObjetivoProyecto(objetivo);
-			proyectoPP.setIdResponsable(idResponsable);
-
-			ProyectoPPDAO.validarProyectoPP(proyectoPP);
-			ProyectoPPDAO.registrarProyectoPP(proyectoPP);
-		} catch (IllegalArgumentException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Validación", ex.getMessage());
-		} catch (SQLException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"No se ha podido registrar el proyecto");
-		}
-	}
-
 	private void cargarListaResponsables() {
 		try {
 			responsables = FXCollections.observableArrayList();
@@ -183,7 +119,7 @@ public class FXMLRegistroProyectoController implements Initializable {
 	}
 
 	private void cerrarFormulario() {
-		Stage escenarioBase = (Stage) cBoxEmpresa.getScene().getWindow();
+		Stage escenarioBase = (Stage) cBoxResponsable.getScene().getWindow();
 		escenarioBase.close();
 	}
 }

@@ -4,13 +4,11 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLRegistroProyectoController">
    <children>
@@ -24,13 +22,6 @@
             <Image url="@../recursos/logo%20uv%20blanco.png" />
          </image>
       </ImageView>
-      <Label layoutX="226.0" layoutY="96.0" text="Tipo Proyecto:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <RadioButton fx:id="rbPractica" layoutX="388.0" layoutY="97.0" mnemonicParsing="false" text="Pŕactica Profesional" textFill="WHITE" />
-      <RadioButton fx:id="rbServicio" layoutX="578.0" layoutY="97.0" mnemonicParsing="false" text="Servicio Social" textFill="WHITE" />
       <Label layoutX="85.0" layoutY="167.0" text="Nombre Proyecto:" textFill="WHITE" />
       <Label layoutX="586.0" layoutY="167.0" text="Fecha de inicio:" textFill="WHITE" />
       <Label layoutX="86.0" layoutY="228.0" text="Periodo:" textFill="WHITE" />
