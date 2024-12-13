@@ -2,6 +2,7 @@ package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.pojo.Alumno;
+import gestorproyectos.modelo.pojo.EE;
 import gestorproyectos.modelo.pojo.InscripcionEE;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -125,76 +126,82 @@ public class InscripcionEEDAO {
         return idInscripcionEE;
     }
 
-    public static List<String> obtenerEEActivaPorAlumno(int idAlumno) throws SQLException {
-        List<String> experienciasEducativas = new ArrayList<>();
-        HashMap<String, Object> respuesta = new HashMap<>();
+    public static List<EE> obtenerEEActivaPorAlumno(int idAlumno) throws SQLException {
+		List<EE> experienciasEducativas = new ArrayList<>();
+		Connection conexionBD = ConexionBD.abrirConexion();
 
-        Connection conexionBD = ConexionBD.abrirConexion();
-        if (conexionBD != null) {
-            try {
-                String consulta = "SELECT e.nombreEE "
-                    + "FROM ee e "
-                    + "JOIN inscripcionee i ON e.idEE = i.idEE "
-                    + "WHERE i.idAlumno = ? AND i.estadoInscripcion = 'inscrito';";
+		if (conexionBD != null) {
+			try {
+				String consulta = "SELECT e.idEE, e.nombreEE, e.nrc, e.seccion, e.periodo, e.idProfesor "
+						+ "FROM ee e "
+						+ "JOIN inscripcionee i ON e.idEE = i.idEE "
+						+ "WHERE i.idAlumno = ? AND i.estadoInscripcion = 'inscrito';";
 
-                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
-                prepararConsulta.setInt(1, idAlumno);
-                ResultSet resultado = prepararConsulta.executeQuery();
-                while (resultado.next()) {
-                    experienciasEducativas.add(resultado.getString("nombreEE"));
-                }
+				PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+				prepararConsulta.setInt(1, idAlumno);
 
-                if (experienciasEducativas.isEmpty()) {
-                    respuesta.put("error", true);
-                    respuesta.put("mensaje", "No se encontraron experiencias educativas inscritas para el alumno especificado.");
-                }
-            } catch (SQLException ex) {
-                respuesta.put("error", true);
-                respuesta.put("mensaje", "Error al obtener las experiencias educativas: "
-                    + ex.getMessage());
-                logger.log(Level.SEVERE, "Error al obtener las experiencias educativas", ex);
-            } finally {
-                conexionBD.close();
-            }
-        } else {
-            respuesta.put("error", true);
-            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio no está disponible. Intente más tarde.");
-        }
+				try (ResultSet resultado = prepararConsulta.executeQuery()) {
+					while (resultado.next()) {
+						EE experienciaEducativa = new EE(
+								resultado.getInt("idEE"),
+								resultado.getString("nombreEE"),
+								resultado.getInt("nrc"),
+								resultado.getInt("seccion"),
+								resultado.getString("periodo"),
+								resultado.getInt("idProfesor")
+						);
+						experienciasEducativas.add(experienciaEducativa);
+					}
+				}
+			} catch (SQLException ex) {
+				throw new SQLException("Error al obtener las EE activas del alumno con id: " + idAlumno, ex);
+			} finally {
+				conexionBD.close();
+			}
+		} else {
+			throw new SQLException("No se pudo establecer la conexión con la base de datos.");
+		}
 
-        return experienciasEducativas;
-    }
+		return experienciasEducativas;
+	}
 
-    public static List<String> obtenerNombreTodasEEPorAlumno(int idAlumno) throws SQLException {
-        List<String> nombresEE = new ArrayList<>();
-        Connection conexionBD = ConexionBD.abrirConexion();
+	public static List<EE> obtenerNombreTodasEEPorAlumno(int idAlumno) throws SQLException {
+		List<EE> nombresEE = new ArrayList<>();
+		Connection conexionBD = ConexionBD.abrirConexion();
 
-        if (conexionBD != null) {
-            String consulta = "SELECT ee.nombreEE "
-                + "FROM inscripcionee "
-                + "JOIN ee ON inscripcionee.idEE = ee.idEE "
-                + "WHERE inscripcionee.idAlumno = ?";
+		if (conexionBD != null) {
+			String consulta = "SELECT ee.idEE, ee.nombreEE, ee.nrc, ee.seccion, ee.periodo, ee.idProfesor "
+					+ "FROM inscripcionee "
+					+ "JOIN ee ON inscripcionee.idEE = ee.idEE "
+					+ "WHERE inscripcionee.idAlumno = ?";
 
-            try (
-                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
-                prepararConsulta.setInt(1, idAlumno);
+			try (PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
+				prepararConsulta.setInt(1, idAlumno);
 
-                try (ResultSet resultados = prepararConsulta.executeQuery()) {
-                    while (resultados.next()) {
-                        nombresEE.add(resultados.getString("nombreEE"));
-                    }
-                }
-            } catch (SQLException ex) {
-                throw new SQLException("Error al obtener las EE del alumno con id: "
-                    + idAlumno, ex);
-            } finally {
-                conexionBD.close();
-            }
-        } else {
-            throw new SQLException("No se pudo establecer la conexión con la base de datos.");
-        }
+				try (ResultSet resultados = prepararConsulta.executeQuery()) {
+					while (resultados.next()) {
+						EE experienciaEducativa = new EE(
+								resultados.getInt("idEE"),
+								resultados.getString("nombreEE"),
+								resultados.getInt("nrc"),
+								resultados.getInt("seccion"),
+								resultados.getString("periodo"),
+								resultados.getInt("idProfesor")
+						);
+						nombresEE.add(experienciaEducativa);
+					}
+				}
+			} catch (SQLException ex) {
+				throw new SQLException("Error al obtener las EE del alumno con id: " + idAlumno, ex);
+			} finally {
+				conexionBD.close();
+			}
+		} else {
+			throw new SQLException("No se pudo establecer la conexión con la base de datos.");
+		}
 
-        return nombresEE;
-    }
+		return nombresEE;
+	}
 
     public static List<InscripcionEE> obtenerAlumnosSSParaAsignarProyectoSS() throws SQLException {
         List<InscripcionEE> resultados = new ArrayList<>();

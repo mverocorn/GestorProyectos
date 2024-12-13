@@ -322,6 +322,38 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 		colNombreEE.setCellValueFactory(new PropertyValueFactory("nombreEE"));
 		colPeriodoEE.setCellValueFactory(new PropertyValueFactory("periodo"));
 		colBloqueEE.setCellValueFactory(new PropertyValueFactory("seccion"));
+
+		tblEE.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				EE seleccionada = tblEE.getSelectionModel().getSelectedItem();
+				if (seleccionada != null) {
+					abrirDetalleEE(seleccionada);
+				}
+			}
+		});
+	}
+
+	private void abrirDetalleEE(EE eeSeleccionada) {
+		try {
+			Stage nuevoEscenario = new Stage();
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+					"vista/FXMLExperienciaEducativa.fxml"));
+			Parent vista = loader.load();
+			FXMLExperienciaEducativaController controladorDetalle = loader.getController();
+			controladorDetalle.inicializarValores(eeSeleccionada);
+
+			Scene escena = new Scene(vista);
+
+			nuevoEscenario.setScene(escena);
+			nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+			nuevoEscenario.setTitle("Detalle de la EE");
+
+			nuevoEscenario.showAndWait();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, no se pudo cargar la ventana de la EE");
+		}
 	}
 
 	private void cargarTablaEE() {

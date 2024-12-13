@@ -1,5 +1,6 @@
 package gestorproyectos.controller;
 
+import gestorproyectos.modelo.pojo.EE;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -29,16 +30,28 @@ public class FXMLExperienciaEducativaController implements Initializable {
 	@FXML
 	private Label txtFResultadoSeccion;
 
+	private EE ee;
+
 	/**
 	 * Initializes the controller class.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
-	}	
+	}
+
+	public void inicializarValores(EE ee) {
+		this.ee = ee;
+		cargarInfo();
+	}
+
+	private void cargarInfo() {
+		txtFResultadoNombre.setText(ee.getNombreEE());
+		txtFResultadoNRC.setText(ee.getNrc() + "");
+		txtFResultadoSeccion.setText(ee.getSeccion() + "");
+	}
 
 	@FXML
 	private void clickAsignarAlumno(ActionEvent event) {
 	}
-	
+
 }
