@@ -24,15 +24,13 @@
       </ImageView>
       <Label layoutX="85.0" layoutY="167.0" text="Nombre Proyecto:" textFill="WHITE" />
       <Label layoutX="586.0" layoutY="167.0" text="Fecha de inicio:" textFill="WHITE" />
-      <Label layoutX="86.0" layoutY="228.0" text="Periodo:" textFill="WHITE" />
-      <Label layoutX="274.0" layoutY="228.0" text="Cupo:" textFill="WHITE" />
+      <Label layoutX="81.0" layoutY="228.0" text="Cupo:" textFill="WHITE" />
       <Label layoutX="85.0" layoutY="290.0" text="Objetivo:" textFill="WHITE" />
       <Label layoutX="469.0" layoutY="290.0" text="Descripción:" textFill="WHITE" />
       <Label layoutX="466.0" layoutY="228.0" text="Responsable:" textFill="WHITE" />
       <TextField fx:id="txtFNombreProyecto" layoutX="82.0" layoutY="185.0" prefHeight="26.0" prefWidth="457.0" promptText="Nombre" />
       <DatePicker fx:id="dpFechaInicio" layoutX="581.0" layoutY="185.0" prefHeight="26.0" prefWidth="222.0" promptText="Fecha" />
-      <TextField fx:id="txtFPeriodo" layoutX="86.0" layoutY="246.0" promptText="MesAAAA-MesAAAA" />
-      <TextField fx:id="txtFCupo" layoutX="274.0" layoutY="246.0" promptText="Cupo" />
+      <TextField fx:id="txtFCupo" layoutX="81.0" layoutY="246.0" prefHeight="26.0" prefWidth="343.0" promptText="Cupo" />
       <ComboBox fx:id="cBoxResponsable" layoutX="464.0" layoutY="246.0" prefHeight="26.0" prefWidth="343.0" promptText="Responsable" />
       <TextArea fx:id="txtAObjetivo" layoutX="82.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />
       <TextArea fx:id="txtADescripcion" layoutX="464.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />

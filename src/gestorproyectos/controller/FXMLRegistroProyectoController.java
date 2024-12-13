@@ -11,6 +11,7 @@ import gestorproyectos.utilidades.MisUtilidades;
 import gestorproyectos.utilidades.Validador;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -62,7 +63,6 @@ public class FXMLRegistroProyectoController implements Initializable {
 	@FXML
 	private void clickRegistrar(ActionEvent event) {
 		registrarProyectoSS();
-
 	}
 
 	private void registrarProyectoSS() {
@@ -71,18 +71,24 @@ public class FXMLRegistroProyectoController implements Initializable {
 			int cupo = Integer.parseInt(txtFCupo.getText());
 			String descripcion = txtADescripcion.getText().trim();
 			String objetivo = txtAObjetivo.getText().trim();
-			String fechaInicio = dpFechaInicio.getValue().toString();
-			int idResponsable = cBoxResponsable.getSelectionModel().getSelectedItem().getIdResponsable();
 
 			Validador.validarTexto(nombreProyecto, "Nombre del proyecto", 150);
 			Validador.validarTexto(descripcion, "Descripción", 500);
 			Validador.validarTexto(objetivo, "Objetivo", 255);
-			Validador.validarCupo(cupo);
+
+			if (cBoxResponsable.getSelectionModel().getSelectedItem() == null) {
+				throw new IllegalArgumentException("Debe seleccionar un responsable.");
+			}
+
+			int idResponsable = cBoxResponsable.getSelectionModel().getSelectedItem().getIdResponsable();
+
 			Validador.validarResponsable(idResponsable);
-			Validador.validarFechaProyecto(fechaInicio);
+
+			String fechaInicio = dpFechaInicio.getValue().toString();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			fechaInicio = dpFechaInicio.getValue().format(formatter);
 
 			ProyectoSS proyectoSS = new ProyectoSS();
-
 			proyectoSS.setNombreProyecto(nombreProyecto);
 			proyectoSS.setCupoProyecto(cupo);
 			proyectoSS.setDescripcionProyecto(descripcion);
@@ -92,11 +98,14 @@ public class FXMLRegistroProyectoController implements Initializable {
 
 			ProyectoSSDAO.validarProyectoSS(proyectoSS);
 			ProyectoSSDAO.registrarProyectoSS(proyectoSS);
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Éxito", "Se ha registrado correctamente");
+			cerrarFormulario();
+
 		} catch (IllegalArgumentException ex) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Validación", ex.getMessage());
 		} catch (SQLException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"No se ha podido registrar el proyecto");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error en la base de datos",
+					"No se ha podido registrar el proyecto. Error: " + ex.getMessage());
 		}
 	}
 
@@ -114,7 +123,8 @@ public class FXMLRegistroProyectoController implements Initializable {
 				cerrarFormulario();
 			}
 		} catch (SQLException ex) {
-
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de Base de Datos",
+					"Hubo un problema al cargar los responsables: " + ex.getMessage());
 		}
 	}
 
