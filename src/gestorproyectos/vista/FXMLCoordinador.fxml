@@ -87,8 +87,6 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TextField fx:id="txtFBuscarProyecto" layoutX="52.0" layoutY="53.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
-                                          <Button layoutX="690.0" layoutY="53.0" mnemonicParsing="false" onAction="#clickBuscarProyecto" text="Buscar" />
                                           <TableView fx:id="tblProyectoSS" layoutX="52.0" layoutY="151.0" prefHeight="319.0" prefWidth="690.0">
                                             <columns>
                                               <TableColumn fx:id="colNombreProyectoSS" prefWidth="412.00003814697266" text="Nombre Proyecto" />
@@ -97,7 +95,7 @@
                                           </TableView>
                                           <Button layoutX="699.0" layoutY="483.0" mnemonicParsing="false" onAction="#clickRegistrarProyecto" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
                                           <ComboBox fx:id="cBoxFiltroProyecto" layoutX="591.0" layoutY="104.0" prefWidth="150.0" />
-                                          <Label layoutX="523.0" layoutY="108.0" text="Filtrar por:" textFill="WHITE" />
+                                          <Label layoutX="453.0" layoutY="108.0" text="Buscar Proyecto por:" textFill="WHITE" />
                                           <TableView fx:id="tblProyectoPP" layoutX="52.0" layoutY="151.0" prefHeight="318.0" prefWidth="690.0">
                                              <columns>
                                                 <TableColumn fx:id="colNombreProyectoPP" prefWidth="412.00003814697266" text="Nombre Proyecto" />

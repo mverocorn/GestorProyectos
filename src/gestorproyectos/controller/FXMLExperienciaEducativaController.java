@@ -52,7 +52,7 @@ public class FXMLExperienciaEducativaController implements Initializable {
 	private Label txtFResultadoProfesor;
 
 	private EE ee;
-	
+
 	private ObservableList<Alumno> alumnos;
 
 	/**
@@ -105,27 +105,26 @@ public class FXMLExperienciaEducativaController implements Initializable {
 	private void clickAsignarAlumno(ActionEvent event) {
 		abrirAsignarAlumnoEE(ee);
 	}
-	
+
 	private void abrirAsignarAlumnoEE(EE eeSeleccionada) {
 		try {
-			Stage nuevoEscenario = new Stage();
+			Stage escenarioActual = (Stage) txtFResultadoNRC.getScene().getWindow();
+
 			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
 					"vista/FXMLAsignacionAlumnoAEE.fxml"));
 			Parent vista = loader.load();
 			FXMLAsignacionAlumnoAEEController controladorDetalle = loader.getController();
 			controladorDetalle.inicializarValores(eeSeleccionada);
 
-			Scene escena = new Scene(vista);
+			Scene nuevaEscena = new Scene(vista);
 
-			nuevoEscenario.setScene(escena);
-			nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
-			nuevoEscenario.setTitle("Asignación de Alumno a EE");
-
-			nuevoEscenario.showAndWait();
+			escenarioActual.setScene(nuevaEscena);
+			escenarioActual.setTitle("Asignación de Alumno a EE");
+			escenarioActual.show();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"Lo sentimos, no se pudo cargar la ventana de Asignació a EE");
+					"Lo sentimos, no se pudo cargar la ventana de Asignación a EE");
 		}
 	}
 

@@ -246,31 +246,29 @@ public class AlumnoDAO {
         return resultados;
     }
 
-    public static List<Alumno> obtenerAlumnosNoInscritosEnEE() throws SQLException {
+   public static List<Alumno> obtenerAlumnosNoInscritosEnEE(String filtro) throws SQLException {
     List<Alumno> resultados = new ArrayList<>();
     Connection conexionBD = ConexionBD.abrirConexion();
 
     if (conexionBD != null) {
-        String consulta = "SELECT "
-                + "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreCompleto, "
-                + "a.idAlumno, "
-                + "a.matricula "
-                + "FROM alumno a "
-                + "LEFT JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
-                + "WHERE (i.idInscripcionEE IS NULL OR i.estadoInscripcion = 'Finalizada') "
-                + "AND (LOWER(a.nombreAlumno) LIKE LOWER(?) "
-                + "OR LOWER(a.matricula) LIKE LOWER(?))";
-        try (
-            PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)
-        ) {
-
+        String consulta = "SELECT " +
+                          "CONCAT(a.nombreAlumno, ' ', a.apellidoAlumno) AS nombreCompleto, " +
+                          "a.idAlumno, " +
+                          "a.matricula " +
+                          "FROM alumno a " +
+                          "LEFT JOIN inscripcionee i ON a.idAlumno = i.idAlumno " +
+                          "WHERE (i.idInscripcionEE IS NULL OR i.estadoInscripcion = 'Finalizada') " +
+                          "AND (LOWER(a.nombreAlumno) LIKE ? OR LOWER(a.matricula) LIKE ?)";
+        try (PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+            String valorFiltro = "%" + filtro.toLowerCase() + "%";
+            prepararSentencia.setString(1, valorFiltro);
+            prepararSentencia.setString(2, valorFiltro);
 
             try (ResultSet resultado = prepararSentencia.executeQuery()) {
                 while (resultado.next()) {
                     Alumno alumno = new Alumno();
                     alumno.setIdAlumno(resultado.getInt("idAlumno"));
-                    alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
-					
+                    alumno.setNombreAlumno(resultado.getString("nombreCompleto"));
                     alumno.setMatricula(resultado.getString("matricula"));
                     resultados.add(alumno);
                 }
@@ -288,6 +286,5 @@ public class AlumnoDAO {
 
     return resultados;
 }
-
 
 }
