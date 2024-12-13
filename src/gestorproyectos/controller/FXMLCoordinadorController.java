@@ -146,6 +146,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	private ObservableList<InscripcionEE> inscripcionesPP;
 	private ObservableList<ProyectoSS> priorizacionesSS;
 	private ObservableList<ProyectoPP> priorizacionesPP;
+	String tipoProyectoAsignascion;
 
 	/**
 	 * Initializes the controller class.
@@ -352,13 +353,16 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	}
 
 	private void filtrarTablasAsignacion() {
-		String tipoProyecto = cBoxFiltroAsignarProyecto.getValue().toString();
-		if (tipoProyecto.equals("Servicio Social")) {
+		tipoProyectoAsignascion = cBoxFiltroAsignarProyecto.getValue().toString();
+		if (tipoProyectoAsignascion.equals("Servicio Social")) {
+			tblProyectoPP.setVisible(false);
 			tblAlumnoAsignacionPP.setVisible(false);
 			tblAlumnoAsignacionSS.setVisible(true);
 			configurarTablaAlumnoAsignacionSS();
 			cargarTablaAlumnoAsignacionSS();
-		} else if (tipoProyecto.equals("Práctica Profesional")) {
+
+		} else if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+			tblProyectoSS.setVisible(false);
 			tblAlumnoAsignacionSS.setVisible(false);
 			tblAlumnoAsignacionPP.setVisible(true);
 			configurarTablaAlumnoAsignacionPP();
@@ -420,18 +424,52 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	@FXML
 	private void clickSiguienteAsignación(ActionEvent event) {
-		agregarListenersTablasAsignacion();
+		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+			agregarListenersTablaAsignacionPP();
+		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
+			agregarListenersTablaAsignacionSS();
+		}
+		btnAsignar.setVisible(true);
 	}
 
-	private void agregarListenersTablasAsignacion() {
-		tblPriorizacionPP.setVisible(true);
+	private void agregarListenersTablaAsignacionPP() {
+		tblPriorizacionSS.setVisible(false);
+
 		int posicionSeleccion = tblAlumnoAsignacionPP.getSelectionModel().getSelectedIndex();
-		InscripcionEE inscripcionPP = inscripcionesPP.get(posicionSeleccion);
-		int idAlumno = inscripcionPP.getIdAlumno();
-		System.out.println("IDALUMNO:" + idAlumno);
-		tblPriorizacionPP.setVisible(true);
-		configurarTablaAlumnoPriorizacionPP();
-		cargarTablaAlumnoPriorizacionPP(idAlumno);
+
+		if (posicionSeleccion >= 0) {
+			InscripcionEE inscripcionPP = inscripcionesPP.get(posicionSeleccion);
+			int idAlumno = inscripcionPP.getIdAlumno();
+			System.out.println("IDALUMNO:" + idAlumno);
+			tblPriorizacionPP.setVisible(true);
+			configurarTablaAlumnoPriorizacionPP();
+			cargarTablaAlumnoPriorizacionPP(idAlumno);
+		} else {
+			System.out.println("No se seleccionó ningún alumno en la tabla de asignación PP.");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING,
+					"Selección requerida",
+					"Por favor, selecciona un alumno de la tabla.");
+		}
+	}
+
+	private void agregarListenersTablaAsignacionSS() {
+		tblPriorizacionPP.setVisible(false);
+
+		int posicionSeleccion = tblAlumnoAsignacionSS.getSelectionModel().getSelectedIndex();
+
+		if (posicionSeleccion >= 0) {
+			InscripcionEE inscripcionSS = inscripcionesSS.get(posicionSeleccion);
+			int idAlumno = inscripcionSS.getIdAlumno();
+			System.out.println("IDALUMNO:" + idAlumno);
+			tblPriorizacionSS.setVisible(true);
+			configurarTablaAlumnoPriorizacionSS();
+			cargarTablaAlumnoPriorizacionSS(idAlumno);
+		} else {
+			System.out.println("No se seleccionó ningún alumno en la tabla de asignación SS.");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING,
+					"Selección requerida",
+					"Por favor, selecciona un alumno de la tabla.");
+		}
 	}
 
 	private void configurarTablaAlumnoPriorizacionSS() {
