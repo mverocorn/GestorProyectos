@@ -51,10 +51,9 @@ public class AlumnoDAO {
         alumno.setNombreAlumno(resultado.getString("nombreAlumno"));
         alumno.setApellidoAlumno(resultado.getString("apellidoAlumno"));
         alumno.setMatricula(resultado.getString("matricula"));
-        alumno.setPromedio(resultado.getFloat("promedio"));
         alumno.setTelefonoAlumno(resultado.getString("telefonoAlumno"));
         alumno.setCorreo(resultado.getString("correoAlumno"));
-        
+        alumno.setPromedio(resultado.getFloat("promedio"));
         alumno.setEstadoAlumno(resultado.getString("estadoAlumno"));
         return alumno;
     }
@@ -248,10 +247,6 @@ public class AlumnoDAO {
 
     return resultados;
 }
-
-
-
-
 
 
 }

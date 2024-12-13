@@ -54,9 +54,9 @@
                               <TableColumn fx:id="colProyectoAlumno" prefWidth="259.9999084472656" text="Proyecto" />
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="585.0" layoutY="173.0" prefHeight="26.0" prefWidth="160.0" promptText="Seleccione Tipo de Proyecto" />
+                        <ComboBox fx:id="cBoxFiltroAlumno" layoutX="539.0" layoutY="173.0" prefHeight="26.0" prefWidth="206.0" promptText="Seleccione Tipo de Proyecto" />
                         <Button layoutX="701.0" layoutY="520.0" mnemonicParsing="false" onAction="#clickRegistrarAlumno" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
-                        <Label layoutX="512.0" layoutY="177.0" text="Filtrar por:" textFill="WHITE" />
+                        <Label layoutX="457.0" layoutY="177.0" text="Filtrar por:" textFill="WHITE" />
                         <Button layoutX="689.0" layoutY="127.0" mnemonicParsing="false" onAction="#clickBuscarAlumno" prefHeight="26.0" prefWidth="56.0" text="Buscar" />
                         <Label layoutX="55.0" layoutY="101.0" text="Ingrese el nombre del alumno a buscar:" textFill="WHITE">
                            <font>
@@ -89,15 +89,21 @@
                                        <children>
                                           <TextField fx:id="txtFBuscarProyecto" layoutX="52.0" layoutY="53.0" prefHeight="26.0" prefWidth="645.0" promptText="Buscar" />
                                           <Button layoutX="690.0" layoutY="53.0" mnemonicParsing="false" onAction="#clickBuscarProyecto" text="Buscar" />
-                                          <TableView fx:id="tblProyecto" layoutX="52.0" layoutY="151.0" prefHeight="330.0" prefWidth="690.0">
+                                          <TableView fx:id="tblProyectoSS" layoutX="52.0" layoutY="151.0" prefHeight="319.0" prefWidth="690.0">
                                             <columns>
-                                              <TableColumn fx:id="colNombreProyecto" prefWidth="412.00003814697266" text="Nombre Proyecto" />
-                                              <TableColumn fx:id="colEEProyecto" prefWidth="279.1999816894531" text="Experiencia Educativa" />
+                                              <TableColumn fx:id="colNombreProyectoSS" prefWidth="412.00003814697266" text="Nombre Proyecto" />
+                                              <TableColumn fx:id="colEEProyectoSS" prefWidth="279.1999816894531" text="Experiencia Educativa" />
                                             </columns>
                                           </TableView>
-                                          <Button layoutX="702.0" layoutY="496.0" mnemonicParsing="false" onAction="#clickRegistrarProyecto" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
+                                          <Button layoutX="699.0" layoutY="483.0" mnemonicParsing="false" onAction="#clickRegistrarProyecto" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 30;" text="+" />
                                           <ComboBox fx:id="cBoxFiltroProyecto" layoutX="591.0" layoutY="104.0" prefWidth="150.0" />
                                           <Label layoutX="523.0" layoutY="108.0" text="Filtrar por:" textFill="WHITE" />
+                                          <TableView fx:id="tblProyectoPP" layoutX="52.0" layoutY="151.0" prefHeight="318.0" prefWidth="690.0">
+                                             <columns>
+                                                <TableColumn fx:id="colNombreProyectoPP" prefWidth="412.00003814697266" text="Nombre Proyecto" />
+                                                <TableColumn fx:id="colEEProyectoPP" prefWidth="279.1999816894531" text="Experiencia Educativa" />
+                                             </columns>
+                                          </TableView>
                                        </children>
                                     </AnchorPane>
                               </content>
@@ -106,23 +112,38 @@
                               <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TableView fx:id="tblAlumnoAsignacion" layoutX="32.0" layoutY="130.0" prefHeight="311.0" prefWidth="346.0">
+                                          <TableView fx:id="tblAlumnoAsignacionSS" layoutX="32.0" layoutY="130.0" prefHeight="311.0" prefWidth="346.0">
                                             <columns>
-                                              <TableColumn fx:id="colNombreAlumnoAsignacion" prefWidth="129.60004425048828" text="Nombre Alumno" />
-                                              <TableColumn fx:id="colPromedioAsignacion" prefWidth="60.79998779296875" text="Promedio" />
-                                                <TableColumn fx:id="colEEAsignacion" prefWidth="92.800048828125" text="EE" />
-                                                <TableColumn fx:id="colSeccionAsignacion" prefWidth="63.2000732421875" text="Seccion" />
+                                              <TableColumn fx:id="colNombreAlumnoAsignacionSS" prefWidth="129.60004425048828" text="Nombre Alumno" />
+                                              <TableColumn fx:id="colPromedioAsignacionSS" prefWidth="60.79998779296875" text="Promedio" />
+                                                <TableColumn fx:id="colEEAsignacionSS" prefWidth="92.800048828125" text="EE" />
+                                                <TableColumn fx:id="colSeccionAsignacionSS" prefWidth="63.2000732421875" text="Seccion" />
                                             </columns>
                                           </TableView>
                                           <ComboBox fx:id="cBoxFiltroAsignarProyecto" layoutX="244.0" layoutY="62.0" prefHeight="40.0" prefWidth="306.0" />
-                                          <TableView fx:id="tblPriorizacion" layoutX="455.0" layoutY="130.0" prefHeight="310.0" prefWidth="295.0">
+                                          <TableView fx:id="tblPriorizacionSS" layoutX="455.0" layoutY="130.0" prefHeight="310.0" prefWidth="295.0">
                                             <columns>
-                                              <TableColumn fx:id="colNombreProyectoPriorizacion" prefWidth="132.80001831054688" text="Nombre Proyecto" />
-                                              <TableColumn fx:id="colCupoPriorizacion" prefWidth="47.20001220703125" text="Cupo" />
-                                                <TableColumn fx:id="colOrdenPriorizacion" prefWidth="114.39995117187499" text="Orden Priorización" />
+                                              <TableColumn fx:id="colNombreProyectoPriorizacionSS" prefWidth="132.80001831054688" text="Nombre Proyecto" />
+                                              <TableColumn fx:id="colCupoPriorizacionSS" prefWidth="47.20001220703125" text="Cupo" />
+                                                <TableColumn fx:id="colOrdenPriorizacionSS" prefWidth="114.39995117187499" text="Orden Priorización" />
                                             </columns>
                                           </TableView>
                                           <Button layoutX="371.0" layoutY="495.0" mnemonicParsing="false" onAction="#clickAsignar" text="Asignar" />
+                                          <TableView fx:id="tblAlumnoAsignacionPP" layoutX="32.0" layoutY="130.0" prefHeight="311.0" prefWidth="346.0">
+                                             <columns>
+                                                <TableColumn fx:id="colNombreAlumnoAsignacionPP" prefWidth="129.60004425048828" text="Nombre Alumno" />
+                                                <TableColumn fx:id="colPromedioAsignacionPP" prefWidth="60.79998779296875" text="Promedio" />
+                                                <TableColumn fx:id="colEEAsignacionPP" prefWidth="92.800048828125" text="EE" />
+                                                <TableColumn fx:id="colSeccionAsignacionPP" prefWidth="63.2000732421875" text="Seccion" />
+                                             </columns>
+                                          </TableView>
+                                          <TableView fx:id="tblPriorizacionPP" layoutX="455.0" layoutY="130.0" prefHeight="310.0" prefWidth="295.0">
+                                             <columns>
+                                                <TableColumn fx:id="colNombreProyectoPriorizacionPP" prefWidth="132.80001831054688" text="Nombre Proyecto" />
+                                                <TableColumn fx:id="colCupoPriorizacionPP" prefWidth="47.20001220703125" text="Cupo" />
+                                                <TableColumn fx:id="colOrdenPriorizacionPP" prefWidth="114.39995117187499" text="Orden Priorización" />
+                                             </columns>
+                                          </TableView>
                                        </children>
                                     </AnchorPane>
                               </content>

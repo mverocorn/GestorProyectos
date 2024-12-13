@@ -2,6 +2,7 @@ package gestorproyectos.controller;
 
 import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.pojo.Alumno;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +11,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class FXMLAlumnoController implements Initializable {
 
@@ -40,8 +47,13 @@ public class FXMLAlumnoController implements Initializable {
 		} catch (SQLException ex) {
 			System.err.println("Error al obtener las experiencias educativas: " + ex.getMessage());
 		}
+		saludo(alumno);
 	}
 
+	public void saludo(Alumno alumno) {
+		lblNombreAlumno.setText(alumno.getNombreAlumno()+ " " + alumno.getApellidoAlumno());
+	}
+	
 	private List<String> obtenerEEPorAlumno(int idAlumno) throws SQLException {
 		List<String> experienciasEducativas = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
@@ -77,6 +89,26 @@ public class FXMLAlumnoController implements Initializable {
 
 			boton.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
 			experienciasContenedor.getChildren().add(boton);
+		}
+	}
+
+	@FXML
+	private void clickCerrarSesion(ActionEvent event) {
+		try {
+			Stage stage = (Stage) lblNombreAlumno.getScene().getWindow();
+			stage.close();
+			FXMLLoader loader = new FXMLLoader(
+					gestorproyectos.GestorProyectos.class.getResource(
+							"vista/FXMLInicioSesion.fxml"));
+			Parent vista = loader.load();
+			Stage escenario = new Stage();
+			Scene escena = new Scene(vista);
+			escenario.setScene(escena);
+			escenario.setTitle("Inicio Sesion");
+			escenario.initModality(Modality.APPLICATION_MODAL);
+			escenario.show();
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 }
