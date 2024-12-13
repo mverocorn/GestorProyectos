@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -8,7 +12,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLRegistroExperienciaEducativaController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLRegistroExperienciaEducativaController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -24,13 +28,13 @@
       <Label layoutX="184.0" layoutY="215.0" text="NRC:" textFill="WHITE" />
       <Label layoutX="490.0" layoutY="215.0" text="Sección:" textFill="WHITE" />
       <Label layoutX="183.0" layoutY="291.0" text="Periodo:" textFill="WHITE" />
-      <TextField fx:id="txtFNombreEE" layoutX="183.0" layoutY="159.0" prefHeight="26.0" prefWidth="501.0" promptText="Nombre" />
       <TextField fx:id="txtFNRC" layoutX="183.0" layoutY="241.0" prefHeight="26.0" prefWidth="194.0" promptText="NRC" />
       <TextField fx:id="txtFSeccion" layoutX="490.0" layoutY="241.0" prefHeight="26.0" prefWidth="194.0" promptText="Sección" />
-      <TextField fx:id="txtFPeriodo" layoutX="183.0" layoutY="318.0" prefHeight="26.0" prefWidth="194.0" promptText="Periodo" />
       <Button layoutX="184.0" layoutY="397.0" mnemonicParsing="false" onAction="#clickCancelar" text="Cancelar" />
       <Button layoutX="621.0" layoutY="397.0" mnemonicParsing="false" onAction="#clickRegistrar" text="Registrar" />
       <ComboBox fx:id="cBoxProfesor" layoutX="490.0" layoutY="319.0" prefWidth="150.0" />
       <Label layoutX="490.0" layoutY="291.0" text="Profesor:" textFill="WHITE" />
+      <ComboBox fx:id="cBoxNombreEE" layoutX="184.0" layoutY="168.0" prefWidth="500.0" />
+      <ComboBox fx:id="cBoxPeriodo" layoutX="183.0" layoutY="319.0" prefWidth="195.0" />
    </children>
 </AnchorPane>

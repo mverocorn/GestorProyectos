@@ -227,4 +227,9 @@ public class Validador {
         }
     }
 
+    public static void validarHoras(int horas) {
+        if (horas < 1 ) {
+            throw new IllegalArgumentException("El numero de horas es invalido");
+        }
+    }    
 }
