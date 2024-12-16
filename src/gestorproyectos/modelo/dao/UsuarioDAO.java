@@ -15,120 +15,141 @@ import java.sql.SQLException;
  */
 public class UsuarioDAO {
 
-	public static IUsuario verificarCredencialesUsuario(String tipoUsuario,
-			String correo, String contrasenia) throws SQLException {
-		if (tipoUsuario == null) {
-			return null;
-		}
+    public static IUsuario verificarCredencialesUsuario(String tipoUsuario,
+        String correo, String contrasenia) throws SQLException {
+        if (tipoUsuario == null) {
+            return null;
+        }
 
-		if (tipoUsuario.equals("alumno")) {
-			return verificarCredencialesAlumno(correo, contrasenia);
-		} else if (tipoUsuario.equals("profesor")) {
-			return verificarCredencialesProfesor(correo, contrasenia);
-		}
-		return null;
-	}
+        if (tipoUsuario.equals("alumno")) {
+            return verificarCredencialesAlumno(correo, contrasenia);
+        } else if (tipoUsuario.equals("profesor")) {
+            return verificarCredencialesProfesor(correo, contrasenia);
+        }
+        return null;
+    }
 
-	public static String identificarTipoUsuario(String correo) {
-		String tipoUsuario = null;
-		Connection conexionBD = null;
+    public static String identificarTipoUsuario(String correo) {
+        String tipoUsuario = null;
+        Connection conexionBD = null;
 
-		try {
-			conexionBD = ConexionBD.abrirConexion();
-			if (conexionBD != null) {
-				System.out.println("Conexión a la base de datos abierta correctamente.");
+        try {
+            conexionBD = ConexionBD.abrirConexion();
+            if (conexionBD != null) {
+                System.out.println("Conexión a la base de datos abierta correctamente.");
 
-				String consulta = "SELECT 'alumno' AS tipoUsuario FROM Alumno WHERE correoAlumno = ? "
-						+ "UNION "
-						+ "SELECT 'profesor' AS tipoUsuario FROM Profesor WHERE correoProfesor = ?";
-				PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-				prepararSentencia.setString(1, correo.trim().toLowerCase());
-				prepararSentencia.setString(2, correo.trim().toLowerCase());
+                String consulta = "SELECT 'alumno' AS tipoUsuario FROM Alumno WHERE correo = ? "
+                    + "UNION "
+                    + "SELECT 'profesor' AS tipoUsuario FROM Profesor WHERE correo = ?";
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+                prepararSentencia.setString(1, correo.trim().toLowerCase());
+                prepararSentencia.setString(2, correo.trim().toLowerCase());
 
-				ResultSet resultadoConsulta = prepararSentencia.executeQuery();
-				if (resultadoConsulta.next()) {
-					tipoUsuario = resultadoConsulta.getString("tipoUsuario");
-					System.out.println("Tipo de usuario encontrado: " + tipoUsuario);
-				} else {
-					System.out.println("No se encontró tipo de usuario para el correo: " + correo);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (conexionBD != null) {
-				try {
-					conexionBD.close();
-					System.out.println("Conexión cerrada correctamente.");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+                ResultSet resultadoConsulta = prepararSentencia.executeQuery();
+                if (resultadoConsulta.next()) {
+                    tipoUsuario = resultadoConsulta.getString("tipoUsuario");
+                    System.out.println("Tipo de usuario encontrado: "
+                        + tipoUsuario);
+                } else {
+                    System.out.println("No se encontró tipo de usuario para el correo: "
+                        + correo);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (conexionBD != null) {
+                try {
+                    conexionBD.close();
+                    System.out.println("Conexión cerrada correctamente.");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-		return tipoUsuario;
-	}
+        return tipoUsuario;
+    }
 
-	private static Alumno verificarCredencialesAlumno(String correo, String contrasenia) {
-		Alumno alumno = null;
-		try {
-			Connection conexionBD = ConexionBD.abrirConexion();
+    private static Alumno verificarCredencialesAlumno(String correo, String contrasenia) {
+        Alumno alumno = null;
+        Connection conexionBD = null;
 
-			if (conexionBD != null) {
-				try {
-					String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, "
-							+ "correoAlumno, matricula, telefonoAlumno, correoAlumno, "
-							+ "promedio, estadoAlumno "
-							+ "FROM Alumno "
-							+ "WHERE correoAlumno = ? "
-							+ "AND contraseniaAlumno = ?";
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-					prepararSentencia.setString(1, correo);
-					prepararSentencia.setString(2, contrasenia);
+        try {
+            // Establecer la conexión a la base de datos
+            conexionBD = ConexionBD.abrirConexion();
 
-					ResultSet resultadoConsulta = prepararSentencia.executeQuery();
-					if (resultadoConsulta.next()) {
-						alumno = AlumnoDAO.serializarAlumno(resultadoConsulta);
-					}
-					System.out.println("Verificando credenciales para correo: " + correo);//quitar
-					conexionBD.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return alumno;
-		} catch (SQLException ex) {
-			ex.getMessage();
-		}
-		return alumno;
-	}
+            if (conexionBD != null) {
+                System.out.println("Conexión a la base de datos abierta correctamente.");
 
-	private static Profesor verificarCredencialesProfesor(String correo, String contrasenia) {
-		Profesor profesor = null;
-		try {
-			Connection conexionBD = ConexionBD.abrirConexion();
+                String consulta = "SELECT idAlumno, nombreAlumno, apellidoAlumno, "
+                    + "correo, matricula, telefonoAlumno, correo, "
+                    + "promedio, estadoAlumno "
+                    + "FROM Alumno "
+                    + "WHERE correo = ? "
+                    + "AND contrasenia = ?";
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+                prepararSentencia.setString(1, correo.trim().toLowerCase());
+                prepararSentencia.setString(2, contrasenia.trim()); 
+                System.out.println("Verificando credenciales para alumno: " + correo + ", Contraseña: " + contrasenia); //quitar
 
-			if (conexionBD != null) {
-				try {
-					String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, correoProfesor, clave "
-							+ "FROM Profesor WHERE correoProfesor = ? AND contraseniaProfesor = ?";
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
-					prepararSentencia.setString(1, correo);
-					prepararSentencia.setString(2, contrasenia);
+                ResultSet resultadoConsulta = prepararSentencia.executeQuery();
+                if (resultadoConsulta.next()) {
+                    alumno = AlumnoDAO.serializarAlumno(resultadoConsulta);
+                    System.out.println("Credenciales verificadas correctamente para: "
+                        + correo);
+                } else {
+                    System.out.println("No se encontraron credenciales para el correo: "
+                        + correo);
+                }
+            } else {
+                System.out.println("Error al abrir la conexión.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al ejecutar la consulta: "
+                + e.getMessage());
+        } finally {
+            // Asegurarse de cerrar la conexión
+            if (conexionBD != null) {
+                try {
+                    conexionBD.close();
+                    System.out.println("Conexión cerrada correctamente.");
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar la conexión: "
+                        + e.getMessage());
+                }
+            }
+        }
 
-					ResultSet resultadoConsulta = prepararSentencia.executeQuery();
-					if (resultadoConsulta.next()) {
-						profesor = ProfesorDAO.serializarProfesor(resultadoConsulta);
-					}
-					conexionBD.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			return profesor;
-		} catch (SQLException ex) {
-			ex.getMessage();
-		}
-		return profesor;
-	}
+        return alumno;
+    }
+
+    private static Profesor verificarCredencialesProfesor(String correo, String contrasenia) {
+        Profesor profesor = null;
+        try {
+            Connection conexionBD = ConexionBD.abrirConexion();
+
+            if (conexionBD != null) {
+                try {
+                    String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, correo, clave "
+                        + "FROM Profesor WHERE correo = ? AND contrasenia = ?";
+                    PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+                    prepararSentencia.setString(1, correo);
+                    prepararSentencia.setString(2, contrasenia);
+
+                    ResultSet resultadoConsulta = prepararSentencia.executeQuery();
+                    if (resultadoConsulta.next()) {
+                        profesor = ProfesorDAO.serializarProfesor(resultadoConsulta);
+                    }
+                    conexionBD.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return profesor;
+        } catch (SQLException ex) {
+            ex.getMessage();
+        }
+        return profesor;
+    }
 }

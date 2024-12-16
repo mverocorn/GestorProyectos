@@ -8,8 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLAsignacionAlumnoAEEController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLAsignacionAlumnoAEEController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -29,5 +28,6 @@
           <TableColumn fx:id="colMatricula" prefWidth="188.800048828125" text="Matrícula" />
         </columns>
       </TableView>
+      <Button layoutX="34.0" layoutY="534.0" mnemonicParsing="false" onAction="#clickCancelar" text="Cancelar" />
    </children>
 </AnchorPane>

@@ -23,6 +23,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -49,9 +50,10 @@ public class FXMLAlumnoController implements Initializable {
             validarPriorizacionRealizada(alumno.getIdAlumno());
 
         } catch (SQLException ex) {
-            System.err.println("Error al inicializar valores: " + ex.getMessage());
+            System.err.println("Error al inicializar valores: "
+                + ex.getMessage());
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-                    "Hubo un problema al cargar la información del alumno.");
+                "Hubo un problema al cargar la información del alumno.");
         }
 
         saludo(alumno);
@@ -70,43 +72,83 @@ public class FXMLAlumnoController implements Initializable {
     private void agregarBotonesEE(List<EE> experiencias) {
         experienciasContenedor.getChildren().clear();
 
+        // Agregar un espaciado entre los botones en el contenedor principal
+        experienciasContenedor.setSpacing(10);  // Espacio de 10px entre cada botón
+
         for (EE ee : experiencias) {
-            Button boton = new Button(ee.getNombreEE());
+            // Crear un contenedor para los elementos del botón
+            VBox contenedorBoton = new VBox();
+            contenedorBoton.setSpacing(5);  // Espaciado entre los Labels
+
+            // Crear el Label para el nombre de la EE en negritas con color específico
+            Label nombreLabel = new Label(ee.getNombreEE());
+            nombreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;");  // Color negro para el nombre
+
+            // Crear el Label para el periodo en texto normal y tamaño pequeño con color específico
+            Label periodoLabel = new Label(ee.getPeriodo());
+            periodoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");  // Color gris para el periodo
+
+            // Crear el Label para el NRC en texto normal y tamaño pequeño con color específico
+            Label nrcLabel = new Label("NRC: " + ee.getNrc());
+            nrcLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");  // Color gris para el NRC
+
+            // Agregar los Labels al contenedor
+            contenedorBoton.getChildren().addAll(nombreLabel, periodoLabel, nrcLabel);
+
+            // Crear el botón y asignar el contenedor con los Labels como su contenido
+            Button boton = new Button();
+            boton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");  // Fondo verde y texto blanco en el botón
+            boton.setPrefWidth(200);  // Puedes ajustar el ancho si es necesario
+            boton.setPrefHeight(80); // Puedes ajustar la altura si es necesario
+            boton.setGraphic(contenedorBoton);
+
+            // Configurar la acción del botón
             boton.setOnAction(event -> {
-                System.out.println("Seleccionaste la EE con id " + ee.getIdEE() + " y nombre: " + ee.getNombreEE());
-                abrirDetalleProyecto(obtenerIdProyecto());
+                System.out.println("Seleccionaste la EE con id " + ee.getIdEE()
+                    + " y nombre: " + ee.getNombreEE() + ", periodo: "
+                    + ee.getPeriodo() + ", NRC: " + ee.getNrc());
+
+                // Abrir la interfaz AsignacionAlumnoAEE.fxml
+                try {
+                    FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLPriorizacion.fxml"));
+                    Stage stage = new Stage(); // Nueva ventana
+                    stage.setScene(new Scene(loader.load())); // Cargar la escena de FXML
+                    stage.setTitle("Priorizacion de proyectos"); // Título de la ventana
+                    stage.show(); // Mostrar la ventana
+                } catch (IOException e) {
+                    e.printStackTrace(); // Manejar el error en caso de que no se cargue el FXML
+                }
             });
 
-            boton.setStyle("-fx-font-size: 14px; -fx-padding: 5px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
             experienciasContenedor.getChildren().add(boton);
         }
     }
 
     private void saludo(Alumno alumno) {
-        lblNombreAlumno.setText(alumno.getNombreAlumno() + " " + alumno.getApellidoAlumno());
+        lblNombreAlumno.setText(alumno.getNombreAlumno() + " "
+            + alumno.getApellidoAlumno());
     }
 
     private void abrirDetalleProyecto(int idProyecto) {
-		int idAlumno = alumno.getIdAlumno();
-    try {
-        Stage nuevoEscenario = new Stage();
-        FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLProyecto.fxml"));
-        Parent vista = loader.load();
-        FXMLProyectoController controladorDetalle = loader.getController();
-        controladorDetalle.inicializarValores(idProyecto, idAlumno);
+        int idAlumno = alumno.getIdAlumno();
+        try {
+            Stage nuevoEscenario = new Stage();
+            FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLProyecto.fxml"));
+            Parent vista = loader.load();
+            FXMLProyectoController controladorDetalle = loader.getController();
+            controladorDetalle.inicializarValores(idProyecto, idAlumno);
 
-        Scene nuevaEscena = new Scene(vista);
-        nuevoEscenario.setScene(nuevaEscena);
-        nuevoEscenario.setTitle("Detalle de la EE");
-        nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
-        nuevoEscenario.showAndWait();
+            Scene nuevaEscena = new Scene(vista);
+            nuevoEscenario.setScene(nuevaEscena);
+            nuevoEscenario.setTitle("Detalle de la EE");
+            nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+            nuevoEscenario.showAndWait();
 
-    } catch (IOException ex) {
-        ex.printStackTrace();
-        MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Lo sentimos, no se pudo cargar la ventana de la EE.");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Lo sentimos, no se pudo cargar la ventana de la EE.");
+        }
     }
-}
-
 
     private void validarPriorizacionRealizada(int idAlumno) {
         try {
@@ -118,7 +160,8 @@ public class FXMLAlumnoController implements Initializable {
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Aviso", "El alumno no ha realizado su priorización de proyectos.");
             }
         } catch (SQLException ex) {
-            System.err.println("Error al validar priorización: " + ex.getMessage());
+            System.err.println("Error al validar priorización: "
+                + ex.getMessage());
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Hubo un problema al verificar la priorización de proyectos.");
         }
     }

@@ -15,6 +15,7 @@ public class InscripcionEE {
 	private float promedio; // Promedio del alumno
 	private String nombreEE; // Nombre de la EE
 	private String seccion; // Sección de la EE
+        private String nombreProyecto; // Nombre del Proyecto (PP o SS)
 
 	public InscripcionEE(int idInscripcionEE, Date fechaInscripcion, String estadoInscripcion,
 			int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {
@@ -118,4 +119,11 @@ public class InscripcionEE {
         this.seccion = seccion;
     }
 
+    public String getNombreProyecto() {
+        return nombreProyecto;
+    }
+
+    public void setNombreProyecto(String nombreProyecto) {
+        this.nombreProyecto = nombreProyecto;
+    }
 }

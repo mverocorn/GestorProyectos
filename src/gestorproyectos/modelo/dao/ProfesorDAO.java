@@ -16,7 +16,7 @@ public class ProfesorDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if (conexionBD != null) {
             try {
-                String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, clave, correoProfesor FROM profesor;";
+                String consulta = "SELECT idProfesor, nombreProfesor, apellidoProfesor, clave, correo FROM profesor;";
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 ResultSet resultado = prepararConsulta.executeQuery();
                 profesores = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ProfesorDAO {
         profesor.setNombreProfesor(resultado.getString("nombreProfesor"));
         profesor.setApellidoProfesor(resultado.getString("apellidoProfesor"));
         profesor.setClave(resultado.getString("clave"));
-        profesor.setCorreo(resultado.getString("correoProfesor"));
+        profesor.setCorreo(resultado.getString("correo"));
         return profesor;
     }
 

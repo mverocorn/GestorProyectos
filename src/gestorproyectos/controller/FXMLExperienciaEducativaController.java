@@ -1,6 +1,5 @@
 package gestorproyectos.controller;
 
-import gestorproyectos.modelo.dao.AlumnoDAO;
 import gestorproyectos.modelo.dao.InscripcionEEDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.pojo.EE;
@@ -10,7 +9,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,98 +32,138 @@ import javafx.stage.Stage;
  */
 public class FXMLExperienciaEducativaController implements Initializable {
 
-	@FXML
-	private TableView<Alumno> tblAlumnosDeExperiencia;
-	@FXML
-	private TableColumn<?, ?> colNombreAlumno;
-	@FXML
-	private TableColumn<?, ?> colMatricula;
-	@FXML
-	private Label txtFResultadoNombre;
-	@FXML
-	private Label txtFResultadoNRC;
-	@FXML
-	private Label txtFResultadoSeccion;
-	@FXML
-	private Label txtFResultadoPeriodo;
-	@FXML
-	private Label txtFResultadoProfesor;
+    @FXML
+    private TableView<Alumno> tblAlumnosDeExperiencia;
+    @FXML
+    private TableColumn<?, ?> colNombreAlumno;
+    @FXML
+    private TableColumn<?, ?> colMatricula;
+    @FXML
+    private Label txtFResultadoNombre;
+    @FXML
+    private Label txtFResultadoNRC;
+    @FXML
+    private Label txtFResultadoSeccion;
+    @FXML
+    private Label txtFResultadoPeriodo;
+    @FXML
+    private Label txtFResultadoProfesor;
 
-	private EE ee;
+    private EE ee;
 
-	private ObservableList<Alumno> alumnos;
+    private ObservableList<Alumno> alumnos;
 
-	/**
-	 * Initializes the controller class.
-	 */
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-	}
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+    }
 
-	public void inicializarValores(EE ee) {
-		this.ee = ee;
-		cargarInfo();
-		configurarTablaProyectoPP();
-		cargarTablaProyectoPP();
-	}
+    public void inicializarValores(EE ee) {
+        this.ee = ee;
+        cargarInfo();
+        configurarTablaProyectoPP();
+        cargarTablaProyectoPP();
+    }
 
-	private void cargarInfo() {
-		txtFResultadoNombre.setText(ee.getNombreEE());
-		txtFResultadoNRC.setText(ee.getNrc() + "");
-		txtFResultadoSeccion.setText(ee.getSeccion() + "");
-		txtFResultadoPeriodo.setText(ee.getPeriodo());
-		txtFResultadoProfesor.setText(ee.getNombreProfesor() + " " + ee.getApellidoProfesor());
-	}
+    private void cargarInfo() {
+        txtFResultadoNombre.setText(ee.getNombreEE());
+        txtFResultadoNRC.setText(ee.getNrc() + "");
+        txtFResultadoSeccion.setText(ee.getSeccion() + "");
+        txtFResultadoPeriodo.setText(ee.getPeriodo());
+        txtFResultadoProfesor.setText(ee.getNombreProfesor() + " "
+            + ee.getApellidoProfesor());
+    }
 
-	private void configurarTablaProyectoPP() {
-		colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
-		colMatricula.setCellValueFactory(new PropertyValueFactory("matricula"));
-	}
+    
+    private void configurarTablaProyectoPP() {
+        colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
+        colMatricula.setCellValueFactory(new PropertyValueFactory("matricula"));
 
-	private void cargarTablaProyectoPP() {
-		alumnos = FXCollections.observableArrayList();
-		try {
-			List<Alumno> AlumnosBD = InscripcionEEDAO.obtenerAlumnosAsignados(ee.getIdEE());
-			if (AlumnosBD != null) {
-				alumnos.addAll(AlumnosBD);
-				tblAlumnosDeExperiencia.setItems(alumnos);
-			} else {
-				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
-						"Error", "Lo sentimos, no se puede cargar en "
-						+ "este momento la tabla de alumnos");
-			}
-		} catch (SQLException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"Lo sentimos, el sistema presenta fallas para recuperar la información, "
-					+ "vuelva a intentar");
-		}
-	}
+        tblAlumnosDeExperiencia.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Si se hace doble clic en un alumno
+                Alumno seleccionado = tblAlumnosDeExperiencia.getSelectionModel().getSelectedItem();
+                if (seleccionado != null) {
+                    abrirDetallesAlumno(seleccionado); // Abrir los detalles del alumno
+                }
+            }
+        });
+    }
 
-	@FXML
-	private void clickAsignarAlumno(ActionEvent event) {
-		abrirAsignarAlumnoEE(ee);
-	}
+    private void abrirDetallesAlumno(Alumno alumnoSeleccionado) {
+        try {
+            // Cargar la ventana de detalles del alumno
+            Stage nuevoEscenario = new Stage();
+            FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+                "vista/FXMLDetallesAlumno.fxml"));
+            Parent vista = loader.load();
 
-	private void abrirAsignarAlumnoEE(EE eeSeleccionada) {
-		try {
-			Stage escenarioActual = (Stage) txtFResultadoNRC.getScene().getWindow();
 
-			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
-					"vista/FXMLAsignacionAlumnoAEE.fxml"));
-			Parent vista = loader.load();
-			FXMLAsignacionAlumnoAEEController controladorDetalle = loader.getController();
-			controladorDetalle.inicializarValores(eeSeleccionada);
+            // Obtener el controlador de la vista
+            FXMLDetallesAlumnoController controladorDetalle = loader.getController();
 
-			Scene nuevaEscena = new Scene(vista);
+            // Inicializar los valores en la vista con el alumno seleccionado
+            controladorDetalle.inicializarValores(alumnoSeleccionado);
 
-			escenarioActual.setScene(nuevaEscena);
-			escenarioActual.setTitle("Asignación de Alumno a EE");
-			escenarioActual.show();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-					"Lo sentimos, no se pudo cargar la ventana de Asignación a EE");
-		}
-	}
+            // Configurar y mostrar la ventana
+            Scene escena = new Scene(vista);
+            nuevoEscenario.setScene(escena);
+            nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+            nuevoEscenario.setTitle("Detalle del Alumno");
+
+            nuevoEscenario.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+                "Lo sentimos, no se pudo cargar la ventana de detalles del alumno");
+        }
+    }
+
+    private void cargarTablaProyectoPP() {
+        alumnos = FXCollections.observableArrayList();
+        try {
+            List<Alumno> AlumnosBD = InscripcionEEDAO.obtenerAlumnosAsignados(ee.getIdEE());
+            if (AlumnosBD != null) {
+                alumnos.addAll(AlumnosBD);
+                tblAlumnosDeExperiencia.setItems(alumnos);
+            } else {
+                MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,
+                    "Error", "Lo sentimos, no se puede cargar en "
+                    + "este momento la tabla de alumnos");
+            }
+        } catch (SQLException ex) {
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+                "Lo sentimos, el sistema presenta fallas para recuperar la información, "
+                + "vuelva a intentar");
+        }
+    }
+
+    @FXML
+    private void clickAsignarAlumno(ActionEvent event) {
+        abrirAsignarAlumnoEE(ee);
+    }
+
+    private void abrirAsignarAlumnoEE(EE eeSeleccionada) {
+        try {
+            Stage escenarioActual = (Stage) txtFResultadoNRC.getScene().getWindow();
+
+            FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+                "vista/FXMLAsignacionAlumnoAEE.fxml"));
+            Parent vista = loader.load();
+            FXMLAsignacionAlumnoAEEController controladorDetalle = loader.getController();
+            controladorDetalle.inicializarValores(eeSeleccionada);
+
+            Scene nuevaEscena = new Scene(vista);
+
+            escenarioActual.setScene(nuevaEscena);
+            escenarioActual.setTitle("Asignación de Alumno a EE");
+            escenarioActual.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+                "Lo sentimos, no se pudo cargar la ventana de Asignación a EE");
+        }
+    }
 
 }
