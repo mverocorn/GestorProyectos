@@ -32,7 +32,7 @@ public class InscripcionEEDAO {
                 String consulta = "SELECT a.idAlumno, a.nombreAlumno, a.apellidoAlumno, a.matricula "
                     + "FROM alumno a "
                     + "JOIN inscripcionee i ON a.idAlumno = i.idAlumno "
-                    + "WHERE i.idEE;";
+                    + "WHERE i.idEE = ?;";
 
                 PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
                 prepararConsulta.setInt(1, idEE);
