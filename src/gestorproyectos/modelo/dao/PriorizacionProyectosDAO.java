@@ -16,249 +16,299 @@ import java.util.logging.Logger;
 
 public class PriorizacionProyectosDAO {
 
-	private static final Logger logger = Logger.getLogger(
-			InscripcionEEDAO.class.getName()
-	);
+    private static final Logger logger = Logger.getLogger(
+        InscripcionEEDAO.class.getName()
+    );
 
-	public static boolean validarPriorizacion(Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
-		Set<Integer> prioridades = new HashSet<>(proyectosYPrioridades.values());
-		if (prioridades.size() != proyectosYPrioridades.size()) {
-			throw new SQLException("Detectamos la repetición de un mismo número en 2 o más proyectos. "
-					+ "Por favor asigne un número a cada proyecto sin repetir.");
-		}
+    public static boolean validarPriorizacion(Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
+        Set<Integer> prioridades = new HashSet<>(proyectosYPrioridades.values());
+        if (prioridades.size() != proyectosYPrioridades.size()) {
+            throw new SQLException("Detectamos la repetición de un mismo número en 2 o más proyectos. "
+                + "Por favor asigne un número a cada proyecto sin repetir.");
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public static void guardarPriorizacionProyectosSS(int idInscripcionEE,
-			Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
-		validarPriorizacion(proyectosYPrioridades);
+    public static void guardarPriorizacionProyectosSS(int idInscripcionEE,
+        Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
+        validarPriorizacion(proyectosYPrioridades);
 
-		Connection conexionBD = ConexionBD.abrirConexion();
-		HashMap<String, Object> respuesta = new HashMap<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+        HashMap<String, Object> respuesta = new HashMap<>();
 
-		if (conexionBD != null) {
-			try {
-				String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
-						+ "idProyectoSS, prioridad) VALUES (?, ?, ?)";
-				PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+        if (conexionBD != null) {
+            try {
+                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
+                    + "idProyectoSS, prioridad) VALUES (?, ?, ?)";
+                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
 
-				for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
-					prepararConsulta.setInt(1, idInscripcionEE);
-					prepararConsulta.setInt(2, entrada.getKey());
-					prepararConsulta.setInt(3, entrada.getValue());
-					prepararConsulta.addBatch();
-				}
+                for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
+                    prepararConsulta.setInt(1, idInscripcionEE);
+                    prepararConsulta.setInt(2, entrada.getKey());
+                    prepararConsulta.setInt(3, entrada.getValue());
+                    prepararConsulta.addBatch();
+                }
 
-				int[] resultado = prepararConsulta.executeBatch();
+                int[] resultado = prepararConsulta.executeBatch();
 
-				if (resultado.length > 0) {
-					respuesta.put("error", false);
-					respuesta.put("mensaje", "Se ha guardado tu orden de "
-							+ "preferencia para proyecto de Servicio Social. Tu "
-							+ "coordinador pronto te asignará tu proyecto.");
-				} else {
-					respuesta.put("error", true);
-					respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
-							+ "la priorización de los proyectos. Intenta nuevamente más tarde.");
-				}
+                if (resultado.length > 0) {
+                    respuesta.put("error", false);
+                    respuesta.put("mensaje", "Se ha guardado tu orden de "
+                        + "preferencia para proyecto de Servicio Social. Tu "
+                        + "coordinador pronto te asignará tu proyecto.");
+                } else {
+                    respuesta.put("error", true);
+                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
+                        + "la priorización de los proyectos. Intenta nuevamente más tarde.");
+                }
 
-			} catch (SQLException ex) {
-				respuesta.put("error", true);
-				respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
-						+ ex.getMessage());
-				logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
-				throw new SQLException("Error al guardar priorización de proyectos", ex);
-			} finally {
-				conexionBD.close();
-			}
-		} else {
-			respuesta.put("error", true);
-			respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
-					+ "no está disponible. Intente más tarde.");
-		}
-	}
+            } catch (SQLException ex) {
+                respuesta.put("error", true);
+                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
+                    + ex.getMessage());
+                logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
+                throw new SQLException("Error al guardar priorización de proyectos", ex);
+            } finally {
+                conexionBD.close();
+            }
+        } else {
+            respuesta.put("error", true);
+            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
+                + "no está disponible. Intente más tarde.");
+        }
+    }
 
-	public static void guardarPriorizacionProyectosPP(int idInscripcionEE,
-			Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
-		validarPriorizacion(proyectosYPrioridades);
+    public static void guardarPriorizacionProyectosPP(int idInscripcionEE,
+        Map<Integer, Integer> proyectosYPrioridades) throws SQLException {
+        validarPriorizacion(proyectosYPrioridades);
 
-		Connection conexionBD = ConexionBD.abrirConexion();
-		HashMap<String, Object> respuesta = new HashMap<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
+        HashMap<String, Object> respuesta = new HashMap<>();
 
-		if (conexionBD != null) {
-			try {
-				String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
-						+ "idProyectoPP, prioridad) VALUES (?, ?, ?)";
-				PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+        if (conexionBD != null) {
+            try {
+                String consulta = "INSERT INTO priorizacionproyectos (idInscripcionEE, "
+                    + "idProyectoPP, prioridad) VALUES (?, ?, ?)";
+                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
 
-				for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
-					prepararConsulta.setInt(1, idInscripcionEE);
-					prepararConsulta.setInt(2, entrada.getKey());
-					prepararConsulta.setInt(3, entrada.getValue());
-					prepararConsulta.addBatch();
-				}
+                for (Map.Entry<Integer, Integer> entrada : proyectosYPrioridades.entrySet()) {
+                    prepararConsulta.setInt(1, idInscripcionEE);
+                    prepararConsulta.setInt(2, entrada.getKey());
+                    prepararConsulta.setInt(3, entrada.getValue());
+                    prepararConsulta.addBatch();
+                }
 
-				int[] resultado = prepararConsulta.executeBatch();
+                int[] resultado = prepararConsulta.executeBatch();
 
-				if (resultado.length > 0) {
-					respuesta.put("error", false);
-					respuesta.put("mensaje", "Se ha guardado tu orden de "
-							+ "preferencia para proyecto de Practica Profesional. Tu coordinador pronto te asignará tu proyecto.");
-				} else {
-					respuesta.put("error", true);
-					respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
-							+ "la priorización de los proyectos. Intenta nuevamente más tarde.");
-				}
+                if (resultado.length > 0) {
+                    respuesta.put("error", false);
+                    respuesta.put("mensaje", "Se ha guardado tu orden de "
+                        + "preferencia para proyecto de Practica Profesional. Tu coordinador pronto te asignará tu proyecto.");
+                } else {
+                    respuesta.put("error", true);
+                    respuesta.put("mensaje", "Lo sentimos, no se pudo guardar "
+                        + "la priorización de los proyectos. Intenta nuevamente más tarde.");
+                }
 
-			} catch (SQLException ex) {
-				respuesta.put("error", true);
-				respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
-						+ ex.getMessage());
-				logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
-				throw new SQLException("Error al guardar priorización de proyectos", ex);
-			} finally {
-				conexionBD.close();
-			}
-		} else {
-			respuesta.put("error", true);
-			respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
-					+ "no está disponible. Intente más tarde.");
-		}
-	}
+            } catch (SQLException ex) {
+                respuesta.put("error", true);
+                respuesta.put("mensaje", "Error al guardar la priorización de proyectos: "
+                    + ex.getMessage());
+                logger.log(Level.SEVERE, "Error al guardar priorización de proyectos", ex);
+                throw new SQLException("Error al guardar priorización de proyectos", ex);
+            } finally {
+                conexionBD.close();
+            }
+        } else {
+            respuesta.put("error", true);
+            respuesta.put("mensaje", "Lo sentimos, por el momento el servicio "
+                + "no está disponible. Intente más tarde.");
+        }
+    }
 
-	public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
-		List<Map<String, Object>> resultados = new ArrayList<>();
-		Connection conexionBD = ConexionBD.abrirConexion();
+    public static List<Map<String, Object>> obtenerPriorizacionDeAlumnoProyectoPP(int idAlumno) throws SQLException {
+        List<Map<String, Object>> resultados = new ArrayList<>();
+        Connection conexionBD = ConexionBD.abrirConexion();
 
-		if (conexionBD != null) {
-			String consulta = "SELECT "
-					+ "ss.idProyectoPP, "
-					+ "ss.nombreProyecto, "
-					+ "ss.cupoProyecto, "
-					+ "p.prioridad "
-					+ "FROM proyectopp pp "
-					+ "INNER JOIN priorizacionproyectos p ON p.idProyectoPP = ss.idProyectoPP "
-					+ "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
-					+ "WHERE ie.idAlumno = ?";
+        if (conexionBD != null) {
+            String consulta = "SELECT "
+                + "ss.idProyectoPP, "
+                + "ss.nombreProyecto, "
+                + "ss.cupoProyecto, "
+                + "p.prioridad "
+                + "FROM proyectopp pp "
+                + "INNER JOIN priorizacionproyectos p ON p.idProyectoPP = ss.idProyectoPP "
+                + "INNER JOIN inscripcionee ie ON p.idInscripcionEE = ie.idInscripcionEE "
+                + "WHERE ie.idAlumno = ?";
 
-			try (
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-				prepararSentencia.setInt(1, idAlumno);
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
 
-				try (ResultSet resultado = prepararSentencia.executeQuery()) {
-					while (resultado.next()) {
-						Map<String, Object> fila = new HashMap<>();
-						fila.put("idProyectoSS", resultado.getInt("idProyectoSS"));
-						fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
-						fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
-						fila.put("prioridad", resultado.getInt("prioridad"));
-						resultados.add(fila);
-					}
-				}
-			} catch (SQLException ex) {
-				logger.log(Level.SEVERE, "Error al obtener detalles de priorización de proyectos", ex);
-				throw ex;
-			} finally {
-				ConexionBD.cerrarConexion(conexionBD);
-			}
-		} else {
-			throw new SQLException("No se pudo establecer conexión con la base de datos.");
-		}
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    while (resultado.next()) {
+                        Map<String, Object> fila = new HashMap<>();
+                        fila.put("idProyectoSS", resultado.getInt("idProyectoSS"));
+                        fila.put("nombreProyecto", resultado.getString("nombreProyecto"));
+                        fila.put("cupoProyecto", resultado.getInt("cupoProyecto"));
+                        fila.put("prioridad", resultado.getInt("prioridad"));
+                        resultados.add(fila);
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al obtener detalles de priorización de proyectos", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
 
-		return resultados;
-	}
+        return resultados;
+    }
 
-	public static void asignarProyectoSS(int idAlumno, int idProyectoSS) throws SQLException {
-		Connection conexionBD = ConexionBD.abrirConexion();
+    public static void asignarProyectoSS(int idAlumno, int idProyectoSS) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
 
-		if (conexionBD != null) {
-			String consulta = "UPDATE inscripcionee "
-					+ "SET idProyectoSS = ? "
-					+ "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+        if (conexionBD != null) {
+            try {
+                conexionBD.setAutoCommit(false);
 
-			try (
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-				prepararSentencia.setInt(1, idProyectoSS);
-				prepararSentencia.setInt(2, idAlumno);
+                String consultaAsignarProyecto = "UPDATE inscripcionee "
+                    + "SET idProyectoSS = ? "
+                    + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
 
-				int filasAfectadas = prepararSentencia.executeUpdate();
+                try (
+                    PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
+                    prepararSentencia.setInt(1, idProyectoSS);
+                    prepararSentencia.setInt(2, idAlumno);
 
-				if (filasAfectadas > 0) {
-					System.out.println("Proyecto asignado correctamente al alumno.");
-				} else {
-					System.out.println("No se encontró una inscripción activa para el alumno especificado.");
-				}
-			} catch (SQLException ex) {
-				logger.log(Level.SEVERE, "Error al asignar el proyecto al alumno", ex);
-				throw ex;
-			} finally {
-				ConexionBD.cerrarConexion(conexionBD);
-			}
-		} else {
-			throw new SQLException("No se pudo establecer conexión con la base de datos.");
-		}
-	}
+                    int filasAfectadas = prepararSentencia.executeUpdate();
 
-	public static void asignarProyectoPP(int idAlumno, int idProyectoPP) throws SQLException {
-		Connection conexionBD = ConexionBD.abrirConexion();
+                    if (filasAfectadas > 0) {
+                        actualizarEstadoInscripcion(idAlumno);
 
-		if (conexionBD != null) {
-			String consulta = "UPDATE inscripcionee "
-					+ "SET idProyectoPP = ? "
-					+ "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+                        conexionBD.commit();
+                        System.out.println("Proyecto asignado y estado actualizado correctamente.");
+                    } else {
+                        System.out.println("No se encontró una inscripción activa para el alumno especificado.");
+                        conexionBD.rollback();
+                    }
+                }
+            } catch (SQLException ex) {
+                conexionBD.rollback();
+                logger.log(Level.SEVERE, "Error en la asignación del proyecto o actualización del estado", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+    }
 
-			try (
-					PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-				prepararSentencia.setInt(1, idProyectoPP);
-				prepararSentencia.setInt(2, idAlumno);
+    public static void asignarProyectoPP(int idAlumno, int idProyectoPP) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
 
-				int filasAfectadas = prepararSentencia.executeUpdate();
+        if (conexionBD != null) {
+            try {
+                conexionBD.setAutoCommit(false);
 
-				if (filasAfectadas > 0) {
-					System.out.println("Proyecto asignado correctamente al alumno.");
-				} else {
-					System.out.println("No se encontró una inscripción activa para el alumno especificado.");
-				}
-			} catch (SQLException ex) {
-				logger.log(Level.SEVERE, "Error al asignar el proyecto al alumno", ex);
-				throw ex;
-			} finally {
-				ConexionBD.cerrarConexion(conexionBD);
-			}
-		} else {
-			throw new SQLException("No se pudo establecer conexión con la base de datos.");
-		}
-	}
+                String consultaAsignarProyecto = "UPDATE inscripcionee "
+                    + "SET idProyectoPP = ? "
+                    + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
 
-	public static boolean validarPriorizacionPorAlumno(int idAlumno) throws SQLException {
-		Connection conexionBD = ConexionBD.abrirConexion();
-		boolean priorizacionHecha = false;
+                try (
+                    PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
+                    prepararSentencia.setInt(1, idProyectoPP);
+                    prepararSentencia.setInt(2, idAlumno);
 
-		if (conexionBD != null) {
-			String consulta = "SELECT COUNT(*) FROM priorizacionproyectos WHERE idInscripcionEE IN ("
-					+ "SELECT idInscripcionEE FROM inscripcionee WHERE idAlumno = ?)";
+                    int filasAfectadas = prepararSentencia.executeUpdate();
 
-			try (PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-				prepararSentencia.setInt(1, idAlumno);
+                    if (filasAfectadas > 0) {
+                        actualizarEstadoInscripcion(idAlumno);
 
-				try (ResultSet resultado = prepararSentencia.executeQuery()) {
-					if (resultado.next()) {
-						int count = resultado.getInt(1);
-						priorizacionHecha = count > 0;
-					}
-				}
-			} catch (SQLException ex) {
-				logger.log(Level.SEVERE, "Error al validar priorización de proyectos", ex);
-				throw ex;
-			} finally {
-				ConexionBD.cerrarConexion(conexionBD);
-			}
-		} else {
-			throw new SQLException("No se pudo establecer conexión con la base de datos.");
-		}
+                        conexionBD.commit();
+                        System.out.println("Proyecto PP asignado y estado actualizado correctamente.");
+                    } else {
+                        System.out.println("No se encontró una inscripción activa para el alumno especificado.");
+                        conexionBD.rollback();
+                    }
+                }
+            } catch (SQLException ex) {
+                conexionBD.rollback();
+                logger.log(Level.SEVERE, "Error en la asignación del proyecto PP o actualización del estado", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+    }
 
-		return priorizacionHecha;
-	}
+    public static void actualizarEstadoInscripcion(int idAlumno) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
+
+        if (conexionBD != null) {
+            String consulta = "UPDATE inscripcionee "
+                + "SET estadoInscripcion = 'En curso' "
+                + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
+
+                int filasAfectadas = prepararSentencia.executeUpdate();
+
+                if (filasAfectadas > 0) {
+                    System.out.println("Estado de inscripción actualizado automáticamente a 'En curso'.");
+                } else {
+                    System.out.println("No se encontró una inscripción activa para el alumno especificado.");
+                    throw new SQLException("No se pudo actualizar el estado de inscripción.");
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al actualizar el estado de inscripción", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+    }
+
+    public static boolean validarPriorizacionPorAlumno(int idAlumno) throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
+        boolean priorizacionHecha = false;
+
+        if (conexionBD != null) {
+            String consulta = "SELECT COUNT(*) FROM priorizacionproyectos WHERE idInscripcionEE IN ("
+                + "SELECT idInscripcionEE FROM inscripcionee WHERE idAlumno = ?)";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
+
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    if (resultado.next()) {
+                        int count = resultado.getInt(1);
+                        priorizacionHecha = count > 0;
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al validar priorización de proyectos", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return priorizacionHecha;
+    }
 
 }
