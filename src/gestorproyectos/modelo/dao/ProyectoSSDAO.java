@@ -198,7 +198,7 @@ public class ProyectoSSDAO {
 		return proyectoSS;
 	}
 
-	public List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String periodo) throws SQLException {
+	public static List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String periodo) throws SQLException {
 		List<ProyectoSS> proyectosDisponibles = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
 

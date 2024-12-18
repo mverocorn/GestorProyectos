@@ -107,7 +107,8 @@ public class EEDAO {
 
     public static boolean existeEE(String nombreEE, int nrc, int seccion, String periodo) throws SQLException {
         boolean existe = false;
-        String consulta = "SELECT COUNT(*) AS cantidad FROM EE WHERE (nombreEE = ? AND seccion = ? AND periodo = ?) OR (nrc = ? AND periodo = ?)";
+        String consulta = "SELECT COUNT(*) AS cantidad FROM EE WHERE (nombreEE = ? AND seccion = ? "
+				+ "AND periodo = ?) OR (nrc = ? AND periodo = ?)";
 
         try (Connection conexion = ConexionBD.abrirConexion();
             PreparedStatement sentenciaPreparada = conexion.prepareStatement(consulta)) {

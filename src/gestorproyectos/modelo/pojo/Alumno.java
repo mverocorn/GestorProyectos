@@ -127,4 +127,7 @@ public class Alumno implements IUsuario {
 	public void setTipoProyecto(String tipoProyecto) {
 		this.tipoProyecto = tipoProyecto;
 	}
+	public String getNombreCompleto() {
+        return nombreAlumno + " " + apellidoAlumno;
+    }
 }

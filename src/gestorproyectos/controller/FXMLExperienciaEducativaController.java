@@ -78,7 +78,7 @@ public class FXMLExperienciaEducativaController implements Initializable {
 
     
     private void configurarTablaProyectoPP() {
-        colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreAlumno"));
+        colNombreAlumno.setCellValueFactory(new PropertyValueFactory("nombreCompleto"));
         colMatricula.setCellValueFactory(new PropertyValueFactory("matricula"));
 
         tblAlumnosDeExperiencia.setOnMouseClicked(event -> {

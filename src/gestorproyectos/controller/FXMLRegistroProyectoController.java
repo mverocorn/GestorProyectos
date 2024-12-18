@@ -21,8 +21,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -38,8 +36,6 @@ public class FXMLRegistroProyectoController implements Initializable {
 	@FXML
 	private TextField txtFNombreProyecto;
 	@FXML
-	private DatePicker dpFechaInicio;
-	@FXML
 	private TextField txtFCupo;
 	@FXML
 	private ComboBox<Responsable> cBoxResponsable;
@@ -47,11 +43,13 @@ public class FXMLRegistroProyectoController implements Initializable {
 	private TextArea txtAObjetivo;
 	@FXML
 	private TextArea txtADescripcion;
+	@FXML
+	private TextField txtFPeriodo;
 
 	private ToggleGroup toggleGroup;
 	private ObservableList<Empresa> empresas;
 	private ObservableList<Responsable> responsables;
-
+	
 	/**
 	 * Initializes the controller class.
 	 */
@@ -71,10 +69,12 @@ public class FXMLRegistroProyectoController implements Initializable {
 			int cupo = Integer.parseInt(txtFCupo.getText());
 			String descripcion = txtADescripcion.getText().trim();
 			String objetivo = txtAObjetivo.getText().trim();
+			String periodo = txtFPeriodo.getText().trim();
 
 			Validador.validarTexto(nombreProyecto, "Nombre del proyecto", 150);
 			Validador.validarTexto(descripcion, "Descripción", 500);
 			Validador.validarTexto(objetivo, "Objetivo", 255);
+			Validador.validarPeriodo(periodo);
 
 			if (cBoxResponsable.getSelectionModel().getSelectedItem() == null) {
 				throw new IllegalArgumentException("Debe seleccionar un responsable.");
@@ -83,16 +83,12 @@ public class FXMLRegistroProyectoController implements Initializable {
 			int idResponsable = cBoxResponsable.getSelectionModel().getSelectedItem().getIdResponsable();
 
 			Validador.validarResponsable(idResponsable);
-
-			String fechaInicio = dpFechaInicio.getValue().toString();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			fechaInicio = dpFechaInicio.getValue().format(formatter);
-
+			
 			ProyectoSS proyectoSS = new ProyectoSS();
 			proyectoSS.setNombreProyecto(nombreProyecto);
 			proyectoSS.setCupoProyecto(cupo);
 			proyectoSS.setDescripcionProyecto(descripcion);
-			proyectoSS.setFechaProyecto(fechaInicio);
+			proyectoSS.setFechaProyecto(periodo);
 			proyectoSS.setObjetivoProyecto(objetivo);
 			proyectoSS.setIdResponsable(idResponsable);
 
