@@ -465,11 +465,21 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
     @FXML
     private void clickAsignar(ActionEvent event) throws SQLException {
         if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
-            PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP);
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto");
+            // Verificar si se ha seleccionado un proyecto (usando 0 como valor no asignado)
+            if (idProyectoPP == 0) {
+                MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Práctica Profesional que desea asignar al alumno.");
+            } else {
+                PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP);
+                MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Práctica Profesional.");
+            }
         } else if (tipoProyectoAsignascion.equals("Servicio Social")) {
-            PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS);
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto");
+            // Verificar si se ha seleccionado un proyecto (usando 0 como valor no asignado)
+            if (idProyectoSS == 0) {
+                MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Servicio Social que desea asignar al alumno.");
+            } else {
+                PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS);
+                MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Servicio Social.");
+            }
         }
     }
 
