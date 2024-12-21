@@ -202,7 +202,7 @@ private void clickRealizarPriorizacion(ActionEvent event) {
         }
 
         // Mostrar mensaje de éxito
-        MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Éxito", "Las prioridades han sido registradas correctamente.");
+        MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Éxito", "Se ha guardado tu orden de preferencia para proyectos. Tu coordinador pronto te asignará tu proyecto\"");
         System.out.println("[DEBUG] Priorización guardada correctamente.");
 		Stage stage = (Stage) tblPriorizacion.getScene().getWindow();
 			stage.close();

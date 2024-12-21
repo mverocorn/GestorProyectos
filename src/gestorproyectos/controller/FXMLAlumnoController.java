@@ -130,7 +130,7 @@ public class FXMLAlumnoController implements Initializable {
 			boolean priorizacionHecha = PriorizacionProyectosDAO.validarPriorizacionPorAlumno(idAlumno);
 
 			if (priorizacionHecha) {
-				System.out.println("El alumno ya ha realizado su priorización de proyectos.");
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Aviso", "Tu coordinador pronto te asignará tu proyecto");
 				abrirVentanaExpediente();
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Aviso", "Realiza tu priorización de proyectos.");

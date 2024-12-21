@@ -83,8 +83,7 @@ public class FXMLAsignacionAlumnoAEEController implements Initializable {
                     Alumno alumnoSeleccionado = fila.getItem();
                     int idAlumno = alumnoSeleccionado.getIdAlumno();
                     int idEE = ee.getIdEE();
-                    String nombreAlumno = alumnoSeleccionado.getNombreAlumno()
-                        + " " + alumnoSeleccionado.getApellidoAlumno();
+                    String nombreAlumno = alumnoSeleccionado.getNombreAlumno();
 
                     if (manejarSeleccionDobleClick(nombreAlumno)) {
                         try {
@@ -105,7 +104,7 @@ public class FXMLAsignacionAlumnoAEEController implements Initializable {
     }
 
     private boolean manejarSeleccionDobleClick(String nombreAlumno) {
-        return MisUtilidades.crearAlertaConfirmacion("¿Asignar Alumno", "Desea asignar al alumno: "
+        return MisUtilidades.crearAlertaConfirmacion("Asignar Alumno", "Desea asignar al alumno: "
             + nombreAlumno + " a la experiencia educativa?");
     }
 
