@@ -62,6 +62,10 @@ public class FXMLExperienciaEducativaController implements Initializable {
 
     public void inicializarValores(EE ee) {
         this.ee = ee;
+        
+        System.out.println("Nombre Profesor: " + ee.getNombreProfesor()
+            + ", Apellido: " + ee.getApellidoProfesor());
+
         cargarInfo();
         configurarTablaProyectoPP();
         cargarTablaProyectoPP();
@@ -93,20 +97,16 @@ public class FXMLExperienciaEducativaController implements Initializable {
 
     private void abrirDetallesAlumno(Alumno alumnoSeleccionado) {
         try {
-            // Cargar la ventana de detalles del alumno
             Stage nuevoEscenario = new Stage();
             FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
                 "vista/FXMLDetallesAlumno.fxml"));
             Parent vista = loader.load();
 
 
-            // Obtener el controlador de la vista
             FXMLDetallesAlumnoController controladorDetalle = loader.getController();
 
-            // Inicializar los valores en la vista con el alumno seleccionado
             controladorDetalle.inicializarValores(alumnoSeleccionado);
 
-            // Configurar y mostrar la ventana
             Scene escena = new Scene(vista);
             nuevoEscenario.setScene(escena);
             nuevoEscenario.initModality(Modality.APPLICATION_MODAL);

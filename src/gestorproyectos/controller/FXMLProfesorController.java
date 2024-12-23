@@ -70,54 +70,67 @@ public class FXMLProfesorController implements Initializable {
         experienciasContenedor.getChildren().clear();
 
         // Agregar un espaciado entre los botones en el contenedor principal
-        experienciasContenedor.setSpacing(10);  // Espacio de 10px entre cada botón
+        experienciasContenedor.setSpacing(10); // Espacio de 10px entre cada botón
 
         for (EE ee : experiencias) {
-            // Crear un contenedor para los elementos del botón
-            VBox contenedorBoton = new VBox();
-            contenedorBoton.setSpacing(5);  // Espaciado entre los Labels
+            VBox contenedorBoton = crearContenedorBoton(ee);
 
-            // Crear el Label para el nombre de la EE en negritas con color específico
-            Label nombreLabel = new Label(ee.getNombreEE());
-            nombreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;");  // Color negro para el nombre
-
-            // Crear el Label para el periodo en texto normal y tamaño pequeño con color específico
-            Label periodoLabel = new Label(ee.getPeriodo());
-            periodoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");  // Color gris para el periodo
-
-            // Crear el Label para el NRC en texto normal y tamaño pequeño con color específico
-            Label nrcLabel = new Label("NRC: " + ee.getNrc());
-            nrcLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");  // Color gris para el NRC
-
-            // Agregar los Labels al contenedor
-            contenedorBoton.getChildren().addAll(nombreLabel, periodoLabel, nrcLabel);
-
-            // Crear el botón y asignar el contenedor con los Labels como su contenido
             Button boton = new Button();
-            boton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");  // Fondo verde y texto blanco en el botón
-            boton.setPrefWidth(200);  // Puedes ajustar el ancho si es necesario
-            boton.setPrefHeight(80); // Puedes ajustar la altura si es necesario
+            boton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+            boton.setPrefWidth(200);
+            boton.setPrefHeight(80);
             boton.setGraphic(contenedorBoton);
 
-            // Configurar la acción del botón
             boton.setOnAction(event -> {
                 System.out.println("Seleccionaste la EE con id " + ee.getIdEE()
                     + " y nombre: " + ee.getNombreEE() + ", periodo: "
                     + ee.getPeriodo() + ", NRC: " + ee.getNrc());
 
-                // Abrir la interfaz AsignacionAlumnoAEE.fxml
-                try {
-                    FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLAsignacionAlumnoAEE.fxml"));
-                    Stage stage = new Stage(); // Nueva ventana
-                    stage.setScene(new Scene(loader.load())); // Cargar la escena de FXML
-                    stage.setTitle("Asignación de Alumno a EE"); // Título de la ventana
-                    stage.show(); // Mostrar la ventana
-                } catch (IOException e) {
-                    e.printStackTrace(); // Manejar el error en caso de que no se cargue el FXML
-                }
+                abrirDetalleEE(ee);
             });
-            
+
             experienciasContenedor.getChildren().add(boton);
+        }
+    }
+
+// Método para crear el contenedor del botón
+    private VBox crearContenedorBoton(EE ee) {
+        VBox contenedorBoton = new VBox();
+        contenedorBoton.setSpacing(5);
+
+        Label nombreLabel = new Label(ee.getNombreEE());
+        nombreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;");
+
+        Label periodoLabel = new Label(ee.getPeriodo());
+        periodoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
+
+        Label nrcLabel = new Label("NRC: " + ee.getNrc());
+        nrcLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
+
+        contenedorBoton.getChildren().addAll(nombreLabel, periodoLabel, nrcLabel);
+
+        return contenedorBoton;
+    }
+
+    private void abrirDetalleEE(EE eeSeleccionada) {
+        try {
+            FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+                "vista/FXMLExperienciaEducativa.fxml"));
+            Parent vista = loader.load();
+
+            FXMLExperienciaEducativaController controladorDetalle = loader.getController();
+            controladorDetalle.inicializarValores(eeSeleccionada);
+
+            Stage nuevoEscenario = new Stage();
+            Scene escena = new Scene(vista);
+            nuevoEscenario.setScene(escena);
+            nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+            nuevoEscenario.setTitle("Detalle de la EE");
+            nuevoEscenario.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+                "Lo sentimos, no se pudo cargar la ventana de la EE");
         }
     }
 
