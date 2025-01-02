@@ -165,7 +165,7 @@ public class ProyectoPPDAO {
 						+ "e.nombreEmpresa, e.correoEmpresa " + "FROM proyectopp p "
 						+ "JOIN responsable r ON p.idResponsable = r.idResponsable "
 						+ "JOIN empresa e ON r.idEmpresa = e.idEmpresa "
-						+ "WHERE p.idProyectoSS = ?;";
+						+ "WHERE p.idProyectoPP = ?;";
 
 				PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
 				prepararConsulta.setInt(1, idProyectoPP);

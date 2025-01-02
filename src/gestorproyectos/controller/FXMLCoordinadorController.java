@@ -369,7 +369,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
         } catch (SQLException ex) {
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, "
-                + "vuelva a intentar");
+                + "vuelva a intentar" + ex.getLocalizedMessage());
         }
     }
 
@@ -429,7 +429,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
         } catch (SQLException ex) {
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, "
-                + "vuelva a intentar");
+                + "vuelva a intentar"+ ex.getMessage());
         }
     }
 
@@ -455,7 +455,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
         } catch (SQLException ex) {
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, "
-                + "vuelva a intentar");
+                + "vuelva a intentar"+ ex.getMessage());
         }
     }
 
@@ -570,7 +570,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, "
-                + "vuelva a intentar");
+                + "vuelva a intentar"+ ex.getMessage());
         }
     }
 
@@ -612,7 +612,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, "
-                + "vuelva a intentar");
+                + "vuelva a intentar"+ ex.getMessage());
         }
     }
 

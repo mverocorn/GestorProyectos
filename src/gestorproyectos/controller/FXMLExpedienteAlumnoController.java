@@ -28,13 +28,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -81,21 +86,25 @@ public class FXMLExpedienteAlumnoController implements Initializable {
         private ProyectoPP proyectoPP;
         private boolean tipoProyectoPP;
         private EE ee;
+        private boolean usuarioEstudiante;
+    @FXML
+    private Button btnDarDeBaja;
+    @FXML
+    private Button btnDescargar;
+    @FXML
+    private Button btnValidar;
+    @FXML
+    private Button btnEntregaDeArchivos;
 
 	/**
 	 * Initializes the controller class.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-            llenarTablaDocumentos();
-            if(tipoProyectoPP){
-            llenarInformacionPP();
-            }else{
-            llenarInformacionSS(); 
-            }
+            
 	}
         
-        public void inicializarValores (Empresa empresa, Responsable responsable,EE ee, InscripcionEE inscripcionEE, Expediente expediente, ProyectoPP proyectoPP){
+        public void inicializarValores (Empresa empresa, Responsable responsable,EE ee, InscripcionEE inscripcionEE, Expediente expediente, ProyectoPP proyectoPP, boolean estudiante){
             this.empresa=empresa;
             this.responsable=responsable;
             this.ee=ee;
@@ -105,9 +114,11 @@ public class FXMLExpedienteAlumnoController implements Initializable {
             this.idExpediente=expediente.getIdExpediente();
             this.proyectoPP=proyectoPP;
             tipoProyectoPP=true;
+            this.usuarioEstudiante=estudiante;
+            iniciarConfiguracion();
         }
         
-        public void inicializarValores (Empresa empresa, Responsable responsable,EE ee, InscripcionEE inscripcionEE, Expediente expediente, ProyectoSS proyectoSS){
+        public void inicializarValores (Empresa empresa, Responsable responsable,EE ee, InscripcionEE inscripcionEE, Expediente expediente, ProyectoSS proyectoSS, boolean estudiante){
             this.empresa=empresa;
             this.responsable=responsable;
             this.ee=ee;
@@ -117,8 +128,21 @@ public class FXMLExpedienteAlumnoController implements Initializable {
             this.idExpediente=expediente.getIdExpediente();
             this.proyectoSS=proyectoSS;
             tipoProyectoPP=false;
+            this.usuarioEstudiante=estudiante;
+            iniciarConfiguracion();
         }        
 
+        private void iniciarConfiguracion(){
+            llenarTablaDocumentos();
+            llenarTablaReportes();
+            configurarBotones();
+            if(tipoProyectoPP){
+            llenarInformacionPP();
+            }else{
+            llenarInformacionSS(); 
+            }
+        }
+        
 	@FXML
 	private void clickDarDeBaja(ActionEvent event) {
             boolean confirmacionBaja = MisUtilidades.crearAlertaConfirmacion("Confirmar dada de baja", "¿Seguro que desea dar de baja al alumno de este proyeecto?, esta accion es irreversible");
@@ -245,9 +269,6 @@ public class FXMLExpedienteAlumnoController implements Initializable {
         if(!documentosBD.isEmpty()){
             documentos.addAll(documentosBD);
             tblDocumentos.setItems(documentos);
-        }else{
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos no se puede cargar en este "
-                    + "momento la informacion de los clientes");
         }
         }catch(SQLException e){
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos, no se puede cargar la informacion en este momento ");
@@ -267,7 +288,7 @@ public class FXMLExpedienteAlumnoController implements Initializable {
     private void cargarInformacionTablaReportes() {
         reportes = FXCollections.observableArrayList();
         try{
-        HashMap<String,Object> respuesta = (HashMap<String,Object>) ReporteDAO.obtenerReportes(idExpediente);
+        HashMap<String,Object> respuesta =  ReporteDAO.obtenerReportesExpediente(idExpediente);
         boolean isError = (boolean) respuesta.get("error");
         if(!isError){
             ArrayList<Reporte> reportesBD = (ArrayList<Reporte>) respuesta.get("reportes");
@@ -275,7 +296,7 @@ public class FXMLExpedienteAlumnoController implements Initializable {
             tblReportes.setItems(reportes);
         }else{
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos no se puede cargar en este "
-                    + "momento la informacion de los clientes");
+                    + "momento la informacion de los reportes");
         }
         }catch(SQLException e){
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos, no se puede cargar la informacion en este momento ");
@@ -283,22 +304,50 @@ public class FXMLExpedienteAlumnoController implements Initializable {
     }     
 
     private void llenarInformacionPP() {
-        lblResultadoProyectp.setText(proyectoPP.getNombreProyecto());
         lblResultadoEmpresa.setText(empresa.getNombreEmpresa());
         lblResultadoResponsable.setText(responsable.getNombreResponsable() + responsable.getApellidoResponsable());
         lblResultadoPeriodo.setText(ee.getPeriodo());
+        lblResultadoProyectp.setText(proyectoPP.getNombreProyecto());
         lblResultadoFecha.setText(proyectoPP.getFechaProyecto());
         lblResultadoDescripcion.setText(proyectoPP.getDescripcionProyecto());
         lblResultadoObjetivo.setText(proyectoPP.getObjetivoProyecto());
     }
     
     private void llenarInformacionSS() {
-        lblResultadoProyectp.setText(proyectoSS.getNombreProyecto());
         lblResultadoEmpresa.setText(empresa.getNombreEmpresa());
         lblResultadoResponsable.setText(responsable.getNombreResponsable() + responsable.getApellidoResponsable());
         lblResultadoPeriodo.setText(ee.getPeriodo());
+        lblResultadoProyectp.setText(proyectoSS.getNombreProyecto());
         lblResultadoFecha.setText(proyectoSS.getFechaProyecto());
         lblResultadoDescripcion.setText(proyectoSS.getDescripcionProyecto());
         lblResultadoObjetivo.setText(proyectoSS.getObjetivoProyecto());
     }    
+
+    private void configurarBotones() {
+        if (usuarioEstudiante){
+            btnDarDeBaja.setVisible(false);
+            btnDescargar.setVisible(false);
+            btnValidar.setVisible(false);
+        }else{
+            btnEntregaDeArchivos.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void clickEntregaDeArchivos(ActionEvent event) {
+        try{
+        FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLEntregaDeArchivo.fxml"));
+        Parent vista = loader.load();
+        FXMLEntregaDeArchivoController controladorExpediente = loader.getController();
+        controladorExpediente.inicializarValores(idExpediente);
+        Stage stage = new Stage();
+	stage.setScene(new Scene(vista));
+	stage.setTitle("Priorización de proyectos");
+	stage.show();
+        }catch (IOException e) {
+            e.printStackTrace();
+            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
+	}
+        
+    }
 }

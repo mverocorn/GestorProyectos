@@ -3,8 +3,19 @@ package gestorproyectos.controller;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.dao.InscripcionEEDAO;
 import gestorproyectos.modelo.dao.AlumnoDAO;
+import gestorproyectos.modelo.dao.EmpresaDAO;
+import gestorproyectos.modelo.dao.ExpedienteDAO;
 import gestorproyectos.modelo.dao.PriorizacionProyectosDAO;
+import gestorproyectos.modelo.dao.ProyectoPPDAO;
+import gestorproyectos.modelo.dao.ProyectoSSDAO;
+import gestorproyectos.modelo.dao.ResponsableDAO;
 import gestorproyectos.modelo.pojo.EE;
+import gestorproyectos.modelo.pojo.Empresa;
+import gestorproyectos.modelo.pojo.Expediente;
+import gestorproyectos.modelo.pojo.InscripcionEE;
+import gestorproyectos.modelo.pojo.ProyectoPP;
+import gestorproyectos.modelo.pojo.ProyectoSS;
+import gestorproyectos.modelo.pojo.Responsable;
 import gestorproyectos.utilidades.MisUtilidades;
 import java.io.IOException;
 import java.net.URL;
@@ -92,7 +103,7 @@ public class FXMLAlumnoController implements Initializable {
 				System.out.println("Seleccionaste la EE con id " + ee.getIdEE()
 						+ " y nombre: " + ee.getNombreEE() + ", periodo: "
 						+ ee.getPeriodo() + ", NRC: " + ee.getNrc());
-				validarPriorizacionRealizada(alumno.getIdAlumno(), ee);
+                                                verificarProyectoAlumno(alumno.getIdAlumno(), ee);
 			});
 
 			experienciasContenedor.getChildren().add(boton);
@@ -131,7 +142,7 @@ public class FXMLAlumnoController implements Initializable {
 
 			if (priorizacionHecha) {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Aviso", "Tu coordinador pronto te asignará tu proyecto");
-				abrirVentanaExpediente();
+				abrirVentanaExpediente(eeSeleccionada);
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Aviso", "Realiza tu priorización de proyectos.");
 				abrirVentanaPriorizacion(eeSeleccionada ,alumno); // Pasar EE seleccionada
@@ -148,8 +159,6 @@ public class FXMLAlumnoController implements Initializable {
 			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLPriorizacion.fxml"));
 			Parent vista = loader.load();
 			FXMLPriorizacionController controladorPriorizacion = loader.getController();
-
-			// Pasar el objeto EE al controlador de la ventana FXMLPriorización
 			controladorPriorizacion.inicializarValores(eeSeleccionada, alumno);
 
 			Stage stage = new Stage();
@@ -162,8 +171,39 @@ public class FXMLAlumnoController implements Initializable {
 		}
 	}
 
-	private void abrirVentanaExpediente() {
+	private void abrirVentanaExpediente(EE ee) {
+                try {
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLExpedienteAlumno.fxml"));
+			Parent vista = loader.load();
+			
+                        InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(),ee.getIdEE());
+                        Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
+                        if(ee.getNombreEE().equals("Servicio Social")){
+                            ProyectoSS proyecto = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
+                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,true);
+                        }else{
+                            ProyectoPP proyecto = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
+                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,true);
+                        }
+                        
 
+			Stage stage = new Stage();
+			stage.setScene(new Scene(vista));
+			stage.setTitle("Expediente");
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
+		} catch (SQLException ex){
+                        ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente 1.");
+                }
 	}
 
 	@FXML
@@ -183,4 +223,20 @@ public class FXMLAlumnoController implements Initializable {
 			ex.printStackTrace();
 		}
 	}
+
+    private void verificarProyectoAlumno(int idAlumno, EE ee) {
+        try {
+			boolean proyectoInscrito = AlumnoDAO.validarProyectoInscrito(idAlumno, ee.getIdEE());
+
+			if (proyectoInscrito) {
+                            abrirVentanaExpediente(ee);
+			} else {
+                            validarPriorizacionRealizada(idAlumno, ee);
+			}
+		} catch (SQLException ex) {
+			System.err.println("Error al validar proyectos inscritos: "
+					+ ex.getMessage());
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Hubo un problema al verificar la inscripcion de proyectos.");
+		}
+    }
 }

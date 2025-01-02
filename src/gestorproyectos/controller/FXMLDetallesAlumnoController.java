@@ -1,10 +1,21 @@
 package gestorproyectos.controller;
 
 import gestorproyectos.modelo.dao.AlumnoDAO;
+import gestorproyectos.modelo.dao.EEDAO;
+import gestorproyectos.modelo.dao.EmpresaDAO;
+import gestorproyectos.modelo.dao.ExpedienteDAO;
 import gestorproyectos.modelo.dao.InscripcionEEDAO;
+import gestorproyectos.modelo.dao.ProyectoPPDAO;
+import gestorproyectos.modelo.dao.ProyectoSSDAO;
+import gestorproyectos.modelo.dao.ResponsableDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.pojo.EE;
+import gestorproyectos.modelo.pojo.Empresa;
+import gestorproyectos.modelo.pojo.Expediente;
 import gestorproyectos.modelo.pojo.InscripcionEE;
+import gestorproyectos.modelo.pojo.ProyectoPP;
+import gestorproyectos.modelo.pojo.ProyectoSS;
+import gestorproyectos.modelo.pojo.Responsable;
 import gestorproyectos.utilidades.MisUtilidades;
 import java.io.IOException;
 import java.net.URL;
@@ -109,5 +120,46 @@ public class FXMLDetallesAlumnoController implements Initializable {
             MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
                 "Lo sentimos, el sistema presenta fallas para recuperar la información, vuelva a intentar");
         }
-    }
+    }     
+    
+	private void abrirVentanaExpediente(EE ee) {
+                try {
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLExpedienteAlumno.fxml"));
+			Parent vista = loader.load();
+			
+                        InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(),ee.getIdEE());
+                        Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
+                        if(ee.getNombreEE().equals("Servicio Social")){
+                            ProyectoSS proyecto = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
+                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,false);
+                        }else{
+                            ProyectoPP proyecto = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
+                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,false);
+                        }
+                        
+
+			Stage stage = new Stage();
+			stage.setScene(new Scene(vista));
+			stage.setTitle("Expediente");
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
+		} catch (SQLException ex){
+                        ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente 1.");
+                }
+	}    
+        
+        private EE obtenerEEporInscripcionEE (InscripcionEE inscripcionEE) throws SQLException{
+            EE ee = EEDAO.obtenerEEPorInscripcion(inscripcionEE.getIdInscripcionEE());
+            return ee;
+            
+        }
 }

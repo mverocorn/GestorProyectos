@@ -198,18 +198,19 @@ public class ProyectoSSDAO {
 		return proyectoSS;
 	}
 
-	public static List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String periodo) throws SQLException {
+	public static List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String inicioPeriodo) throws SQLException {
 		List<ProyectoSS> proyectosDisponibles = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
 
 		if (conexionBD != null) {
 			try {
 				String consulta = "SELECT idProyectoSS, nombreProyecto "
-						+ "FROM proyectoss WHERE fechaProyecto = ? AND cupoProyecto > 0";
+						+ "FROM proyectoss WHERE cupoProyecto > 0 AND "
+                                                + "fechaProyecto > ?";
 
 				try (
 						PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
-					prepararConsulta.setString(1, periodo);
+					prepararConsulta.setString(1, inicioPeriodo);
 
 					try (ResultSet resultado = prepararConsulta.executeQuery()) {
 						if (!resultado.isBeforeFirst()) {

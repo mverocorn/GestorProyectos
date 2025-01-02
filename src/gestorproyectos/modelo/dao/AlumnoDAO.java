@@ -78,6 +78,40 @@ public class AlumnoDAO {
         return true;
     }
 
+    public static boolean validarProyectoInscrito(int idAlumno, int idEE)throws SQLException {
+        Connection conexionBD = ConexionBD.abrirConexion();
+        boolean proyectoInscrito = false;
+
+        if (conexionBD != null) {
+            String consulta = "SELECT idProyectoSS, idProyectoPP " +
+                               "FROM inscripcionee " +
+                               "WHERE idAlumno = ? AND idEE = ? " +
+                               "  AND (idProyectoSS IS NOT NULL OR idProyectoPP IS NOT NULL);";
+
+            try (
+                PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
+                prepararSentencia.setInt(1, idAlumno);
+                prepararSentencia.setInt(2, idEE);
+
+                try (ResultSet resultado = prepararSentencia.executeQuery()) {
+                    if (resultado.next()) {
+                        int count = resultado.getInt(1);
+                        proyectoInscrito = count > 0;
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Error al validar inscripcion de proyectos", ex);
+                throw ex;
+            } finally {
+                ConexionBD.cerrarConexion(conexionBD);
+            }
+        } else {
+            throw new SQLException("No se pudo establecer conexión con la base de datos.");
+        }
+
+        return proyectoInscrito;
+    }
+
     public boolean existeAlumno(String correo, String telefono, String matricula, int idAlumnoActual) throws SQLException {
         ConexionBD.verificarConexionBD();
 
@@ -329,6 +363,7 @@ public class AlumnoDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     alumno = new Alumno();
+                    alumno.setIdAlumno(idAlumno);
                     alumno.setNombreAlumno(rs.getString("nombreAlumno"));
                     alumno.setApellidoAlumno(rs.getString("apellidoAlumno"));
                     alumno.setMatricula(rs.getString("matricula"));

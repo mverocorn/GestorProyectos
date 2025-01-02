@@ -253,7 +253,7 @@ public class InscripcionEEDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
 
         if (conexionBD != null) {
-            String consulta = "SELECT ie.estadoInscripcion, ee.nombreEE, "
+            String consulta = "SELECT ie.idInscripcionEE, ie.estadoInscripcion, ee.nombreEE, "
                 + "COALESCE(pp.nombreProyecto, ss.nombreProyecto) AS nombreProyecto "
                 + "FROM inscripcionee ie "
                 + "JOIN ee ee ON ie.idEE = ee.idEE "
@@ -268,6 +268,7 @@ public class InscripcionEEDAO {
                 try (ResultSet resultados = prepararConsulta.executeQuery()) {
                     while (resultados.next()) {
                         InscripcionEE inscripcion = new InscripcionEE();
+                        inscripcion.setIdInscripcionEE(resultados.getInt("idInscripcion"));
                         inscripcion.setNombreProyecto(resultados.getString("nombreProyecto"));
                         inscripcion.setNombreEE(resultados.getString("nombreEE"));
                         inscripcion.setEstadoInscripcion(resultados.getString("estadoInscripcion"));
@@ -407,6 +408,40 @@ public class InscripcionEEDAO {
                 + "no está disponible. Intente más tarde.");
         }
         return respuesta;
+    }
+
+    public static InscripcionEE obtenerInscripcionEE(Integer idAlumno, int idEE) throws SQLException {
+        InscripcionEE  inscripcionEE = new InscripcionEE();
+        String consulta =   "SELECT idInscripcionEE, fechaInscripcion, estadoInscripcion, idProyectoPP, idProyectoSS " +
+                            "FROM inscripcionee " +
+                            "WHERE idAlumno = ? AND idEE = ? " +
+                            "AND (idProyectoSS IS NOT NULL OR idProyectoPP IS NOT NULL);";
+
+        try (Connection conexionBD = ConexionBD.abrirConexion();
+            PreparedStatement sentencia = conexionBD.prepareStatement(consulta)) {
+            sentencia.setInt(1, idAlumno);
+            sentencia.setInt(2, idEE);
+
+            try (ResultSet resultado = sentencia.executeQuery()) {
+                if (resultado.next()) {
+                    inscripcionEE.setIdInscripcionEE(resultado.getInt("idInscripcionEE"));
+                    inscripcionEE.setFechaInscripcion(resultado.getString("fechaInscripcion"));
+                    inscripcionEE.setEstadoInscripcion(resultado.getString("estadoInscripcion"));
+                    inscripcionEE.setIdProyectoSS(resultado.getInt("idProyectoSS"));
+                    inscripcionEE.setIdProyectoPP(resultado.getInt("idProyectoPP"));
+                    
+                    inscripcionEE.setIdAlumno(idAlumno);
+                    inscripcionEE.setIdEE(idEE);
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error al obtener la inscripcionEE "
+                + idAlumno, ex);
+            throw new SQLException("Error al obtener la inscripcionEE: "
+                + ex.getMessage(), ex);
+        }
+
+        return inscripcionEE;
     }
 
     public void actualizarEstadoInscripcion() throws SQLException {

@@ -17,9 +17,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javafx.stage.Stage;
@@ -109,7 +112,9 @@ public class FXMLPriorizacionController {
             // Si el nombre de la EE seleccionada es "Servicio Social"
             if ("Servicio Social".equals(eeSeleccionada.getNombreEE())) {
                 System.out.println("[DEBUG] Cargando proyectos de Servicio Social...");
-                List<ProyectoSS> proyectosDisponiblesSS = ProyectoSSDAO.obtenerProyectosDisponiblesPorPeriodoDeEESS(eeSeleccionada.getPeriodo());
+                String fechaPeriodo = obtenerFechaPeriodo(eeSeleccionada.getPeriodo());
+                
+                List<ProyectoSS> proyectosDisponiblesSS = ProyectoSSDAO.obtenerProyectosDisponiblesPorPeriodoDeEESS(fechaPeriodo);
                 if (proyectosDisponiblesSS != null) {
                     System.out.println("[DEBUG] Proyectos de Servicio Social obtenidos: " + proyectosDisponiblesSS.size());
                     proyectos.addAll(proyectosDisponiblesSS);
@@ -211,5 +216,18 @@ private void clickRealizarPriorizacion(ActionEvent event) {
         System.out.println("[DEBUG] Error al guardar priorización: " + ex.getMessage());
     }
 }
+
+    private String obtenerFechaPeriodo(String periodo) {
+        
+        DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.ENGLISH);
+
+        String[] partes = periodo.split("-");
+        String inicioPeriodo = partes[0]; 
+
+        LocalDate fechaInicio = LocalDate.parse(inicioPeriodo, formatterEntrada).withDayOfMonth(1);
+        DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return fechaInicio.format(formatterSalida);
+    
+    }
 
 }

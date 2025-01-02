@@ -64,7 +64,8 @@ public class ResponsableDAO {
                         resultado.getString("nombreResponsable"),
                         resultado.getString("apellidoResponsable"),
                         resultado.getString("correoResponsable"),
-                        resultado.getString("cargoResponsable")
+                        resultado.getString("cargoResponsable"),
+                        resultado.getInt("idEmpresa")
                     );
                 }
             } catch (SQLException ex) {

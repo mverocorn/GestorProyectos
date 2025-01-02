@@ -85,12 +85,12 @@ public class FXMLRegistroExperienciaEducativaController implements Initializable
 		try {
 			profesores = FXCollections.observableArrayList();
 			List<Profesor> profesoresBD = ProfesorDAO.obtenerProfesores();
-			if(profesoresBD != null && !profesoresBD.isEmpty()) {
+			if(profesoresBD!=null && !profesoresBD.isEmpty()) {
 				profesores.addAll(profesoresBD);
 				cBoxProfesor.setItems(profesores);
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error: Sin información",
-						"Lo sentimos, no se pueden cargar los entrenadores o "
+						"Lo sentimos, no se pueden cargar los profesores o "
 								+ "todavía no hay ninguno registrado en el sistema");
 			}
 		} catch (SQLException ex) {

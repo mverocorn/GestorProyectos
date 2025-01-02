@@ -54,7 +54,7 @@ public class FXMLEntregaDeArchivoController implements Initializable {
             llenarCombo();
 	}	
 
-        public void cargarExpediente(int idExpediente){
+        public void inicializarValores(int idExpediente){
             this.idExpediente = idExpediente;
         }
         

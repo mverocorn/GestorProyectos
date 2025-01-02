@@ -5,7 +5,7 @@ import java.sql.Date;
 public class InscripcionEE {
 
 	private int idInscripcionEE;
-	private Date fechaInscripcion;
+	private String fechaInscripcion;
 	private String estadoInscripcion;
 	private int idAlumno;
 	private int idEE;
@@ -17,7 +17,7 @@ public class InscripcionEE {
 	private String seccion; // Sección de la EE
         private String nombreProyecto; // Nombre del Proyecto (PP o SS)
 
-	public InscripcionEE(int idInscripcionEE, Date fechaInscripcion, String estadoInscripcion,
+	public InscripcionEE(int idInscripcionEE, String fechaInscripcion, String estadoInscripcion,
 			int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {
 		this.idInscripcionEE = idInscripcionEE;
 		this.fechaInscripcion = fechaInscripcion;
@@ -39,11 +39,11 @@ public class InscripcionEE {
 		this.idInscripcionEE = idInscripcionEE;
 	}
 
-	public Date getFechaInscripcion() {
+	public String getFechaInscripcion() {
 		return fechaInscripcion;
 	}
 
-	public void setFechaInscripcion(Date fechaInscripcion) {
+	public void setFechaInscripcion(String fechaInscripcion) {
 		this.fechaInscripcion = fechaInscripcion;
 	}
 

@@ -6,17 +6,27 @@ public class Responsable {
     private String apellidoResponsable;
     private String correoResponsable;
     private String cargoResponsable;
+    private int idEmpresa;
 
     public Responsable(int idResponsable, String nombreResponsable, String apellidoResponsable, 
-        String correoResponsable, String cargoResponsable) {
+        String correoResponsable, String cargoResponsable, int idEmpresa) {
         this.idResponsable = idResponsable;
         this.nombreResponsable = nombreResponsable;
         this.apellidoResponsable = apellidoResponsable;
         this.correoResponsable = correoResponsable;
         this.cargoResponsable = cargoResponsable;
+        this.idEmpresa = idEmpresa;
     }
 
     public Responsable() {
+    }
+
+    public int getIdEmpresa() {
+        return idEmpresa;
+    }
+
+    public void setIdEmpresa(int idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public int getIdResponsable() {

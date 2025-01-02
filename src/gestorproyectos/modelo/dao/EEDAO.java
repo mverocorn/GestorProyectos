@@ -2,6 +2,7 @@ package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.pojo.EE;
+import gestorproyectos.modelo.pojo.InscripcionEE;
 import gestorproyectos.modelo.pojo.ProyectoPP;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import gestorproyectos.utilidades.Validador;
@@ -248,6 +249,35 @@ public class EEDAO {
             }
         }
         return idEE;
+    }
+
+    public static EE obtenerEEPorInscripcion(int idInscripcionEE) throws SQLException {
+        EE ee = new EE();
+        Connection conexionBD = ConexionBD.abrirConexion();
+        if (conexionBD != null) {
+            try {
+                String consulta = "SELECT ee.* " +
+                                "FROM inscripcionee ie " +
+                                "JOIN ee ON ie.idEE = ee.idEE " +
+                                "WHERE ie.idInscripcionEE = ?;";
+                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+                prepararConsulta.setInt(1, idInscripcionEE);
+                ResultSet resultado = prepararConsulta.executeQuery();
+                if (resultado.next()) {
+                    ee.setIdEE(resultado.getInt("idEE"));
+                    ee.setNombreEE(resultado.getString("nombreEE"));
+                    ee.setNrc(resultado.getInt("nrc"));
+                    ee.setSeccion(resultado.getInt("seccion"));
+                    ee.setPeriodo(resultado.getString("periodo"));
+                    ee.setIdProfesor(resultado.getInt("idProfesor"));
+                }
+            } catch (SQLException ex) {
+                throw new SQLException("Error al obtener la EE", ex);
+            } finally {
+                conexionBD.close();
+            }
+        }
+        return ee;
     }
 
 }
