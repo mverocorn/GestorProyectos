@@ -205,8 +205,7 @@ public class ProyectoSSDAO {
 		if (conexionBD != null) {
 			try {
 				String consulta = "SELECT idProyectoSS, nombreProyecto "
-						+ "FROM proyectoss WHERE cupoProyecto > 0 AND "
-                                                + "fechaProyecto > ?";
+						+ "FROM proyectoss WHERE fechaProyecto = ? AND cupoProyecto > 0";
 
 				try (
 						PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
