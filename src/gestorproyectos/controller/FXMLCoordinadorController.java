@@ -616,56 +616,32 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
         }
     }
 
-    private void irFormularioAlumno() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                gestorproyectos.GestorProyectos.class.getResource(
-                    "vista/FXMLRegistroAlumno.fxml"));
-            Parent vista = loader.load();
-            Stage escenario = new Stage();
-            Scene escena = new Scene(vista);
-            escenario.setScene(escena);
-            escenario.setTitle("Registro de clientes");
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.showAndWait();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    private void abrirFormulario(String rutaFXML, String titulo) {
+    try {
+        FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(rutaFXML));
+        Parent vista = loader.load();
+        Stage escenario = new Stage();
+        escenario.setScene(new Scene(vista));
+        escenario.setTitle(titulo);
+        escenario.initModality(Modality.APPLICATION_MODAL);
+        escenario.showAndWait();
+    } catch (IOException ex) {
+        MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", 
+				"Lo sentimos, no se ha podido abrir el formulario");
     }
+}
+private void irFormularioAlumno() {
+    abrirFormulario("vista/FXMLRegistroAlumno.fxml", "Registro de Alumnos");
+}
 
-    private void irFormularioEE() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                gestorproyectos.GestorProyectos.class.getResource(
-                    "vista/FXMLRegistroExperienciaEducativa.fxml"));
-            Parent vista = loader.load();
-            Stage escenario = new Stage();
-            Scene escena = new Scene(vista);
-            escenario.setScene(escena);
-            escenario.setTitle("Registro de Experiencias educativas");
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.showAndWait();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+private void irFormularioEE() {
+    abrirFormulario("vista/FXMLRegistroExperienciaEducativa.fxml", "Registro de Experiencias Educativas");
+}
 
-    private void irFormularioProyecto() {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                gestorproyectos.GestorProyectos.class.getResource(
-                    "vista/FXMLRegistroProyecto.fxml"));
-            Parent vista = loader.load();
-            Stage escenario = new Stage();
-            Scene escena = new Scene(vista);
-            escenario.setScene(escena);
-            escenario.setTitle("Registro de Proyectos");
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.showAndWait();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+private void irFormularioProyecto() {
+    abrirFormulario("vista/FXMLRegistroProyecto.fxml", "Registro de Proyectos");
+}
+
 
     @Override
     public void notificarAlumnoGuardado(String nombreAlumno, String operacion) {

@@ -98,10 +98,27 @@ public class FXMLDetallesAlumnoController implements Initializable {
     }
 
     private void configurarTablaProyectos() {
-        colNombreProyecto.setCellValueFactory(new PropertyValueFactory<>("nombreProyecto"));
-        colExperienciaEducativa.setCellValueFactory(new PropertyValueFactory<>("nombreEE"));
-        colEstado.setCellValueFactory(new PropertyValueFactory<>("estadoInscripcion"));
-    }
+    colNombreProyecto.setCellValueFactory(new PropertyValueFactory<>("nombreProyecto"));
+    colExperienciaEducativa.setCellValueFactory(new PropertyValueFactory<>("nombreEE"));
+    colEstado.setCellValueFactory(new PropertyValueFactory<>("estadoInscripcion"));
+
+    tblProyectos.setOnMouseClicked(event -> {
+        if (event.getClickCount() == 2) {
+            InscripcionEE seleccionada = tblProyectos.getSelectionModel().getSelectedItem();
+            if (seleccionada != null) {
+                try {
+                    EE ee = obtenerEEporInscripcionEE(seleccionada);
+                    abrirVentanaExpediente(ee);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", 
+                        "No se pudo cargar la información de la inscripción seleccionada.");
+                }
+            }
+        }
+    });
+}
+
 
     private void cargarTablaProyectoDeAlumno() {
         ObservableList<InscripcionEE> inscripciones = FXCollections.observableArrayList(); // Lista ObservableList de InscripcionEE
