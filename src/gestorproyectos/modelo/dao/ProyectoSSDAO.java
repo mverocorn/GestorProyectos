@@ -5,7 +5,9 @@ import gestorproyectos.utilidades.Validador;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
@@ -289,20 +291,38 @@ public class ProyectoSSDAO {
     DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.forLanguageTag("es"));
     DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    // Separar el periodo en partes
-    String[] partes = periodo.split("-");
-    String inicioPeriodo = partes[0];
-    String finPeriodo = partes[1];
+    try {
+        // Separar el periodo en partes
+        String[] partes = periodo.split("-");
+        if (partes.length != 2) {
+            throw new IllegalArgumentException("El formato del periodo debe ser 'MMMuuuu-MMMuuuu'.");
+        }
 
-    // Obtener la fecha de inicio del periodo
-    LocalDate fechaInicio = LocalDate.parse(inicioPeriodo, formatterEntrada).withDayOfMonth(1);
+        // Convertir las partes del periodo a minúsculas para que coincidan con el formato esperado
+        String inicioPeriodo = partes[0].trim().toLowerCase(Locale.ROOT);
+        String finPeriodo = partes[1].trim().toLowerCase(Locale.ROOT);
 
-    // Obtener la fecha de fin del periodo (último día del mes)
-    LocalDate fechaFin = LocalDate.parse(finPeriodo, formatterEntrada).withDayOfMonth(1).withDayOfMonth(LocalDate.parse(finPeriodo, formatterEntrada).lengthOfMonth());
+        // Obtener la fecha de inicio del periodo
+        YearMonth inicioYM = YearMonth.parse(inicioPeriodo, formatterEntrada);
+        LocalDate fechaInicio = inicioYM.atDay(1); // Primer día del mes
 
-    // Formatear las fechas y retornarlas como un arreglo
-    return new String[] { fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida) };
+        // Obtener la fecha de fin del periodo (último día del mes)
+        YearMonth finYM = YearMonth.parse(finPeriodo, formatterEntrada);
+        LocalDate fechaFin = finYM.atEndOfMonth(); // Último día del mes
+
+        // Formatear las fechas y retornarlas como un arreglo
+        return new String[]{fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida)};
+
+    } catch (DateTimeParseException e) {
+        System.err.println("Error al analizar el periodo: " + periodo + " - " + e.getMessage());
+        throw e; // Relanzar la excepción para que se registre en la pila
+    } catch (IllegalArgumentException e) {
+        System.err.println("Formato inválido del periodo: " + e.getMessage());
+        throw e;
+    }
 }
+
+
   
         
 }
