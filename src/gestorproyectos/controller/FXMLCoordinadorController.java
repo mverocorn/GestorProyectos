@@ -491,6 +491,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 				PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP, idInscripcionEE);
 				ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 				String fechaProyecto = proyectoSS.getFechaProyecto();
+				System.out.println("Creando expediente");
 				HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
 
 				if (!((boolean) respuestaExpediente.get("error"))) {
@@ -498,6 +499,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 				} else {
 					MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Error al eliminar el expediente", "" + respuestaExpediente.get("mensaje"));
 				}
+				System.out.println(" expediente creado");
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Práctica Profesional.");
 			}
 		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
@@ -505,6 +507,16 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Servicio Social que desea asignar al alumno.");
 			} else {
 				PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS, idInscripcionEE);
+				ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
+				String fechaProyecto = proyectoSS.getFechaProyecto();
+				System.out.println("Creando expediente");
+				HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
+
+				if (!((boolean) respuestaExpediente.get("error"))) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Expediente creado", "" + respuestaExpediente.get("mensaje"));
+				} else {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Error al eliminar el expediente", "" + respuestaExpediente.get("mensaje"));
+				}
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Servicio Social.");
 			}
 		}
