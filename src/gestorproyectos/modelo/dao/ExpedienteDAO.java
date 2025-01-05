@@ -100,4 +100,33 @@ public class ExpedienteDAO {
 		return expediente;
 	}
 
+    public static HashMap<String, Object> CrearExpediente(int idInscripcionEE, String fechaProyecto, int horasPorCubrir) throws SQLException{
+        HashMap<String, Object> respuesta = new HashMap<>();
+        respuesta.put("error",true);
+        Connection conexionBD = ConexionBD.abrirConexion();
+        if(conexionBD!=null){
+        try{
+            String sentencia = "INSERT INTO Expediente (fechaInicioProyecto, horasRestantes, horasAcumuladas, idInscripcionEE) " +
+                                "VALUES ( ? , ?, 0, ?);";
+            PreparedStatement prepararSentencia= conexionBD.prepareStatement(sentencia);
+            prepararSentencia.setString(1, fechaProyecto);
+            prepararSentencia.setInt(2, horasPorCubrir);
+            prepararSentencia.setInt(3, idInscripcionEE);
+            int filasAfectadas = prepararSentencia.executeUpdate();
+            if(filasAfectadas > 0){
+                respuesta.put("error",false);
+                respuesta.put("mensaje","El expediente se ha registrado correctamente");
+            }else{
+                respuesta.put("mensaje","Lo sentimos, hubo un error al registrar el expediente, por favor revisa la informacion");
+            }
+            conexionBD.close();
+        }catch(SQLException ex){
+                respuesta.put("mensaje", ex.getMessage());
+            }    
+        }else{
+            respuesta.put("mensaje","No hay coneccion, intente mas tarde");
+        }
+        return respuesta; 
+    }        
+        
 }
