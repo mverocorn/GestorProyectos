@@ -175,7 +175,7 @@ public class FXMLAlumnoController implements Initializable {
                 try {
 			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLExpedienteAlumno.fxml"));
 			Parent vista = loader.load();
-			
+                        
                         InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(),ee.getIdEE());
                         Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
                         if(ee.getNombreEE().equals("Servicio Social")){
@@ -192,11 +192,13 @@ public class FXMLAlumnoController implements Initializable {
                             controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,true);
                         }
                         
-
+                        
 			Stage stage = new Stage();
 			stage.setScene(new Scene(vista));
 			stage.setTitle("Expediente");
 			stage.show();
+                } catch (NullPointerException e){
+                    System.out.println("No se ha asigando proyecto al alumno");
 		} catch (IOException e) {
 			e.printStackTrace();
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
