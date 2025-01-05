@@ -97,9 +97,10 @@ public class PriorizacionProyectosDAOTest {
     public void testAsignarProyectoSS() throws SQLException {
         int idAlumno = 1;
         int idProyectoSS = 3;
+	int idInscripcionEE = 1;
 
         // Llamamos al método que estamos probando
-        PriorizacionProyectosDAO.asignarProyectoSS(idAlumno, idProyectoSS);
+        PriorizacionProyectosDAO.asignarProyectoSS(idAlumno, idProyectoSS, idInscripcionEE);
 
         // Ahora verificamos que el proyecto se asignó correctamente en la base de datos
         Connection conexionBD = ConexionBD.abrirConexion();

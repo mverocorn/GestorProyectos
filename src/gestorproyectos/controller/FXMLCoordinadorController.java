@@ -468,21 +468,32 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
         }
         btnAsignar.setVisible(true);
     }
+	
+	private int obtenerIdInscripcion() throws SQLException{
+		int idInscripcion = 0;
+		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+			idInscripcion = InscripcionEEDAO.obtenerIdInscripcionEE(agregarListenersTablaAsignacionPP());
+		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
+			idInscripcion = InscripcionEEDAO.obtenerIdInscripcionEE(agregarListenersTablaAsignacionSS());
+		}
+		return idInscripcion;
+	}
 
     @FXML
     private void clickAsignar(ActionEvent event) throws SQLException {
+	int idInscripcionEE = obtenerIdInscripcion();
         if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
             if (idProyectoPP == 0) {
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Práctica Profesional que desea asignar al alumno.");
             } else {
-                PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP);
+                PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP, idInscripcionEE);
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Práctica Profesional.");
             }
         } else if (tipoProyectoAsignascion.equals("Servicio Social")) {
             if (idProyectoSS == 0) {
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Servicio Social que desea asignar al alumno.");
             } else {
-                PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS);
+                PriorizacionProyectosDAO.asignarProyectoSS(agregarListenersTablaAsignacionSS(), idProyectoSS, idInscripcionEE);
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Asignado", "Se ha asignado la relación de alumno y proyecto de Servicio Social.");
             }
         }

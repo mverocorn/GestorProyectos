@@ -172,7 +172,7 @@ public class PriorizacionProyectosDAO {
         return resultados;
     }
 
-    public static void asignarProyectoSS(int idAlumno, int idProyectoSS) throws SQLException {
+    public static void asignarProyectoSS(int idAlumno, int idProyectoSS, int idInscripcionEE) throws SQLException {
         Connection conexionBD = ConexionBD.abrirConexion();
 
         if (conexionBD != null) {
@@ -181,17 +181,17 @@ public class PriorizacionProyectosDAO {
 
                 String consultaAsignarProyecto = "UPDATE inscripcionee "
                     + "SET idProyectoSS = ? "
-                    + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+                    + "WHERE idInscripcionEE = ?";
 
                 try (
                     PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
                     prepararSentencia.setInt(1, idProyectoSS);
-                    prepararSentencia.setInt(2, idAlumno);
+                    prepararSentencia.setInt(2, idInscripcionEE);
 
                     int filasAfectadas = prepararSentencia.executeUpdate();
 
                     if (filasAfectadas > 0) {
-                        actualizarEstadoInscripcion(idAlumno);
+                        actualizarEstadoInscripcion(idInscripcionEE);
 			ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 			String fechaProyecto = proyectoSS.getFechaProyecto();
 			ExpedienteDAO.CrearExpediente(idProyectoSS, fechaProyecto, 300);
@@ -215,7 +215,7 @@ public class PriorizacionProyectosDAO {
         }
     }
 
-    public static void asignarProyectoPP(int idAlumno, int idProyectoPP) throws SQLException {
+    public static void asignarProyectoPP(int idAlumno, int idProyectoPP, int idInscripcionEE) throws SQLException {
         Connection conexionBD = ConexionBD.abrirConexion();
 
         if (conexionBD != null) {
@@ -224,17 +224,17 @@ public class PriorizacionProyectosDAO {
 
                 String consultaAsignarProyecto = "UPDATE inscripcionee "
                     + "SET idProyectoPP = ? "
-                    + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+                    + "WHERE idInscripcionEE = ? ";
 
                 try (
                     PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
                     prepararSentencia.setInt(1, idProyectoPP);
-                    prepararSentencia.setInt(2, idAlumno);
+                    prepararSentencia.setInt(2, idInscripcionEE);
 
                     int filasAfectadas = prepararSentencia.executeUpdate();
 
                     if (filasAfectadas > 0) {
-                        actualizarEstadoInscripcion(idAlumno);
+                        actualizarEstadoInscripcion(idInscripcionEE);
 
                         conexionBD.commit();
                         System.out.println("Proyecto PP asignado y estado actualizado correctamente.");
@@ -255,17 +255,17 @@ public class PriorizacionProyectosDAO {
         }
     }
 
-    public static void actualizarEstadoInscripcion(int idAlumno) throws SQLException {
+    public static void actualizarEstadoInscripcion(int idInscripcionEE) throws SQLException {
         Connection conexionBD = ConexionBD.abrirConexion();
 
         if (conexionBD != null) {
             String consulta = "UPDATE inscripcionee "
                 + "SET estadoInscripcion = 'En curso' "
-                + "WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
+                + "WHERE idInscripcionEE = ? ";
 
             try (
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta)) {
-                prepararSentencia.setInt(1, idAlumno);
+                prepararSentencia.setInt(1, idInscripcionEE);
 
                 int filasAfectadas = prepararSentencia.executeUpdate();
 
