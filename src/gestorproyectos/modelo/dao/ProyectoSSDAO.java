@@ -286,7 +286,7 @@ public class ProyectoSSDAO {
 	}
 
     private static String[] obtenerFechasPeriodo(String periodo) {
-    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.ENGLISH);
+    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.forLanguageTag("es"));
     DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     // Separar el periodo en partes
