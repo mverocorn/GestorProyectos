@@ -193,18 +193,7 @@ public class PriorizacionProyectosDAO {
 
 					int filasAfectadas = prepararSentencia.executeUpdate();
 
-					if (filasAfectadas > 0) {
-
-						ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
-						String fechaProyecto = proyectoSS.getFechaProyecto();
-						HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
-                                                
-                                                if(!((boolean)respuestaExpediente.get("error")) ){
-                                                    MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Expediente creado", ""+respuestaExpediente.get("mensaje") );
-                                                }else{
-                                                    MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Error al eliminar el expediente", ""+respuestaExpediente.get("mensaje"));
-            }
-                                                
+					if (filasAfectadas > 0) {                                                
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
 					} else {
