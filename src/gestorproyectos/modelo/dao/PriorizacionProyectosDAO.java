@@ -197,8 +197,6 @@ public class PriorizacionProyectosDAO {
 
 						ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 						String fechaProyecto = proyectoSS.getFechaProyecto();
-                                                
-                                                
 						HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
                                                 
                                                 if(!((boolean)respuestaExpediente.get("error")) ){
@@ -206,7 +204,7 @@ public class PriorizacionProyectosDAO {
                                                 }else{
                                                     MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Error al eliminar el expediente", ""+respuestaExpediente.get("mensaje"));
             }
-						
+                                                
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
 					} else {
