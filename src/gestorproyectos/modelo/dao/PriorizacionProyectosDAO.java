@@ -179,9 +179,10 @@ public class PriorizacionProyectosDAO {
 			try {
 				conexionBD.setAutoCommit(false);
 
-				String consultaAsignarProyecto = "UPDATE inscripcionee "
-						+ "SET idProyectoSS = ? "
-						+ "WHERE idInscripcionEE = ?";
+				String consultaAsignarProyecto = "UPDATE inscripcionee  " +
+                                                                 "SET idProyectoSS = ?, " +
+                                                                  "estadoInscripcion = 'En curso' " +
+                                                                  "WHERE idInscripcionEE = ?;";
 
 				try (
 						PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
@@ -195,7 +196,6 @@ public class PriorizacionProyectosDAO {
 						ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 						String fechaProyecto = proyectoSS.getFechaProyecto();
 						ExpedienteDAO.CrearExpediente(idProyectoSS, fechaProyecto, 300);
-						actualizarEstadoInscripcion(idInscripcionEE);
 						
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
@@ -223,9 +223,10 @@ public class PriorizacionProyectosDAO {
 			try {
 				conexionBD.setAutoCommit(false);
 
-				String consultaAsignarProyecto = "UPDATE inscripcionee "
-						+ "SET idProyectoPP = ? "
-						+ "WHERE idInscripcionEE = ? ";
+				String consultaAsignarProyecto = "UPDATE inscripcionee  " +
+                                                                 "SET idProyectoPP = ?, " +
+                                                                  "estadoInscripcion = 'En curso' " +
+                                                                  "WHERE idInscripcionEE = ?;";
 
 				try (
 						PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
@@ -235,7 +236,6 @@ public class PriorizacionProyectosDAO {
 					int filasAfectadas = prepararSentencia.executeUpdate();
 
 					if (filasAfectadas > 0) {
-						actualizarEstadoInscripcion(idInscripcionEE);
 
 						conexionBD.commit();
 						System.out.println("Proyecto PP asignado y estado actualizado correctamente.");
