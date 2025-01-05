@@ -195,7 +195,7 @@ public class PriorizacionProyectosDAO {
 
 						ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 						String fechaProyecto = proyectoSS.getFechaProyecto();
-						ExpedienteDAO.CrearExpediente(idProyectoSS, fechaProyecto, 300);
+						ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
 						
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
