@@ -5,11 +5,13 @@ import gestorproyectos.utilidades.Validador;
 import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ProyectoSSDAO {
 
@@ -198,18 +200,22 @@ public class ProyectoSSDAO {
 		return proyectoSS;
 	}
 
-	public static List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String inicioPeriodo) throws SQLException {
+	public static List<ProyectoSS> obtenerProyectosDisponiblesPorPeriodoDeEESS(String periodo) throws SQLException {
 		List<ProyectoSS> proyectosDisponibles = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
-
+                String[] fechasPeriodo = obtenerFechasPeriodo(periodo);
+                
 		if (conexionBD != null) {
 			try {
-				String consulta = "SELECT idProyectoSS, nombreProyecto "
-						+ "FROM proyectoss WHERE fechaProyecto = ? AND cupoProyecto > 0";
+				String consulta = "SELECT idProyectoSS, nombreProyecto " +
+                                                    "FROM proyectoss " +
+                                                    "WHERE fechaProyecto BETWEEN ? AND ?  " +
+                                                    "  AND cupoProyecto > 0;";
 
 				try (
 						PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
-					prepararConsulta.setString(1, inicioPeriodo);
+					prepararConsulta.setString(1, fechasPeriodo[0]);
+					prepararConsulta.setString(2, fechasPeriodo[1]);
 
 					try (ResultSet resultado = prepararConsulta.executeQuery()) {
 						if (!resultado.isBeforeFirst()) {
@@ -279,4 +285,24 @@ public class ProyectoSSDAO {
 		return resultados;
 	}
 
+    private static String[] obtenerFechasPeriodo(String periodo) {
+    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.ENGLISH);
+    DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // Separar el periodo en partes
+    String[] partes = periodo.split("-");
+    String inicioPeriodo = partes[0];
+    String finPeriodo = partes[1];
+
+    // Obtener la fecha de inicio del periodo
+    LocalDate fechaInicio = LocalDate.parse(inicioPeriodo, formatterEntrada).withDayOfMonth(1);
+
+    // Obtener la fecha de fin del periodo (último día del mes)
+    LocalDate fechaFin = LocalDate.parse(finPeriodo, formatterEntrada).withDayOfMonth(1).withDayOfMonth(LocalDate.parse(finPeriodo, formatterEntrada).lengthOfMonth());
+
+    // Formatear las fechas y retornarlas como un arreglo
+    return new String[] { fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida) };
+}
+  
+        
 }
