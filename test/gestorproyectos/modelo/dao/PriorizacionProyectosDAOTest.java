@@ -102,7 +102,6 @@ public class PriorizacionProyectosDAOTest {
         // Llamamos al método que estamos probando
         PriorizacionProyectosDAO.asignarProyectoSS(idAlumno, idProyectoSS, idInscripcionEE);
 
-        // Ahora verificamos que el proyecto se asignó correctamente en la base de datos
         Connection conexionBD = ConexionBD.abrirConexion();
         String consulta = "SELECT idProyectoSS FROM inscripcionee WHERE idAlumno = ? AND estadoInscripcion = 'inscrito'";
         PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
