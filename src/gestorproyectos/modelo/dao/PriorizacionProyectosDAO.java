@@ -1,6 +1,9 @@
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
+import gestorproyectos.modelo.dao.ProyectoSSDAO;
+import gestorproyectos.modelo.dao.ProyectoPPDAO;
+import gestorproyectos.modelo.pojo.ProyectoSS;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -189,6 +192,9 @@ public class PriorizacionProyectosDAO {
 
                     if (filasAfectadas > 0) {
                         actualizarEstadoInscripcion(idAlumno);
+			ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
+			String fechaProyecto = proyectoSS.getFechaProyecto();
+			ExpedienteDAO.CrearExpediente(idProyectoSS, fechaProyecto, 300);
 
                         conexionBD.commit();
                         System.out.println("Proyecto asignado y estado actualizado correctamente.");
