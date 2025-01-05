@@ -4,6 +4,7 @@ import gestorproyectos.modelo.ConexionBD;
 import gestorproyectos.modelo.dao.ProyectoSSDAO;
 import gestorproyectos.modelo.dao.ProyectoPPDAO;
 import gestorproyectos.modelo.pojo.ProyectoSS;
+import gestorproyectos.utilidades.MisUtilidades;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
 
 public class PriorizacionProyectosDAO {
 
@@ -195,7 +197,15 @@ public class PriorizacionProyectosDAO {
 
 						ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
 						String fechaProyecto = proyectoSS.getFechaProyecto();
-						ExpedienteDAO.CrearExpediente(idProyectoSS, fechaProyecto, 300);
+                                                
+                                                
+						HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
+                                                
+                                                if(!((boolean)respuestaExpediente.get("error")) ){
+                                                    MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Expediente creado", ""+respuestaExpediente.get("mensaje") );
+                                                }else{
+                                                    MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Error al eliminar el expediente", ""+respuestaExpediente.get("mensaje"));
+            }
 						
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
