@@ -12,7 +12,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -41,126 +40,125 @@ public class FXMLEntregaDeArchivoController implements Initializable {
 	private ComboBox<String> cBoxTipoArchivo;
 	@FXML
 	private TextField txtFCantidadHoras;
-        private File archivo;
-        private int idExpediente;
-        @FXML
-        private Label lbConfirmacionArchivo;
-    @FXML
-    private Label lblCantidadHoras;
+	private File archivo;
+	private int idExpediente;
+	@FXML
+	private Label lbConfirmacionArchivo;
+	@FXML
+	private Label lblCantidadHoras;
 
 	/**
 	 * Initializes the controller class.
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-            llenarCombo();
-	}	
+		llenarCombo();
+	}
 
-        public void inicializarValores(int idExpediente){
-            this.idExpediente = idExpediente;
-        }
-        
+	public void inicializarValores(int idExpediente) {
+		this.idExpediente = idExpediente;
+	}
+
 	@FXML
 	private void clickSubirArchivo(ActionEvent event) {
-            FileChooser dialogoSeleccion = new FileChooser();
-            dialogoSeleccion.setTitle("Seleccionar archivo");
-            String etiquetaTipoDato = "Archivo (*.pdf)";
-            FileChooser.ExtensionFilter filtroArchivo = new FileChooser.ExtensionFilter(etiquetaTipoDato, "*.pdf");
-            dialogoSeleccion.getExtensionFilters().add(filtroArchivo);
-            Stage escenarioActual = (Stage) txtFNombreEntrega.getScene().getWindow();
-            archivo = dialogoSeleccion.showOpenDialog(escenarioActual);
-            if(archivo != null){
-                mostrarMensajeConfirmacion(archivo.getName());
-            }
+		FileChooser dialogoSeleccion = new FileChooser();
+		dialogoSeleccion.setTitle("Seleccionar archivo");
+		String etiquetaTipoDato = "Archivo (*.pdf)";
+		FileChooser.ExtensionFilter filtroArchivo = new FileChooser.ExtensionFilter(etiquetaTipoDato, "*.pdf");
+		dialogoSeleccion.getExtensionFilters().add(filtroArchivo);
+		Stage escenarioActual = (Stage) txtFNombreEntrega.getScene().getWindow();
+		archivo = dialogoSeleccion.showOpenDialog(escenarioActual);
+		if (archivo != null) {
+			mostrarMensajeConfirmacion(archivo.getName());
+		}
 	}
 
 	@FXML
 	private void clickEntregar(ActionEvent event) {
-        boolean datosValidos = datosValidos();
-        if (datosValidos){
-            try{
-                if(cBoxTipoArchivo.getSelectionModel().getSelectedItem()=="Documento"){
-                    Documento documento = obtenerDocumento();
-                    HashMap<String,Object> respuesta = DocumentoDAO.subirDocumento(documento);
-                        if(!(boolean)respuesta.get("error")){
-                            MisUtilidades.crearAlertaSimple( Alert.AlertType.ERROR,"Documento guardado", ""+respuesta.get("mensaje"));
-                            cerrarVentana();
-                        }else{
-                            MisUtilidades.crearAlertaSimple( Alert.AlertType.ERROR,"Error", ""+respuesta.get("mensaje"));
-                        } 
-                }else{
-                    Reporte reporte = obtenerReporte();
-                    HashMap<String,Object> respuesta = ReporteDAO.subirReporte(reporte);
-                        if(!(boolean)respuesta.get("error")){
-                            MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Reporte guardado", ""+respuesta.get("mensaje"));
-                            cerrarVentana();
-                        }else{
-                            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", ""+respuesta.get("mensaje"));
-                        } 
-                }
-            }catch (SQLException ex) {
-                MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo subir el archivo.");
-            }  
-        }else{
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos, los datos estan incompletos");
-        }
+		boolean datosValidos = datosValidos();
+		if (datosValidos) {
+			try {
+				if (cBoxTipoArchivo.getSelectionModel().getSelectedItem() == "Documento") {
+					Documento documento = obtenerDocumento();
+					HashMap<String, Object> respuesta = DocumentoDAO.subirDocumento(documento);
+					if (!(boolean) respuesta.get("error")) {
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Documento guardado", "" + respuesta.get("mensaje"));
+						cerrarVentana();
+					} else {
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "" + respuesta.get("mensaje"));
+					}
+				} else {
+					Reporte reporte = obtenerReporte();
+					HashMap<String, Object> respuesta = ReporteDAO.subirReporte(reporte);
+					if (!(boolean) respuesta.get("error")) {
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Reporte guardado", "" + respuesta.get("mensaje"));
+						cerrarVentana();
+					} else {
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "" + respuesta.get("mensaje"));
+					}
+				}
+			} catch (SQLException ex) {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo subir el archivo.");
+			}
+		} else {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Lo sentimos, los datos estan incompletos");
+		}
 	}
 
-    
-    private void mostrarMensajeConfirmacion(String nombreArchivo) {
-        lbConfirmacionArchivo.setVisible(true);
-        lbConfirmacionArchivo.setText(nombreArchivo);
-    }
-    
-    private Reporte obtenerReporte() {
-        Reporte reporte = new Reporte();
-        reporte.setReporte(obtenerArchivo());
-        reporte.setNombreReporte(txtFNombreEntrega.getText());
-        reporte.setHorasReportadas(Integer.parseInt(txtFCantidadHoras.getText()));
-        reporte.setValidado("Entregado");
-        reporte.setNoReporte(obtenerNumeroReporte()+1);
-        reporte.setIdExpediente(idExpediente);
-        
-        return reporte;
-    }
+	private void mostrarMensajeConfirmacion(String nombreArchivo) {
+		lbConfirmacionArchivo.setVisible(true);
+		lbConfirmacionArchivo.setText(nombreArchivo);
+	}
 
-    private Documento obtenerDocumento() {
-        LocalDate fechaActual = LocalDate.now();
-        
-        Documento documento = new Documento();
-        documento.setNombreDocumento(txtFNombreEntrega.getText());
-        documento.setDocumento(obtenerArchivo());
-        documento.setFechaEntrega(fechaActual.toString());
-        documento.setValidado("Entregado");
-        documento.setIdExpediente(idExpediente);
-        
-        return documento;
-    }
+	private Reporte obtenerReporte() {
+		Reporte reporte = new Reporte();
+		reporte.setReporte(obtenerArchivo());
+		reporte.setNombreReporte(txtFNombreEntrega.getText());
+		reporte.setHorasReportadas(Integer.parseInt(txtFCantidadHoras.getText()));
+		reporte.setValidado("Entregado");
+		reporte.setNoReporte(obtenerNumeroReporte() + 1);
+		reporte.setIdExpediente(idExpediente);
 
-    private byte[] obtenerArchivo() {
-        try{
-            if(archivo!=null){
-                byte[] archivoBytes = Files.readAllBytes(archivo.toPath());
-                return archivoBytes;
-            }else{
-                MisUtilidades.crearAlertaSimple( Alert.AlertType.ERROR,"Error", "Lo sentimos, el archivo seleccionado no puede ser guardado");
-                return null;
-            }            
-        }catch (IOException ex) {
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", "Lo sentimos, el archivo seleccionado no puede ser guardad");
-            return null;
-        }
-    }
+		return reporte;
+	}
+
+	private Documento obtenerDocumento() {
+		LocalDate fechaActual = LocalDate.now();
+
+		Documento documento = new Documento();
+		documento.setNombreDocumento(txtFNombreEntrega.getText());
+		documento.setDocumento(obtenerArchivo());
+		documento.setFechaEntrega(fechaActual.toString());
+		documento.setValidado("Entregado");
+		documento.setIdExpediente(idExpediente);
+
+		return documento;
+	}
+
+	private byte[] obtenerArchivo() {
+		try {
+			if (archivo != null) {
+				byte[] archivoBytes = Files.readAllBytes(archivo.toPath());
+				return archivoBytes;
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Lo sentimos, el archivo seleccionado no puede ser guardado");
+				return null;
+			}
+		} catch (IOException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "Lo sentimos, el archivo seleccionado no puede ser guardad");
+			return null;
+		}
+	}
 
 	private int obtenerNumeroReporte() {
 		try {
 			List<Reporte> reportesBD = ReporteDAO.obtenerReportes(idExpediente);
 
 			if (reportesBD != null) {
-				return reportesBD.size(); 
+				return reportesBD.size();
 			} else {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se encontraron reportes.");
-				return -1; 
+				return -1;
 			}
 		} catch (SQLException ex) {
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo obtener los reportes.");
@@ -168,42 +166,41 @@ public class FXMLEntregaDeArchivoController implements Initializable {
 		}
 	}
 
+	private void llenarCombo() {
+		ObservableList<String> opcionesArchivo = FXCollections.observableArrayList("Documento", "Reporte");
+		cBoxTipoArchivo.setItems(opcionesArchivo);
 
-    private void llenarCombo() {
-        ObservableList<String> opcionesArchivo = FXCollections.observableArrayList("Documento","Reporte");
-        cBoxTipoArchivo.setItems(opcionesArchivo);
-        
-            cBoxTipoArchivo.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if ("Documento".equals(newValue)) {
-                txtFCantidadHoras.setVisible(false);
-                lblCantidadHoras.setVisible(false);
-            } else {
-                txtFCantidadHoras.setVisible(true);
-                lblCantidadHoras.setVisible(true);
-            }
-        });
-        
-    }
+		cBoxTipoArchivo.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if ("Documento".equals(newValue)) {
+				txtFCantidadHoras.setVisible(false);
+				lblCantidadHoras.setVisible(false);
+			} else {
+				txtFCantidadHoras.setVisible(true);
+				lblCantidadHoras.setVisible(true);
+			}
+		});
 
-    private void cerrarVentana() {
-        Stage stage = (Stage) txtFCantidadHoras.getScene().getWindow();
-        stage.close();
-    }
-    
-    private boolean datosValidos() {
-        try{
-        Validador.validarTexto(txtFNombreEntrega.getText(), "Nombre de la entrega", 50);
-        if(cBoxTipoArchivo.getSelectionModel().getSelectedItem().contains("Reporte")){
-            Validador.validarHoras(Integer.parseInt(txtFCantidadHoras.getText()));
-        }
-        if (archivo==null || cBoxTipoArchivo.getSelectionModel().getSelectedItem().isEmpty()){
-            return false;
-        }
-        return true;
-        }catch(IllegalArgumentException ex){
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", ex.getMessage());
-            return false;
-        }
-        
-    }    
+	}
+
+	private void cerrarVentana() {
+		Stage stage = (Stage) txtFCantidadHoras.getScene().getWindow();
+		stage.close();
+	}
+
+	private boolean datosValidos() {
+		try {
+			Validador.validarTexto(txtFNombreEntrega.getText(), "Nombre de la entrega", 50);
+			if (cBoxTipoArchivo.getSelectionModel().getSelectedItem().contains("Reporte")) {
+				Validador.validarHoras(Integer.parseInt(txtFCantidadHoras.getText()));
+			}
+			if (archivo == null || cBoxTipoArchivo.getSelectionModel().getSelectedItem().isEmpty()) {
+				return false;
+			}
+			return true;
+		} catch (IllegalArgumentException ex) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de base de datos", ex.getMessage());
+			return false;
+		}
+
+	}
 }

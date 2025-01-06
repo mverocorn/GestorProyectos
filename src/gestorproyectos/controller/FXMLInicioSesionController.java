@@ -39,14 +39,14 @@ public class FXMLInicioSesionController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
+
 	}
 
 	@FXML
 	private void clickAceptar(ActionEvent event) throws SQLException {
 		String correo = txtFCorreo.getText().trim();
 		String contrasenia = txtFContrasenia.getText().trim();
-		System.out.println("Correo: " + correo + ", Contraseña: " + contrasenia);//quitar
+		System.out.println("Correo: " + correo + ", Contraseña: " + contrasenia);
 		if (validarFormulario(correo, contrasenia)) {
 			if (!verificarCoordinador(correo, contrasenia)) {
 				tipoUsuario = UsuarioDAO.identificarTipoUsuario(correo);
@@ -116,7 +116,7 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.show();
 		} catch (IOException ex) {
 			System.out.println(ex.getMessage());
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
 					"Lo sentimos, no se pudo cargar la ventana principal de alumno");
 		}
 	}
@@ -135,7 +135,7 @@ public class FXMLInicioSesionController implements Initializable {
 			escenario.setTitle("Inicio Profesor");
 			escenario.show();
 		} catch (IOException ex) {
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR,"Error", 
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
 					"Lo sentimos, no se pudo cargar la ventana principal de profesor" + ex.getMessage());
 		}
 	}

@@ -1,10 +1,6 @@
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
-import gestorproyectos.modelo.dao.ProyectoSSDAO;
-import gestorproyectos.modelo.dao.ProyectoPPDAO;
-import gestorproyectos.modelo.pojo.ProyectoSS;
-import gestorproyectos.utilidades.MisUtilidades;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.control.Alert;
 
 public class PriorizacionProyectosDAO {
 
@@ -181,10 +176,10 @@ public class PriorizacionProyectosDAO {
 			try {
 				conexionBD.setAutoCommit(false);
 
-				String consultaAsignarProyecto = "UPDATE inscripcionee  " +
-                                                                 "SET idProyectoSS = ?, " +
-                                                                  "estadoInscripcion = 'En curso' " +
-                                                                  "WHERE idInscripcionEE = ?;";
+				String consultaAsignarProyecto = "UPDATE inscripcionee  "
+						+ "SET idProyectoSS = ?, "
+						+ "estadoInscripcion = 'En curso' "
+						+ "WHERE idInscripcionEE = ?;";
 
 				try (
 						PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
@@ -193,7 +188,7 @@ public class PriorizacionProyectosDAO {
 
 					int filasAfectadas = prepararSentencia.executeUpdate();
 
-					if (filasAfectadas > 0) {                                                
+					if (filasAfectadas > 0) {
 						conexionBD.commit();
 						System.out.println("Proyecto asignado y estado actualizado correctamente.");
 					} else {
@@ -220,10 +215,10 @@ public class PriorizacionProyectosDAO {
 			try {
 				conexionBD.setAutoCommit(false);
 
-				String consultaAsignarProyecto = "UPDATE inscripcionee  " +
-                                                                 "SET idProyectoPP = ?, " +
-                                                                  "estadoInscripcion = 'En curso' " +
-                                                                  "WHERE idInscripcionEE = ?;";
+				String consultaAsignarProyecto = "UPDATE inscripcionee  "
+						+ "SET idProyectoPP = ?, "
+						+ "estadoInscripcion = 'En curso' "
+						+ "WHERE idInscripcionEE = ?;";
 
 				try (
 						PreparedStatement prepararSentencia = conexionBD.prepareStatement(consultaAsignarProyecto)) {
@@ -315,16 +310,16 @@ public class PriorizacionProyectosDAO {
 		return priorizacionHecha;
 	}
 
-	public static HashMap<String, Object> DarDeBaja(int idExpediente) throws SQLException {
+	public static HashMap<String, Object> DarDeBaja(int idInscripcionEE) throws SQLException {
 		HashMap<String, Object> respuesta = new HashMap<>();
 		respuesta.put("error", true);
 		Connection conexionBD = ConexionBD.abrirConexion();
 		if (conexionBD != null) {
 			String sentencia = "DELETE FROM priorizacionproyectos "
-					+ "WHERE idExpediente = ?";
+					+ "WHERE idInscripcionEE = ?";
 			try {
 				PreparedStatement prepararSentencia = conexionBD.prepareStatement(sentencia);
-				prepararSentencia.setInt(1, idExpediente);
+				prepararSentencia.setInt(1, idInscripcionEE);
 				int filasAfectadas = prepararSentencia.executeUpdate();
 				if (filasAfectadas > 0) {
 					respuesta.put("error", false);
@@ -342,6 +337,6 @@ public class PriorizacionProyectosDAO {
 			respuesta.put("mensaje", "Por el momento el servicio no esta disponible, intentalo mas tarde.");
 		}
 		return respuesta;
-	}        
-        
+	}
+
 }

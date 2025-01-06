@@ -50,8 +50,6 @@ public class FXMLDetallesAlumnoController implements Initializable {
 	@FXML
 	private Label lblResultadoPromedio;
 	@FXML
-	private Label lblResultadoProyectoEnCurso;
-	@FXML
 	private TableView<InscripcionEE> tblProyectos;
 
 	@FXML
@@ -65,20 +63,21 @@ public class FXMLDetallesAlumnoController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		configurarTablaProyectos();  // Asegúrate de configurar la tabla en el método initialize
+		configurarTablaProyectos();
 	}
 
-	public void inicializarValores(Alumno alumnoSeleccionado) {
-		this.alumno = alumnoSeleccionado; // Asignar el alumno recibido
-		cargarInfo(); // Llamar al método para mostrar la información
-		cargarTablaProyectoDeAlumno(); // Cargar los proyectos del alumno
+	public void inicializarValores(Alumno alumnoSeleccionado) throws SQLException {
+		this.alumno = alumnoSeleccionado;
+		cargarInfo();
+		cargarTablaProyectoDeAlumno();
 	}
 
-	private void cargarInfo() {
+	private void cargarInfo() throws SQLException {
 		if (alumno != null) {
 			Alumno alumnoCompleto = AlumnoDAO.obtenerAlumnoPorId(alumno.getIdAlumno());
+			int idProyecto = AlumnoDAO.obtenerIdProyectoPorIdAlumno(alumno.getIdAlumno());
 			if (alumnoCompleto != null) {
-				alumno = alumnoCompleto; // Actualizamos la instancia del alumno con datos completos
+				alumno = alumnoCompleto;
 				lblResultadoAlumno.setText(alumno.getNombreAlumno() + " " + alumno.getApellidoAlumno());
 				lblResultadoMatricula.setText(alumno.getMatricula() != null ? alumno.getMatricula() : "No disponible");
 				lblResultadoCorreo.setText(alumno.getCorreo() != null ? alumno.getCorreo() : "No disponible");
@@ -105,7 +104,7 @@ public class FXMLDetallesAlumnoController implements Initializable {
 				inscripciones.addAll(inscripcionesBD);
 				tblProyectos.setItems(inscripciones);
 			} else {
-				tblProyectos.setItems(FXCollections.observableArrayList()); // Asigna una lista vacía si no hay inscripciones
+				tblProyectos.setItems(FXCollections.observableArrayList());
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Información", "El alumno no tiene inscripciones registradas.");
 			}
 		} catch (SQLException ex) {
@@ -138,35 +137,80 @@ public class FXMLDetallesAlumnoController implements Initializable {
 
 	private void abrirVentanaExpediente(EE ee) {
 		try {
+
 			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLExpedienteAlumno.fxml"));
 			Parent vista = loader.load();
 
 			InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(), ee.getIdEE());
+			if (inscripcionEE == null) {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Inscripción no encontrada", "No se encontró la inscripción de la EE para el alumno.");
+				return;
+			}
+
 			Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
+			if (expediente == null) {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Expediente no encontrado", "No se encontró el expediente relacionado con la inscripción.");
+				return;
+			}
+
+			Empresa empresa = null;
+			Responsable responsable = null;
+
 			if (ee.getNombreEE().equals("Servicio Social")) {
-				ProyectoSS proyecto = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
-				Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
-				Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
+				if (proyectoSS == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Proyecto de Servicio Social no encontrado", "No se encontró el proyecto de Servicio Social relacionado.");
+					return;
+				}
+				responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyectoSS.getIdResponsable());
+				if (responsable == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Responsable no encontrado", "No se encontró el responsable del proyecto de Servicio Social.");
+					return;
+				}
+				empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				if (empresa == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Empresa no encontrada", "No se encontró la empresa asociada al proyecto de Servicio Social.");
+					return;
+				}
+
 				FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
-				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto, false);
+				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyectoSS, false);
+
 			} else {
-				ProyectoPP proyecto = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
-				Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
-				Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				ProyectoPP proyectoPP = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
+				if (proyectoPP == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Proyecto profesional no encontrado", "No se encontró el proyecto profesional relacionado.");
+					return;
+				}
+				responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyectoPP.getIdResponsable());
+				if (responsable == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Responsable no encontrado", "No se encontró el responsable del proyecto profesional.");
+					return;
+				}
+				empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				if (empresa == null) {
+					MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Empresa no encontrada", "No se encontró la empresa asociada al proyecto profesional.");
+					return;
+				}
+
 				FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
-				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto, false);
+				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyectoPP, false);
 			}
 
 			Stage stage = new Stage();
 			stage.setScene(new Scene(vista));
 			stage.setTitle("Expediente");
 			stage.show();
+
 		} catch (IOException e) {
 			e.printStackTrace();
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente 1.");
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error de carga", "No se pudo cargar la ventana de expediente.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error en la base de datos", "Ocurrió un problema al acceder a la base de datos: " + e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error inesperado", "Ha ocurrido un error inesperado: " + e.getMessage());
 		}
 	}
 

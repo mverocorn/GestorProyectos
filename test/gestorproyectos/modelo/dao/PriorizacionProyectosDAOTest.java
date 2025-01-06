@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit4TestClass.java to edit this template
- */
+
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
@@ -99,7 +96,6 @@ public class PriorizacionProyectosDAOTest {
         int idProyectoSS = 3;
 	int idInscripcionEE = 1;
 
-        // Llamamos al método que estamos probando
         PriorizacionProyectosDAO.asignarProyectoSS(idAlumno, idProyectoSS, idInscripcionEE);
 
         Connection conexionBD = ConexionBD.abrirConexion();
@@ -111,17 +107,14 @@ public class PriorizacionProyectosDAOTest {
 
         boolean proyectoAsignado = false;
         while (resultado.next()) {
-            // Comprobamos si el idProyectoSS coincide
             if (resultado.getInt("idProyectoSS") == idProyectoSS) {
                 proyectoAsignado = true;
                 break;
             }
         }
 
-        // Verificamos que el proyecto fue asignado
         assertTrue(proyectoAsignado);
 
-        // Cerramos la conexión
         conexionBD.close();
     }
 

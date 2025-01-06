@@ -1,6 +1,5 @@
 package gestorproyectos.controller;
 
-import gestorproyectos.interfaces.IObservador;
 import gestorproyectos.modelo.dao.AlumnoDAO;
 import gestorproyectos.modelo.pojo.Alumno;
 import gestorproyectos.modelo.dao.ProyectoSSDAO;
@@ -45,7 +44,7 @@ import javafx.stage.Stage;
  *
  * @author Vero
  */
-public class FXMLCoordinadorController implements Initializable, IObservador {
+public class FXMLCoordinadorController implements Initializable {
 
 	@FXML
 	private TableView<Alumno> tblAlumno;
@@ -157,19 +156,19 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		cBoxFiltroAlumno.getItems().addAll("Servicio Social", "Práctica Profesional", "Todos");
+		cBoxFiltroAlumno.getItems().addAll("Servicio Social", "Practica Profesional", "Todos");
 		cBoxFiltroAlumno.setValue("Todos");
 		cBoxFiltroAlumno.setOnAction(event -> {
 			configurarTablaAlumno();
 			cargarTablaAlumno();
 		});
 
-		cBoxFiltroProyecto.getItems().addAll("Práctica Profesional", "Servicio Social");
+		cBoxFiltroProyecto.getItems().addAll("Practica Profesional", "Servicio Social");
 		cBoxFiltroProyecto.setOnAction(event -> {
 			filtrarTipoProyectos();
 		});
 
-		cBoxFiltroAsignarProyecto.getItems().addAll("Práctica Profesional", "Servicio Social");
+		cBoxFiltroAsignarProyecto.getItems().addAll("Practica Profesional", "Servicio Social");
 		cBoxFiltroAsignarProyecto.setOnAction(event -> {
 			filtrarTablasAsignacion();
 		});
@@ -253,7 +252,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 			tblProyectoSS.setVisible(true);
 			configurarTablaProyectoSS();
 			cargarTablaProyectoSS();
-		} else if (tipoProyecto.equals("Práctica Profesional")) {
+		} else if (tipoProyecto.equals("Practica Profesional")) {
 			tblProyectoSS.setVisible(false);
 			tblProyectoPP.setVisible(true);
 			configurarTablaProyectoPP();
@@ -287,7 +286,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	private void configurarTablaProyectoPP() {
 		colNombreProyectoPP.setCellValueFactory(new PropertyValueFactory("nombreProyecto"));
-		colEEProyectoPP.setCellValueFactory(celda -> new SimpleStringProperty("Práctica Profesional"));
+		colEEProyectoPP.setCellValueFactory(celda -> new SimpleStringProperty("Practica Profesional"));
 	}
 
 	private void cargarTablaProyectoPP() {
@@ -400,7 +399,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 			configurarTablaAlumnoAsignacionSS();
 			cargarTablaAlumnoAsignacionSS();
 
-		} else if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+		} else if (tipoProyectoAsignascion.equals("Practica Profesional")) {
 			tblProyectoSS.setVisible(false);
 			tblAlumnoAsignacionSS.setVisible(false);
 			tblAlumnoAsignacionPP.setVisible(true);
@@ -463,7 +462,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	@FXML
 	private void clickSiguienteAsignación(ActionEvent event) {
-		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+		if (tipoProyectoAsignascion.equals("Practica Profesional")) {
 			agregarListenersTablaAsignacionPP();
 		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
 			agregarListenersTablaAsignacionSS();
@@ -473,7 +472,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	private int obtenerIdInscripcion() throws SQLException {
 		int idInscripcion = 0;
-		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+		if (tipoProyectoAsignascion.equals("Practica Profesional")) {
 			idInscripcion = InscripcionEEDAO.obtenerIdInscripcionEE(agregarListenersTablaAsignacionPP());
 		} else if (tipoProyectoAsignascion.equals("Servicio Social")) {
 			idInscripcion = InscripcionEEDAO.obtenerIdInscripcionEE(agregarListenersTablaAsignacionSS());
@@ -484,7 +483,7 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 	@FXML
 	private void clickAsignar(ActionEvent event) throws SQLException {
 		int idInscripcionEE = obtenerIdInscripcion();
-		if (tipoProyectoAsignascion.equals("Práctica Profesional")) {
+		if (tipoProyectoAsignascion.equals("Practica Profesional")) {
 			if (idProyectoPP == 0) {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Práctica Profesional que desea asignar al alumno.");
 			} else {
@@ -675,11 +674,6 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 
 	private void irFormularioProyecto() {
 		abrirFormulario("vista/FXMLRegistroProyecto.fxml", "Registro de Proyectos");
-	}
-
-	@Override
-	public void notificarAlumnoGuardado(String nombreAlumno, String operacion) {
-
 	}
 
 }

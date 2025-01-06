@@ -30,128 +30,126 @@ import javafx.stage.Stage;
  */
 public class FXMLProfesorController implements Initializable {
 
-    Profesor profesor;
-    @FXML
-    private Label lblNombreProfesor;
-    @FXML
-    private HBox experienciasContenedor;
+	Profesor profesor;
+	@FXML
+	private Label lblNombreProfesor;
+	@FXML
+	private HBox experienciasContenedor;
 
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
+	/**
+	 * Initializes the controller class.
+	 */
+	@Override
+	public void initialize(URL url, ResourceBundle rb) {
 
-    public void inicializarValores(Profesor profesor) {
-        this.profesor = profesor;
+	}
 
-        try {
-            List<EE> experiencias = InscripcionEEDAO.obtenerEEPorProfesor(profesor.getIdProfesor());
-            agregarBotonesEE(experiencias);
+	public void inicializarValores(Profesor profesor) {
+		this.profesor = profesor;
 
-        } catch (SQLException ex) {
-            System.err.println("Error al inicializar valores: "
-                + ex.getMessage());
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-                "Hubo un problema al cargar la información del alumno.");
-        }
+		try {
+			List<EE> experiencias = InscripcionEEDAO.obtenerEEPorProfesor(profesor.getIdProfesor());
+			agregarBotonesEE(experiencias);
 
-        saludo(profesor);
-    }
+		} catch (SQLException ex) {
+			System.err.println("Error al inicializar valores: "
+					+ ex.getMessage());
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Hubo un problema al cargar la información del alumno.");
+		}
 
-    public void saludo(Profesor profesor) {
-        lblNombreProfesor.setText(profesor.getNombreProfesor() + " "
-            + profesor.getApellidoProfesor());
-    }
+		saludo(profesor);
+	}
 
-    private void agregarBotonesEE(List<EE> experiencias) {
-        experienciasContenedor.getChildren().clear();
+	public void saludo(Profesor profesor) {
+		lblNombreProfesor.setText(profesor.getNombreProfesor() + " "
+				+ profesor.getApellidoProfesor());
+	}
 
-        // Agregar un espaciado entre los botones en el contenedor principal
-        experienciasContenedor.setSpacing(10); // Espacio de 10px entre cada botón
+	private void agregarBotonesEE(List<EE> experiencias) {
+		experienciasContenedor.getChildren().clear();
 
-        for (EE ee : experiencias) {
-            VBox contenedorBoton = crearContenedorBoton(ee);
+		experienciasContenedor.setSpacing(10);
 
-            Button boton = new Button();
-            boton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
-            boton.setPrefWidth(200);
-            boton.setPrefHeight(80);
-            boton.setGraphic(contenedorBoton);
+		for (EE ee : experiencias) {
+			VBox contenedorBoton = crearContenedorBoton(ee);
 
-            boton.setOnAction(event -> {
-                System.out.println("Seleccionaste la EE con id " + ee.getIdEE()
-                    + " y nombre: " + ee.getNombreEE() + ", periodo: "
-                    + ee.getPeriodo() + ", NRC: " + ee.getNrc());
+			Button boton = new Button();
+			boton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+			boton.setPrefWidth(200);
+			boton.setPrefHeight(80);
+			boton.setGraphic(contenedorBoton);
 
-                abrirDetalleEE(ee);
-            });
+			boton.setOnAction(event -> {
+				System.out.println("Seleccionaste la EE con id " + ee.getIdEE()
+						+ " y nombre: " + ee.getNombreEE() + ", periodo: "
+						+ ee.getPeriodo() + ", NRC: " + ee.getNrc());
 
-            experienciasContenedor.getChildren().add(boton);
-        }
-    }
+				abrirDetalleEE(ee);
+			});
 
-// Método para crear el contenedor del botón
-    private VBox crearContenedorBoton(EE ee) {
-        VBox contenedorBoton = new VBox();
-        contenedorBoton.setSpacing(5);
+			experienciasContenedor.getChildren().add(boton);
+		}
+	}
 
-        Label nombreLabel = new Label(ee.getNombreEE());
-        nombreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;");
+	private VBox crearContenedorBoton(EE ee) {
+		VBox contenedorBoton = new VBox();
+		contenedorBoton.setSpacing(5);
 
-        Label periodoLabel = new Label(ee.getPeriodo());
-        periodoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
+		Label nombreLabel = new Label(ee.getNombreEE());
+		nombreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: white;");
 
-        Label nrcLabel = new Label("NRC: " + ee.getNrc());
-        nrcLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
+		Label periodoLabel = new Label(ee.getPeriodo());
+		periodoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
 
-        contenedorBoton.getChildren().addAll(nombreLabel, periodoLabel, nrcLabel);
+		Label nrcLabel = new Label("NRC: " + ee.getNrc());
+		nrcLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: white;");
 
-        return contenedorBoton;
-    }
+		contenedorBoton.getChildren().addAll(nombreLabel, periodoLabel, nrcLabel);
 
-    private void abrirDetalleEE(EE eeSeleccionada) {
-        try {
-            FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
-                "vista/FXMLExperienciaEducativa.fxml"));
-            Parent vista = loader.load();
+		return contenedorBoton;
+	}
 
-            FXMLExperienciaEducativaController controladorDetalle = loader.getController();
-            controladorDetalle.inicializarValores(eeSeleccionada);
+	private void abrirDetalleEE(EE eeSeleccionada) {
+		try {
+			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource(
+					"vista/FXMLExperienciaEducativa.fxml"));
+			Parent vista = loader.load();
 
-            Stage nuevoEscenario = new Stage();
-            Scene escena = new Scene(vista);
-            nuevoEscenario.setScene(escena);
-            nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
-            nuevoEscenario.setTitle("Detalle de la EE");
-            nuevoEscenario.showAndWait();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-                "Lo sentimos, no se pudo cargar la ventana de la EE");
-        }
-    }
+			FXMLExperienciaEducativaController controladorDetalle = loader.getController();
+			controladorDetalle.inicializarValores(eeSeleccionada);
 
-    @FXML
-    private void clickCerrarSesion(ActionEvent event) {
-        try {
-            Stage stage = (Stage) lblNombreProfesor.getScene().getWindow();
-            stage.close();
-            FXMLLoader loader = new FXMLLoader(
-                gestorproyectos.GestorProyectos.class.getResource(
-                    "vista/FXMLInicioSesion.fxml"));
-            Parent vista = loader.load();
-            Stage escenario = new Stage();
-            Scene escena = new Scene(vista);
-            escenario.setScene(escena);
-            escenario.setTitle("Inicio Sesion");
-            escenario.initModality(Modality.APPLICATION_MODAL);
-            escenario.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+			Stage nuevoEscenario = new Stage();
+			Scene escena = new Scene(vista);
+			nuevoEscenario.setScene(escena);
+			nuevoEscenario.initModality(Modality.APPLICATION_MODAL);
+			nuevoEscenario.setTitle("Detalle de la EE");
+			nuevoEscenario.showAndWait();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+					"Lo sentimos, no se pudo cargar la ventana de la EE");
+		}
+	}
+
+	@FXML
+	private void clickCerrarSesion(ActionEvent event) {
+		try {
+			Stage stage = (Stage) lblNombreProfesor.getScene().getWindow();
+			stage.close();
+			FXMLLoader loader = new FXMLLoader(
+					gestorproyectos.GestorProyectos.class.getResource(
+							"vista/FXMLInicioSesion.fxml"));
+			Parent vista = loader.load();
+			Stage escenario = new Stage();
+			Scene escena = new Scene(vista);
+			escenario.setScene(escena);
+			escenario.setTitle("Inicio Sesion");
+			escenario.initModality(Modality.APPLICATION_MODAL);
+			escenario.show();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }

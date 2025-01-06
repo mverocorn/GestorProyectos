@@ -76,7 +76,6 @@ public class UsuarioDAO {
         Connection conexionBD = null;
 
         try {
-            // Establecer la conexión a la base de datos
             conexionBD = ConexionBD.abrirConexion();
 
             if (conexionBD != null) {
@@ -91,7 +90,7 @@ public class UsuarioDAO {
                 PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
                 prepararSentencia.setString(1, correo.trim().toLowerCase());
                 prepararSentencia.setString(2, contrasenia.trim()); 
-                System.out.println("Verificando credenciales para alumno: " + correo + ", Contraseña: " + contrasenia); //quitar
+                System.out.println("Verificando credenciales para alumno: " + correo + ", Contraseña: " + contrasenia); 
 
                 ResultSet resultadoConsulta = prepararSentencia.executeQuery();
                 if (resultadoConsulta.next()) {
@@ -109,7 +108,6 @@ public class UsuarioDAO {
             System.out.println("Error al ejecutar la consulta: "
                 + e.getMessage());
         } finally {
-            // Asegurarse de cerrar la conexión
             if (conexionBD != null) {
                 try {
                     conexionBD.close();

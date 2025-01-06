@@ -11,11 +11,11 @@ public class InscripcionEE {
 	private int idEE;
 	private int idProyectoPP;
 	private int idProyectoSS;
-	private String nombreAlumno; // Nombre del alumno
-	private float promedio; // Promedio del alumno
-	private String nombreEE; // Nombre de la EE
-	private String seccion; // Sección de la EE
-        private String nombreProyecto; // Nombre del Proyecto (PP o SS)
+	private String nombreAlumno; 
+	private float promedio; 
+	private String nombreEE; 
+	private String seccion; 
+        private String nombreProyecto; 
 
 	public InscripcionEE(int idInscripcionEE, String fechaInscripcion, String estadoInscripcion,
 			int idAlumno, int idEE, int idProyectoPP, int idProyectoSS) {

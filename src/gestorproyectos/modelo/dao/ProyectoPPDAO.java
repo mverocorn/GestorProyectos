@@ -176,7 +176,6 @@ public class ProyectoPPDAO {
 				ResultSet resultado = prepararConsulta.executeQuery();
 
 				if (resultado.next()) {
-					// Crear el objeto ProyectoSS con los datos básicos
 					proyectoPP = new ProyectoPP(
 							resultado.getInt("idProyectoPP"),
 							resultado.getString("fechaProyecto"),
@@ -204,14 +203,14 @@ public class ProyectoPPDAO {
 	public static List<ProyectoPP> obtenerProyectosDisponiblesPorPeriodoDeEEPP(String periodo) throws SQLException {
 		List<ProyectoPP> proyectosDisponibles = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
-                String[] fechasPeriodo = obtenerFechasPeriodo(periodo);
+		String[] fechasPeriodo = obtenerFechasPeriodo(periodo);
 
 		if (conexionBD != null) {
 			try {
-				String consulta = "SELECT idProyectoPP, nombreProyecto " +
-                                                    "FROM proyectopp " +
-                                                    "WHERE fechaProyecto BETWEEN ? AND ?  " +
-                                                    "  AND cupoProyecto > 0;";
+				String consulta = "SELECT idProyectoPP, nombreProyecto "
+						+ "FROM proyectopp "
+						+ "WHERE fechaProyecto BETWEEN ? AND ?  "
+						+ "  AND cupoProyecto > 0;";
 
 				try (
 						PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
@@ -227,10 +226,10 @@ public class ProyectoPPDAO {
 						while (resultado.next()) {
 							ProyectoPP proyecto = new ProyectoPP(
 									resultado.getInt("idProyectoPP"),
-									null, // Asegúrate de asignar los valores necesarios
+									null,
 									resultado.getString("nombreProyecto"),
 									null, null,
-									0, 0 // Ajusta estos valores según la estructura del ProyectoPP
+									0, 0
 							);
 							proyectosDisponibles.add(proyecto);
 						}
@@ -286,40 +285,34 @@ public class ProyectoPPDAO {
 		return resultados;
 	}
 
+	private static String[] obtenerFechasPeriodo(String periodo) {
+		DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.forLanguageTag("es"));
+		DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private static String[] obtenerFechasPeriodo(String periodo) {
-    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.forLanguageTag("es"));
-    DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		try {
+			String[] partes = periodo.split("-");
+			if (partes.length != 2) {
+				throw new IllegalArgumentException("El formato del periodo debe ser 'MMMuuuu-MMMuuuu'.");
+			}
 
-    try {
-        // Separar el periodo en partes
-        String[] partes = periodo.split("-");
-        if (partes.length != 2) {
-            throw new IllegalArgumentException("El formato del periodo debe ser 'MMMuuuu-MMMuuuu'.");
-        }
+			String inicioPeriodo = partes[0].trim().toLowerCase(Locale.ROOT);
+			String finPeriodo = partes[1].trim().toLowerCase(Locale.ROOT);
 
-        // Convertir las partes del periodo a minúsculas para que coincidan con el formato esperado
-        String inicioPeriodo = partes[0].trim().toLowerCase(Locale.ROOT);
-        String finPeriodo = partes[1].trim().toLowerCase(Locale.ROOT);
+			YearMonth inicioYM = YearMonth.parse(inicioPeriodo, formatterEntrada);
+			LocalDate fechaInicio = inicioYM.atDay(1);
 
-        // Obtener la fecha de inicio del periodo
-        YearMonth inicioYM = YearMonth.parse(inicioPeriodo, formatterEntrada);
-        LocalDate fechaInicio = inicioYM.atDay(1); // Primer día del mes
+			YearMonth finYM = YearMonth.parse(finPeriodo, formatterEntrada);
+			LocalDate fechaFin = finYM.atEndOfMonth();
 
-        // Obtener la fecha de fin del periodo (último día del mes)
-        YearMonth finYM = YearMonth.parse(finPeriodo, formatterEntrada);
-        LocalDate fechaFin = finYM.atEndOfMonth(); // Último día del mes
+			return new String[]{fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida)};
 
-        // Formatear las fechas y retornarlas como un arreglo
-        return new String[]{fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida)};
+		} catch (DateTimeParseException e) {
+			System.err.println("Error al analizar el periodo: " + periodo + " - " + e.getMessage());
+			throw e;
+		} catch (IllegalArgumentException e) {
+			System.err.println("Formato inválido del periodo: " + e.getMessage());
+			throw e;
+		}
+	}
 
-    } catch (DateTimeParseException e) {
-        System.err.println("Error al analizar el periodo: " + periodo + " - " + e.getMessage());
-        throw e; // Relanzar la excepción para que se registre en la pila
-    } catch (IllegalArgumentException e) {
-        System.err.println("Formato inválido del periodo: " + e.getMessage());
-        throw e;
-    }
-}        
-        
 }

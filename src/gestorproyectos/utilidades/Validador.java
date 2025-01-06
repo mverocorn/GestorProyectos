@@ -121,15 +121,12 @@ public class Validador {
 	}
 
 	public static float validarPromedio(float input) throws NumberFormatException {
-		// Validar que el promedio esté dentro del rango permitido (incluyendo 10.0)
 		if (input < 0.0 || input > 10.0) {
 			throw new NumberFormatException("El valor debe estar entre 0.0 y 10.0.");
 		}
 
-		// Convertir el número a String para validar el formato
 		String inputString = String.valueOf(input);
 
-		// Validar que tenga como máximo dos decimales
 		if (!inputString.matches("\\d+(\\.\\d{1,2})?")) {
 			throw new NumberFormatException("El valor no puede tener más de dos decimales.");
 		}

@@ -9,6 +9,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -85,16 +87,20 @@ public class FXMLExperienciaEducativaController implements Initializable {
 		colMatricula.setCellValueFactory(new PropertyValueFactory("matricula"));
 
 		tblAlumnosDeExperiencia.setOnMouseClicked(event -> {
-			if (event.getClickCount() == 2) { // Si se hace doble clic en un alumno
+			if (event.getClickCount() == 2) {
 				Alumno seleccionado = tblAlumnosDeExperiencia.getSelectionModel().getSelectedItem();
 				if (seleccionado != null) {
-					abrirDetallesAlumno(seleccionado); // Abrir los detalles del alumno
+					try {
+						abrirDetallesAlumno(seleccionado);
+					} catch (SQLException ex) {
+						Logger.getLogger(FXMLExperienciaEducativaController.class.getName()).log(Level.SEVERE, null, ex);
+					}
 				}
 			}
 		});
 	}
 
-	private void abrirDetallesAlumno(Alumno alumnoSeleccionado) {
+	private void abrirDetallesAlumno(Alumno alumnoSeleccionado) throws SQLException {
 		try {
 			if (alumnoSeleccionado == null) {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Advertencia", "Debe seleccionar un alumno.");

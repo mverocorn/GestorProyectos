@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
@@ -15,10 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- *
- * @author jonathan
- */
 public class DocumentoDAO {
 
 	public static HashMap<String, Object> subirDocumento(Documento documento) throws SQLException {

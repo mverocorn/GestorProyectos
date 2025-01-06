@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="gestorproyectos.controller.FXMLDetallesAlumnoController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gestorproyectos.controller.FXMLDetallesAlumnoController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="900.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -51,12 +50,6 @@
          </font>
       </Label>
       <Label fx:id="lblResultadoPromedio" layoutX="593.0" layoutY="174.0" text="resultadoPromedio" textFill="WHITE" />
-      <Label layoutX="59.0" layoutY="240.0" text="Proyecto en curso:" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="lblResultadoProyectoEnCurso" layoutX="202.0" layoutY="240.0" text="resultadoProyectoEnCurso" textFill="WHITE" />
       <TableView fx:id="tblProyectos" layoutX="65.0" layoutY="331.0" prefHeight="200.0" prefWidth="769.0">
         <columns>
           <TableColumn fx:id="colNombreProyecto" prefWidth="414.39998626708984" text="Proyecto" />

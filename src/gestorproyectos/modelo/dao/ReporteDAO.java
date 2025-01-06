@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gestorproyectos.modelo.dao;
 
 import gestorproyectos.modelo.ConexionBD;
@@ -45,42 +41,42 @@ public class ReporteDAO {
 		}
 		return reportes;
 	}
-        
-   public static HashMap<String, Object> obtenerReportesExpediente(int idExpediente) throws SQLException {
-        HashMap<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("error", true);
-        Connection conexionBD = ConexionBD.abrirConexion();
-        if(conexionBD != null){
-            try{
-                String consulta= "SELECT idReporte, nombreReporte, reporte, horasReportadas, validado, noReporte "
-                        + "FROM Reporte "
-                        + "WHERE idExpediente = ?";
-                PreparedStatement prepararSentencia= conexionBD.prepareStatement(consulta);
-                prepararSentencia.setInt(1, idExpediente);
-                ResultSet resultado = prepararSentencia.executeQuery();
-                List<Reporte> reportes = new ArrayList();
-                while(resultado.next()){
-                    Reporte reporte = new Reporte();
-                    reporte.setIdReporte(resultado.getInt("idReporte"));
-                    reporte.setReporte(resultado.getBytes("reporte"));
-                    reporte.setNombreReporte("nombreReporte");
-                    reporte.setHorasReportadas(resultado.getInt("horasReportadas"));
-                    reporte.setValidado(resultado.getString("validado"));
-                    reporte.setNoReporte(resultado.getInt("noReporte"));
-                    reporte.setIdExpediente(idExpediente);
-                    reportes.add(reporte);
-                }
-                respuesta.put("error",false);
-                respuesta.put("reportes", reportes);
-                conexionBD.close();
-            }catch (SQLException e){
-                respuesta.put("mensaje", e.getMessage());
-            }
-        }else{
-            respuesta.put("error", "Error de coneccion");
-        }
-        return respuesta;        
-    }        
+
+	public static HashMap<String, Object> obtenerReportesExpediente(int idExpediente) throws SQLException {
+		HashMap<String, Object> respuesta = new LinkedHashMap<>();
+		respuesta.put("error", true);
+		Connection conexionBD = ConexionBD.abrirConexion();
+		if (conexionBD != null) {
+			try {
+				String consulta = "SELECT idReporte, nombreReporte, reporte, horasReportadas, validado, noReporte "
+						+ "FROM Reporte "
+						+ "WHERE idExpediente = ?";
+				PreparedStatement prepararSentencia = conexionBD.prepareStatement(consulta);
+				prepararSentencia.setInt(1, idExpediente);
+				ResultSet resultado = prepararSentencia.executeQuery();
+				List<Reporte> reportes = new ArrayList();
+				while (resultado.next()) {
+					Reporte reporte = new Reporte();
+					reporte.setIdReporte(resultado.getInt("idReporte"));
+					reporte.setReporte(resultado.getBytes("reporte"));
+					reporte.setNombreReporte("nombreReporte");
+					reporte.setHorasReportadas(resultado.getInt("horasReportadas"));
+					reporte.setValidado(resultado.getString("validado"));
+					reporte.setNoReporte(resultado.getInt("noReporte"));
+					reporte.setIdExpediente(idExpediente);
+					reportes.add(reporte);
+				}
+				respuesta.put("error", false);
+				respuesta.put("reportes", reportes);
+				conexionBD.close();
+			} catch (SQLException e) {
+				respuesta.put("mensaje", e.getMessage());
+			}
+		} else {
+			respuesta.put("error", "Error de coneccion");
+		}
+		return respuesta;
+	}
 
 	private static Reporte convertirReporteResult(ResultSet resultado) throws SQLException {
 		Reporte reporte = new Reporte();
