@@ -127,45 +127,45 @@ public class InscripcionEEDAO {
         return idInscripcionEE;
     }
 
-    public static List<EE> obtenerEEActivaPorAlumno(int idAlumno) throws SQLException {
-        List<EE> experienciasEducativas = new ArrayList<>();
-        Connection conexionBD = ConexionBD.abrirConexion();
+   public static List<EE> obtenerEEActivaPorAlumno(int idAlumno) throws SQLException {
+    List<EE> experienciasEducativas = new ArrayList<>();
+    Connection conexionBD = ConexionBD.abrirConexion();
 
-        if (conexionBD != null) {
-            try {
-                String consulta = "SELECT e.idEE, e.nombreEE, e.nrc, e.seccion, e.periodo, e.idProfesor "
-                    + "FROM ee e "
-                    + "JOIN inscripcionee i ON e.idEE = i.idEE "
-                    + "WHERE i.idAlumno = ? AND i.estadoInscripcion = 'inscrito';";
+    if (conexionBD != null) {
+        try {
+            String consulta = "SELECT e.idEE, e.nombreEE, e.nrc, e.seccion, e.periodo, e.idProfesor "
+                + "FROM ee e "
+                + "JOIN inscripcionee i ON e.idEE = i.idEE "
+                + "WHERE i.idAlumno = ? AND i.estadoInscripcion IN ('inscrito', 'En curso');";
 
-                PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
-                prepararConsulta.setInt(1, idAlumno);
+            PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta);
+            prepararConsulta.setInt(1, idAlumno);
 
-                try (ResultSet resultado = prepararConsulta.executeQuery()) {
-                    while (resultado.next()) {
-                        EE experienciaEducativa = new EE(
-                            resultado.getInt("idEE"),
-                            resultado.getString("nombreEE"),
-                            resultado.getInt("nrc"),
-                            resultado.getInt("seccion"),
-                            resultado.getString("periodo"),
-                            resultado.getInt("idProfesor")
-                        );
-                        experienciasEducativas.add(experienciaEducativa);
-                    }
+            try (ResultSet resultado = prepararConsulta.executeQuery()) {
+                while (resultado.next()) {
+                    EE experienciaEducativa = new EE(
+                        resultado.getInt("idEE"),
+                        resultado.getString("nombreEE"),
+                        resultado.getInt("nrc"),
+                        resultado.getInt("seccion"),
+                        resultado.getString("periodo"),
+                        resultado.getInt("idProfesor")
+                    );
+                    experienciasEducativas.add(experienciaEducativa);
                 }
-            } catch (SQLException ex) {
-                throw new SQLException("Error al obtener las EE activas del alumno con id: "
-                    + idAlumno, ex);
-            } finally {
-                conexionBD.close();
             }
-        } else {
-            throw new SQLException("No se pudo establecer la conexión con la base de datos.");
+        } catch (SQLException ex) {
+            throw new SQLException("Error al obtener las EE activas del alumno con id: "
+                + idAlumno, ex);
+        } finally {
+            conexionBD.close();
         }
-
-        return experienciasEducativas;
+    } else {
+        throw new SQLException("No se pudo establecer la conexión con la base de datos.");
     }
+
+    return experienciasEducativas;
+}
 
     public static List<EE> obtenerEEPorProfesor(int idProfesor) throws SQLException {
         List<EE> experienciasEducativas = new ArrayList<>();
@@ -268,7 +268,7 @@ public class InscripcionEEDAO {
                 try (ResultSet resultados = prepararConsulta.executeQuery()) {
                     while (resultados.next()) {
                         InscripcionEE inscripcion = new InscripcionEE();
-                        inscripcion.setIdInscripcionEE(resultados.getInt("idInscripcion"));
+                        inscripcion.setIdInscripcionEE(resultados.getInt("idInscripcionEE"));
                         inscripcion.setNombreProyecto(resultados.getString("nombreProyecto"));
                         inscripcion.setNombreEE(resultados.getString("nombreEE"));
                         inscripcion.setEstadoInscripcion(resultados.getString("estadoInscripcion"));

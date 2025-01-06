@@ -39,127 +39,123 @@ import javafx.stage.Stage;
 
 public class FXMLDetallesAlumnoController implements Initializable {
 
-    @FXML
-    private Label lblResultadoAlumno;
-    @FXML
-    private Label lblResultadoMatricula;
-    @FXML
-    private Label lblResultadoCorreo;
-    @FXML
-    private Label lblResultadoTelefono;
-    @FXML
-    private Label lblResultadoPromedio;
-    @FXML
-    private Label lblResultadoProyectoEnCurso;
-    @FXML
-    private TableView<InscripcionEE> tblProyectos;
+	@FXML
+	private Label lblResultadoAlumno;
+	@FXML
+	private Label lblResultadoMatricula;
+	@FXML
+	private Label lblResultadoCorreo;
+	@FXML
+	private Label lblResultadoTelefono;
+	@FXML
+	private Label lblResultadoPromedio;
+	@FXML
+	private Label lblResultadoProyectoEnCurso;
+	@FXML
+	private TableView<InscripcionEE> tblProyectos;
 
-    @FXML
-    private TableColumn<?, ?> colNombreProyecto;
-    @FXML
-    private TableColumn<?, ?> colExperienciaEducativa;
-    @FXML
-    private TableColumn<?, ?> colEstado;
+	@FXML
+	private TableColumn<?, ?> colNombreProyecto;
+	@FXML
+	private TableColumn<?, ?> colExperienciaEducativa;
+	@FXML
+	private TableColumn<?, ?> colEstado;
 
-    private Alumno alumno;
+	private Alumno alumno;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        configurarTablaProyectos();  // Asegúrate de configurar la tabla en el método initialize
-    }
+	@Override
+	public void initialize(URL url, ResourceBundle rb) {
+		configurarTablaProyectos();  // Asegúrate de configurar la tabla en el método initialize
+	}
 
-    public void inicializarValores(Alumno alumnoSeleccionado) {
-        this.alumno = alumnoSeleccionado; // Asignar el alumno recibido
-        cargarInfo(); // Llamar al método para mostrar la información
-        cargarTablaProyectoDeAlumno(); // Cargar los proyectos del alumno
-    }
+	public void inicializarValores(Alumno alumnoSeleccionado) {
+		this.alumno = alumnoSeleccionado; // Asignar el alumno recibido
+		cargarInfo(); // Llamar al método para mostrar la información
+		cargarTablaProyectoDeAlumno(); // Cargar los proyectos del alumno
+	}
 
-    private void cargarInfo() {
-        // Verificar si 'alumno' no es null
-        if (alumno != null) {
-            // Obtener los detalles completos del alumno desde la base de datos
-            alumno = AlumnoDAO.obtenerAlumnoPorId(alumno.getIdAlumno());
-            
-            // Mostrar la información básica del alumno
-            lblResultadoAlumno.setText(alumno.getNombreAlumno() + " "
-                + alumno.getApellidoAlumno());
-            lblResultadoMatricula.setText(alumno.getMatricula() != null ? alumno.getMatricula() : "No disponible");
-            lblResultadoCorreo.setText(alumno.getCorreo() != null ? alumno.getCorreo() : "No disponible");
-            lblResultadoTelefono.setText(alumno.getTelefonoAlumno() != null ? alumno.getTelefonoAlumno() : "No disponible");
-            
-            // Mostrar el promedio con un formato adecuado
-            Float promedio = alumno.getPromedio();
-            lblResultadoPromedio.setText(promedio != null ? String.format("%.2f", promedio) : "Promedio no disponible");
-            
-            // Obtener y mostrar los proyectos activos (deberás agregar esa parte)
-        } else {
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Advertencia", "El alumno no está disponible.");
-        }
-    }
+	private void cargarInfo() {
+		if (alumno != null) {
+			Alumno alumnoCompleto = AlumnoDAO.obtenerAlumnoPorId(alumno.getIdAlumno());
+			if (alumnoCompleto != null) {
+				alumno = alumnoCompleto; // Actualizamos la instancia del alumno con datos completos
+				lblResultadoAlumno.setText(alumno.getNombreAlumno() + " " + alumno.getApellidoAlumno());
+				lblResultadoMatricula.setText(alumno.getMatricula() != null ? alumno.getMatricula() : "No disponible");
+				lblResultadoCorreo.setText(alumno.getCorreo() != null ? alumno.getCorreo() : "No disponible");
+				lblResultadoTelefono.setText(alumno.getTelefonoAlumno() != null ? alumno.getTelefonoAlumno() : "No disponible");
+				lblResultadoPromedio.setText(alumno.getPromedio() != null ? String.format("%.2f", alumno.getPromedio()) : "No disponible");
+			} else {
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo recuperar la información del alumno.");
+			}
+		} else {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Advertencia", "El alumno no está disponible.");
+		}
+	}
 
-    private void configurarTablaProyectos() {
-    colNombreProyecto.setCellValueFactory(new PropertyValueFactory<>("nombreProyecto"));
-    colExperienciaEducativa.setCellValueFactory(new PropertyValueFactory<>("nombreEE"));
-    colEstado.setCellValueFactory(new PropertyValueFactory<>("estadoInscripcion"));
+	private void cargarTablaProyectoDeAlumno() {
+		if (alumno == null || alumno.getIdAlumno() == 0) {
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Advertencia", "No se puede cargar la tabla sin un alumno válido.");
+			return;
+		}
 
-    tblProyectos.setOnMouseClicked(event -> {
-        if (event.getClickCount() == 2) {
-            InscripcionEE seleccionada = tblProyectos.getSelectionModel().getSelectedItem();
-            if (seleccionada != null) {
-                try {
-                    EE ee = obtenerEEporInscripcionEE(seleccionada);
-                    abrirVentanaExpediente(ee);
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", 
-                        "No se pudo cargar la información de la inscripción seleccionada.");
-                }
-            }
-        }
-    });
-}
+		ObservableList<InscripcionEE> inscripciones = FXCollections.observableArrayList();
+		try {
+			List<InscripcionEE> inscripcionesBD = InscripcionEEDAO.obtenerDetallesInscripcionesPorAlumno(alumno.getIdAlumno());
+			if (inscripcionesBD != null && !inscripcionesBD.isEmpty()) {
+				inscripciones.addAll(inscripcionesBD);
+				tblProyectos.setItems(inscripciones);
+			} else {
+				tblProyectos.setItems(FXCollections.observableArrayList()); // Asigna una lista vacía si no hay inscripciones
+				MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION, "Información", "El alumno no tiene inscripciones registradas.");
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo cargar la tabla de proyectos.");
+		}
+	}
 
+	private void configurarTablaProyectos() {
+		colNombreProyecto.setCellValueFactory(new PropertyValueFactory<>("nombreProyecto"));
+		colExperienciaEducativa.setCellValueFactory(new PropertyValueFactory<>("nombreEE"));
+		colEstado.setCellValueFactory(new PropertyValueFactory<>("estadoInscripcion"));
 
-    private void cargarTablaProyectoDeAlumno() {
-        ObservableList<InscripcionEE> inscripciones = FXCollections.observableArrayList(); // Lista ObservableList de InscripcionEE
-        try {
-            // Recupera las inscripciones del alumno
-            List<InscripcionEE> inscripcionesBD = InscripcionEEDAO.obtenerDetallesInscripcionesPorAlumno(alumno.getIdAlumno());
+		tblProyectos.setOnMouseClicked(event -> {
+			if (event.getClickCount() == 2) {
+				InscripcionEE seleccionada = tblProyectos.getSelectionModel().getSelectedItem();
+				if (seleccionada != null) {
+					try {
+						EE ee = obtenerEEporInscripcionEE(seleccionada);
+						abrirVentanaExpediente(ee);
+					} catch (SQLException ex) {
+						ex.printStackTrace();
+						MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
+								"No se pudo cargar la información de la inscripción seleccionada.");
+					}
+				}
+			}
+		});
+	}
 
-            if (inscripcionesBD != null && !inscripcionesBD.isEmpty()) {
-                inscripciones.addAll(inscripcionesBD); // Agrega las inscripciones obtenidas a la lista observable
-                tblProyectos.setItems(inscripciones); // Asigna la lista observable a la tabla
-            } else {
-                tblProyectos.setItems(FXCollections.observableArrayList()); // Si no hay inscripciones, asigna una lista vacía
-            }
-        } catch (SQLException ex) {
-            // Manejar la excepción y mostrar un mensaje de error si es necesario
-            MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error",
-                "Lo sentimos, el sistema presenta fallas para recuperar la información, vuelva a intentar");
-        }
-    }     
-    
 	private void abrirVentanaExpediente(EE ee) {
-                try {
+		try {
 			FXMLLoader loader = new FXMLLoader(gestorproyectos.GestorProyectos.class.getResource("vista/FXMLExpedienteAlumno.fxml"));
 			Parent vista = loader.load();
-			
-                        InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(),ee.getIdEE());
-                        Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
-                        if(ee.getNombreEE().equals("Servicio Social")){
-                            ProyectoSS proyecto = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
-                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
-                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
-                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
-                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,false);
-                        }else{
-                            ProyectoPP proyecto = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
-                            Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
-                            Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
-                            FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
-                            controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto,false);
-                        }
-                        
+
+			InscripcionEE inscripcionEE = InscripcionEEDAO.obtenerInscripcionEE(alumno.getIdAlumno(), ee.getIdEE());
+			Expediente expediente = ExpedienteDAO.obtenerExpediente(inscripcionEE.getIdInscripcionEE());
+			if (ee.getNombreEE().equals("Servicio Social")) {
+				ProyectoSS proyecto = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(inscripcionEE.getIdProyectoSS());
+				Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+				Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto, false);
+			} else {
+				ProyectoPP proyecto = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(inscripcionEE.getIdProyectoPP());
+				Responsable responsable = ResponsableDAO.obtenerResponsablePorIdResponsable(proyecto.getIdResponsable());
+				Empresa empresa = EmpresaDAO.obtenerEmpresaPorIdEmpresa(responsable.getIdEmpresa());
+				FXMLExpedienteAlumnoController controladorExpediente = loader.getController();
+				controladorExpediente.inicializarValores(empresa, responsable, ee, inscripcionEE, expediente, proyecto, false);
+			}
 
 			Stage stage = new Stage();
 			stage.setScene(new Scene(vista));
@@ -168,15 +164,15 @@ public class FXMLDetallesAlumnoController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente.");
-		} catch (SQLException ex){
-                        ex.printStackTrace();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 			MisUtilidades.crearAlertaSimple(Alert.AlertType.ERROR, "Error", "No se pudo abrir la ventana de expediente 1.");
-                }
-	}    
-        
-        private EE obtenerEEporInscripcionEE (InscripcionEE inscripcionEE) throws SQLException{
-            EE ee = EEDAO.obtenerEEPorInscripcion(inscripcionEE.getIdInscripcionEE());
-            return ee;
-            
-        }
+		}
+	}
+
+	private EE obtenerEEporInscripcionEE(InscripcionEE inscripcionEE) throws SQLException {
+		EE ee = EEDAO.obtenerEEPorInscripcion(inscripcionEE.getIdInscripcionEE());
+		return ee;
+
+	}
 }
