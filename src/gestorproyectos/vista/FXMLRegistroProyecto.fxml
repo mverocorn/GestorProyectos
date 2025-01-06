@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -22,7 +23,7 @@
          </image>
       </ImageView>
       <Label layoutX="85.0" layoutY="167.0" text="Nombre Proyecto:" textFill="WHITE" />
-      <Label layoutX="586.0" layoutY="167.0" text="Periodo:" textFill="WHITE" />
+      <Label layoutX="586.0" layoutY="167.0" text="Fecha Inicio Proyecto:" textFill="WHITE" />
       <Label layoutX="81.0" layoutY="228.0" text="Cupo:" textFill="WHITE" />
       <Label layoutX="85.0" layoutY="290.0" text="Objetivo:" textFill="WHITE" />
       <Label layoutX="469.0" layoutY="290.0" text="Descripción:" textFill="WHITE" />
@@ -33,6 +34,6 @@
       <TextArea fx:id="txtAObjetivo" layoutX="82.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />
       <TextArea fx:id="txtADescripcion" layoutX="464.0" layoutY="308.0" prefHeight="104.0" prefWidth="343.0" />
       <Button layoutX="739.0" layoutY="442.0" mnemonicParsing="false" onAction="#clickRegistrar" text="Registrar" />
-      <TextField fx:id="txtFPeriodo" layoutX="586.0" layoutY="186.0" prefHeight="26.0" prefWidth="223.0" promptText="MMMYYYY-MMMYYYY" />
+      <DatePicker fx:id="dpFechaProyecto" layoutX="579.0" layoutY="186.0" prefHeight="26.0" prefWidth="229.0" />
    </children>
 </AnchorPane>

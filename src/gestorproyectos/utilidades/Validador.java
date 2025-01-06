@@ -26,8 +26,8 @@ public class Validador {
 	}
 
 	public static void validarMatricula(String matricula) {
-		if (matricula == null || !matricula.matches("^[\\w\\d]+$")) {
-			throw new IllegalArgumentException("La matrícula del estudiante es inválida.");
+		if (matricula == null || !matricula.matches("^zS\\d{8}$")) {
+			throw new IllegalArgumentException("La matrícula del estudiante es inválida. Debe comenzar con 'zS' seguido de 8 dígitos numéricos.");
 		}
 	}
 
@@ -51,7 +51,7 @@ public class Validador {
 		}
 		if (texto.chars().allMatch(c -> c == texto.charAt(0))) {
 			throw new IllegalArgumentException("El campo " + campo
-					+ " no puede contener caracteres repetidos.");
+					+ " no puede contener caracteres repetidos o ser uno solo.");
 		}
 		if (Pattern.compile("[.,]{2,}").matcher(texto).find()
 				|| Pattern.compile("[.,]\\s+[.,]").matcher(texto).find()) {
@@ -71,10 +71,9 @@ public class Validador {
 	}
 
 	public static void validarTelefono(String telefono) {
-		String telefonoStr = String.valueOf(telefono);
-		String patronTelefono = "^\\+[0-9]{1,3}\\s[0-9]{10}$";
-		if (!Pattern.matches(patronTelefono, telefonoStr)) {
-			throw new IllegalArgumentException("El formato del teléfono es incorrecto. Debe incluir un simbolo '+', la lada del país, un espacio y 10 dígitos.");
+		String patronTelefono = "^[0-9]{10}$";
+		if (!Pattern.matches(patronTelefono, telefono)) {
+			throw new IllegalArgumentException("El formato del teléfono es incorrecto. Debe contener exactamente 10 dígitos numéricos.");
 		}
 	}
 
@@ -122,18 +121,16 @@ public class Validador {
 	}
 
 	public static float validarPromedio(float input) throws NumberFormatException {
-		if (input < 0.0 || input >= 10.00) {
+		// Validar que el promedio esté dentro del rango permitido (incluyendo 10.0)
+		if (input < 0.0 || input > 10.0) {
 			throw new NumberFormatException("El valor debe estar entre 0.0 y 10.0.");
 		}
 
+		// Convertir el número a String para validar el formato
 		String inputString = String.valueOf(input);
 
+		// Validar que tenga como máximo dos decimales
 		if (!inputString.matches("\\d+(\\.\\d{1,2})?")) {
-			throw new NumberFormatException("El valor ingresado contiene caracteres no válidos.");
-		}
-
-		if (inputString.contains(".") && inputString.split("\\.")[1].length()
-				> 2) {
 			throw new NumberFormatException("El valor no puede tener más de dos decimales.");
 		}
 
