@@ -52,7 +52,7 @@ public class ReporteDAO {
         Connection conexionBD = ConexionBD.abrirConexion();
         if(conexionBD != null){
             try{
-                String consulta= "SELECT idReporte, reporte, horasReportadas, validado, noReporte "
+                String consulta= "SELECT idReporte, nombreReporte, reporte, horasReportadas, validado, noReporte "
                         + "FROM Reporte "
                         + "WHERE idExpediente = ?";
                 PreparedStatement prepararSentencia= conexionBD.prepareStatement(consulta);
@@ -63,6 +63,7 @@ public class ReporteDAO {
                     Reporte reporte = new Reporte();
                     reporte.setIdReporte(resultado.getInt("idReporte"));
                     reporte.setReporte(resultado.getBytes("reporte"));
+                    reporte.setNombreReporte("nombreReporte");
                     reporte.setHorasReportadas(resultado.getInt("horasReportadas"));
                     reporte.setValidado(resultado.getString("validado"));
                     reporte.setNoReporte(resultado.getInt("noReporte"));
@@ -136,7 +137,7 @@ public class ReporteDAO {
 				PreparedStatement prepararSentencia = conexionBD.prepareStatement(sentencia);
 				prepararSentencia.setInt(1, idExpediente);
 				int filasAfectadas = prepararSentencia.executeUpdate();
-				if (filasAfectadas == 1) {
+				if (filasAfectadas > 0) {
 					respuesta.put("error", false);
 					respuesta.put("mensaje", "Información del expediente eliminada correctamente");
 				} else {

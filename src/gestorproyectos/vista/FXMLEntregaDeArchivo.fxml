@@ -39,8 +39,8 @@
       </Label>
       <ComboBox fx:id="cBoxTipoArchivo" layoutX="423.0" layoutY="150.0" prefHeight="26.0" prefWidth="254.0" />
       <Button layoutX="355.0" layoutY="267.0" mnemonicParsing="false" onAction="#clickSubirArchivo" prefHeight="65.0" prefWidth="189.0" text="Subir Archivo" />
-      <TextField fx:id="txtFCantidadHoras" layoutX="245.0" layoutY="456.0" prefHeight="26.0" prefWidth="75.0" />
-      <Label layoutX="133.0" layoutY="461.0" text="Cantidad de horas:" textFill="WHITE" />
+      <TextField fx:id="txtFCantidadHoras" layoutX="133.0" layoutY="496.0" prefHeight="26.0" prefWidth="75.0" />
+      <Label fx:id="lblCantidadHoras" layoutX="133.0" layoutY="461.0" text="Cantidad de horas:" textFill="WHITE" />
       <Button layoutX="706.0" layoutY="457.0" mnemonicParsing="false" onAction="#clickEntregar" text="Entregar" />
       <Label fx:id="lbConfirmacionArchivo" layoutX="429.0" layoutY="361.0" visible="false" />
    </children>

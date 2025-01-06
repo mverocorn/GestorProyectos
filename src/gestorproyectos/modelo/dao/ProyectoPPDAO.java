@@ -12,7 +12,11 @@ import gestorproyectos.utilidades.Validador;
 import java.sql.SQLTimeoutException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -200,15 +204,19 @@ public class ProyectoPPDAO {
 	public static List<ProyectoPP> obtenerProyectosDisponiblesPorPeriodoDeEEPP(String periodo) throws SQLException {
 		List<ProyectoPP> proyectosDisponibles = new ArrayList<>();
 		Connection conexionBD = ConexionBD.abrirConexion();
+                String[] fechasPeriodo = obtenerFechasPeriodo(periodo);
 
 		if (conexionBD != null) {
 			try {
-				String consulta = "SELECT idProyectoPP, nombreProyecto "
-						+ "FROM proyectopp WHERE fechaProyecto = ? AND cupoProyecto > 0";
+				String consulta = "SELECT idProyectoPP, nombreProyecto " +
+                                                    "FROM proyectopp " +
+                                                    "WHERE fechaProyecto BETWEEN ? AND ?  " +
+                                                    "  AND cupoProyecto > 0;";
 
 				try (
 						PreparedStatement prepararConsulta = conexionBD.prepareStatement(consulta)) {
-					prepararConsulta.setString(1, periodo);
+					prepararConsulta.setString(1, fechasPeriodo[0]);
+					prepararConsulta.setString(2, fechasPeriodo[1]);
 
 					try (ResultSet resultado = prepararConsulta.executeQuery()) {
 						if (!resultado.isBeforeFirst()) {
@@ -278,4 +286,40 @@ public class ProyectoPPDAO {
 		return resultados;
 	}
 
+
+    private static String[] obtenerFechasPeriodo(String periodo) {
+    DateTimeFormatter formatterEntrada = DateTimeFormatter.ofPattern("MMMuuuu", Locale.forLanguageTag("es"));
+    DateTimeFormatter formatterSalida = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    try {
+        // Separar el periodo en partes
+        String[] partes = periodo.split("-");
+        if (partes.length != 2) {
+            throw new IllegalArgumentException("El formato del periodo debe ser 'MMMuuuu-MMMuuuu'.");
+        }
+
+        // Convertir las partes del periodo a minúsculas para que coincidan con el formato esperado
+        String inicioPeriodo = partes[0].trim().toLowerCase(Locale.ROOT);
+        String finPeriodo = partes[1].trim().toLowerCase(Locale.ROOT);
+
+        // Obtener la fecha de inicio del periodo
+        YearMonth inicioYM = YearMonth.parse(inicioPeriodo, formatterEntrada);
+        LocalDate fechaInicio = inicioYM.atDay(1); // Primer día del mes
+
+        // Obtener la fecha de fin del periodo (último día del mes)
+        YearMonth finYM = YearMonth.parse(finPeriodo, formatterEntrada);
+        LocalDate fechaFin = finYM.atEndOfMonth(); // Último día del mes
+
+        // Formatear las fechas y retornarlas como un arreglo
+        return new String[]{fechaInicio.format(formatterSalida), fechaFin.format(formatterSalida)};
+
+    } catch (DateTimeParseException e) {
+        System.err.println("Error al analizar el periodo: " + periodo + " - " + e.getMessage());
+        throw e; // Relanzar la excepción para que se registre en la pila
+    } catch (IllegalArgumentException e) {
+        System.err.println("Formato inválido del periodo: " + e.getMessage());
+        throw e;
+    }
+}        
+        
 }

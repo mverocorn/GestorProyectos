@@ -45,6 +45,8 @@ public class FXMLEntregaDeArchivoController implements Initializable {
         private int idExpediente;
         @FXML
         private Label lbConfirmacionArchivo;
+    @FXML
+    private Label lblCantidadHoras;
 
 	/**
 	 * Initializes the controller class.
@@ -170,6 +172,17 @@ public class FXMLEntregaDeArchivoController implements Initializable {
     private void llenarCombo() {
         ObservableList<String> opcionesArchivo = FXCollections.observableArrayList("Documento","Reporte");
         cBoxTipoArchivo.setItems(opcionesArchivo);
+        
+            cBoxTipoArchivo.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if ("Documento".equals(newValue)) {
+                txtFCantidadHoras.setVisible(false);
+                lblCantidadHoras.setVisible(false);
+            } else {
+                txtFCantidadHoras.setVisible(true);
+                lblCantidadHoras.setVisible(true);
+            }
+        });
+        
     }
 
     private void cerrarVentana() {
@@ -180,7 +193,9 @@ public class FXMLEntregaDeArchivoController implements Initializable {
     private boolean datosValidos() {
         try{
         Validador.validarTexto(txtFNombreEntrega.getText(), "Nombre de la entrega", 50);
-        Validador.validarHoras(Integer.parseInt(txtFCantidadHoras.getText()));
+        if(cBoxTipoArchivo.getSelectionModel().getSelectedItem().contains("Reporte")){
+            Validador.validarHoras(Integer.parseInt(txtFCantidadHoras.getText()));
+        }
         if (archivo==null || cBoxTipoArchivo.getSelectionModel().getSelectedItem().isEmpty()){
             return false;
         }

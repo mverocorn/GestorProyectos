@@ -3,6 +3,7 @@ package gestorproyectos.controller;
 import gestorproyectos.modelo.dao.DocumentoDAO;
 import gestorproyectos.modelo.dao.ExpedienteDAO;
 import gestorproyectos.modelo.dao.InscripcionEEDAO;
+import gestorproyectos.modelo.dao.PriorizacionProyectosDAO;
 import gestorproyectos.modelo.dao.ReporteDAO;
 import gestorproyectos.modelo.pojo.Documento;
 import gestorproyectos.modelo.pojo.EE;
@@ -172,6 +173,7 @@ public class FXMLExpedienteAlumnoController implements Initializable {
 
     private void eliminarInscripcionEE() {
         try{
+        HashMap<String,Object> respuestaPriorizacion = PriorizacionProyectosDAO.DarDeBaja(idInscripcionEE);
         HashMap<String,Object> respuesta = InscripcionEEDAO.DarDeBaja(idInscripcionEE);
             if(!((boolean)respuesta.get("error")) ){
                 MisUtilidades.crearAlertaSimple(Alert.AlertType.INFORMATION,"Alumno dado de baja", ""+respuesta.get("mensaje"));

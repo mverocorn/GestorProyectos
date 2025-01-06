@@ -71,7 +71,7 @@ public class ExpedienteDAO {
 				PreparedStatement prepararSentencia = conexionBD.prepareStatement(sentencia);
 				prepararSentencia.setInt(1, idExpediente);
 				int filasAfectadas = prepararSentencia.executeUpdate();
-				if (filasAfectadas == 1) {
+				if (filasAfectadas > 0) {
 					respuesta.put("error", false);
 					respuesta.put("mensaje", "Información del expediente eliminada correctamente");
 				} else {

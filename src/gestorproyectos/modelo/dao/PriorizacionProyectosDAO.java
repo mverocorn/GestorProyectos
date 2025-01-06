@@ -315,4 +315,33 @@ public class PriorizacionProyectosDAO {
 		return priorizacionHecha;
 	}
 
+	public static HashMap<String, Object> DarDeBaja(int idExpediente) throws SQLException {
+		HashMap<String, Object> respuesta = new HashMap<>();
+		respuesta.put("error", true);
+		Connection conexionBD = ConexionBD.abrirConexion();
+		if (conexionBD != null) {
+			String sentencia = "DELETE FROM priorizacionproyectos "
+					+ "WHERE idExpediente = ?";
+			try {
+				PreparedStatement prepararSentencia = conexionBD.prepareStatement(sentencia);
+				prepararSentencia.setInt(1, idExpediente);
+				int filasAfectadas = prepararSentencia.executeUpdate();
+				if (filasAfectadas > 0) {
+					respuesta.put("error", false);
+					respuesta.put("mensaje", "Información de la priorizacion eliminada correctamente");
+				} else {
+					respuesta.put("mensaje", "Lo sentimos, hubo un error al eliminar "
+							+ "la informacion de la priorizacion, por favor intenta mas tarde");
+				}
+				conexionBD.close();
+			} catch (SQLException ex) {
+				respuesta.put("mensaje", ex.getMessage());
+			}
+
+		} else {
+			respuesta.put("mensaje", "Por el momento el servicio no esta disponible, intentalo mas tarde.");
+		}
+		return respuesta;
+	}        
+        
 }

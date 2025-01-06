@@ -489,8 +489,8 @@ public class FXMLCoordinadorController implements Initializable, IObservador {
 				MisUtilidades.crearAlertaSimple(Alert.AlertType.WARNING, "Proyecto no seleccionado", "Selecciona el proyecto de Práctica Profesional que desea asignar al alumno.");
 			} else {
 				PriorizacionProyectosDAO.asignarProyectoPP(agregarListenersTablaAsignacionPP(), idProyectoPP, idInscripcionEE);
-				ProyectoSS proyectoSS = ProyectoSSDAO.obtenerProyectoSSPorIdProyectoSS(idProyectoSS);
-				String fechaProyecto = proyectoSS.getFechaProyecto();
+				ProyectoPP proyectoPP = ProyectoPPDAO.obtenerProyectoPPPorIdProyectoPP(idProyectoPP);
+				String fechaProyecto = proyectoPP.getFechaProyecto();
 				System.out.println("Creando expediente");
 				HashMap respuestaExpediente = ExpedienteDAO.CrearExpediente(idInscripcionEE, fechaProyecto, 300);
 
